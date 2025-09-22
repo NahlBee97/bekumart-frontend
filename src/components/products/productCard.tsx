@@ -1,12 +1,16 @@
 // --- Reusable Product Card Component ---
 
 import { IProduct } from "@/interfaces/productInterfaces";
-import StarRating from "./starRating";
+import { StarRating } from "./starRating";
 
 // This component displays a single product's information in a styled card.
 const ProductCard: React.FC<{ product: IProduct }> = ({ product }) => {
   return (
-    <div className="group relative border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300 ease-in-out bg-white flex flex-col">
+    <div className="group relative border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300 ease-in-out bg-white flex flex-col"
+    onClick={() => {
+      // Navigate to product detail page on card click
+      window.location.href = `/products/${product.id}`;
+    }}>
       <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
         {/* Product Image */}
         {/* eslint-disable-next-line */}
