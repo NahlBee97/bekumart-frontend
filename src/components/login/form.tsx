@@ -32,17 +32,17 @@ export default function LoginForm() {
         const { data } = await axios.post(`${apiUrl}/api/auth/login`, values);
 
         // set token to cookie
-        const { token } = data.data;
+        const token = data.data;
 
         setCookie("access_token", token, {
           expires: new Date(Date.now() + 60 * 60 * 1000),
         });
         setFormSuccess("Berhasil login.");
 
-        const userData = jwtDecode<IUser>(token);
-
-        if (userData.role === "admin") {
-          router.push("/dashboard");
+        const userData = jwtDecode<IUser>(token); 
+        
+        if (userData.role === "ADMIN") {
+          router.push("/admin");
         } else {
           router.push("/");
         }
