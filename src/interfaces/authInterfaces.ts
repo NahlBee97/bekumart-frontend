@@ -10,10 +10,10 @@ export interface ILogin {
 }
 
 export interface IUser {
-  id: number;
+  id: string;
   email: string;
   name: string;
   isVerified: boolean;
   role: string;
-  image: string;
+  imageUrl: string;
 }

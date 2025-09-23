@@ -2,15 +2,18 @@
 
 import { IProduct } from "@/interfaces/productInterfaces";
 import { StarRating } from "./starRating";
+import AddToCartButton from "../addToCartButton";
 
 // This component displays a single product's information in a styled card.
 const ProductCard: React.FC<{ product: IProduct }> = ({ product }) => {
   return (
-    <div className="group relative border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300 ease-in-out bg-white flex flex-col"
-    onClick={() => {
-      // Navigate to product detail page on card click
-      window.location.href = `/products/${product.id}`;
-    }}>
+    <div
+      className="group relative border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300 ease-in-out bg-white flex flex-col"
+      onClick={() => {
+        // Navigate to product detail page on card click
+        window.location.href = `/products/${product.id}`;
+      }}
+    >
       <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
         {/* Product Image */}
         {/* eslint-disable-next-line */}
@@ -31,12 +34,21 @@ const ProductCard: React.FC<{ product: IProduct }> = ({ product }) => {
         <h3 className="text-m text-gray-700 font-semibold truncate">
           {product.name}
         </h3>
-        {/* Product Category */}
-        <p className="py-1 my-2 text-xs font-semibold text-green-800 rounded-full">
-          {product.category.name}
-        </p>
-        {/* Product Weight */}
-        <p className="mt-1 text-xs text-gray-500">{product.weightInKg} kg</p>
+        <div className="flex justify-between items-center mt-1">
+          {/* Product Category */}
+          <div>
+            <p className="py-1 my-2 text-xs font-semibold text-green-800 rounded-full">
+              {product.category.name}
+            </p>
+            {/* Product Weight */}
+            <p className="mt-1 text-xs text-gray-500">
+              {product.weightInKg} kg
+            </p>
+          </div>
+          <div className="mt-1 scale-75 self-end">
+            <AddToCartButton productId={product.id} />
+          </div>
+        </div>
 
         {/* Spacer to push price and rating to the bottom */}
         <div className="flex-grow" />
