@@ -5,6 +5,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { apiUrl } from "@/config";
 import { StarRatingDetail } from "@/components/products/starRating";
+import { ShoppingCart } from "lucide-react";
+import { useCartStore } from "@/stores/useCartStore";
+import useAuthStore from "@/stores/useAuthStore";
 
 export interface PageProps {
   params: Promise<{
@@ -18,6 +21,8 @@ export default function ProductDetailPage({ params }: PageProps) {
   const [resolvedParams, setResolvedParams] = useState<{
     id: string;
   } | null>(null);
+  const { user } = useAuthStore();
+  const { addToCart } = useCartStore();
 
   useEffect(() => {
     const resolveParams = async () => {
@@ -104,9 +109,10 @@ export default function ProductDetailPage({ params }: PageProps) {
                 </p>
                 <button
                   type="button"
-                  className="bg-blue-600 text-white font-bold py-3 px-8 rounded-full shadow-md hover:bg-blue-700 transition-all duration-300 ease-in-out transform hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-blue-300"
+                  className="flex gap-3 bg-blue-600 text-white font-bold py-3 px-8 rounded-full shadow-md hover:bg-blue-700 transition-all duration-300 ease-in-out transform hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-blue-300"
+                  onClick={() => addToCart(user.id, product.id)}
                 >
-                  Add to Cart
+                  Add to Cart <ShoppingCart className="w-6 h-6" />
                 </button>
               </div>
             </div>
