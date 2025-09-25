@@ -8,7 +8,7 @@ import { useCartStore } from "@/stores/useCartStore";
 import { IAddresses } from "@/interfaces/addressInterface";
 import { getCookie } from "cookies-next";
 import axios from "axios";
-import { apiUrl } from "@/config";
+import { apiUrl, midtransClientKey } from "@/config";
 import AddressListModal from "@/components/checkout/addressListModal";
 import AddressFormModal from "@/components/checkout/addressFormModal";
 
@@ -91,6 +91,19 @@ const CheckoutPage: NextPage = () => {
     }
   }, [deliveryMethod, selectedAddress,cart]);
 
+  //midtrans
+  useEffect(() => {
+      const script = document.createElement("script");
+      script.src = "https://app.sandbox.midtrans.com/snap/snap.js";
+      script.setAttribute("data-client-key", String(midtransClientKey));
+      script.async = true;
+      document.body.appendChild(script);
+
+      return () => {
+        document.body.removeChild(script);
+      };
+  }, []);
+
   const handleAddressSubmit = (values: IAddresses) => {
     if (editingAddress) {
       // Edit address
@@ -125,12 +138,15 @@ const CheckoutPage: NextPage = () => {
         addressId: selectedAddress?.id,
         totalCheckoutPrice: total,
       };
-      await axios.post(`${apiUrl}/api/orders`, orderData, {
+      const response = await axios.post(`${apiUrl}/api/orders`, orderData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      alert("Order placed successfully");
+
+      const paymentToken = response.data.order.paymentToken;
+
+      window.snap?.pay(paymentToken);
     } catch (err) {
       alert("Error checking out");
       console.log("Error checking out:", err);
