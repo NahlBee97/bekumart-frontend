@@ -21,8 +21,33 @@ export async function middleware(req: NextRequest) {
       const { payload } = await jwtVerify<IUser>(token, secret);
 
       const user = payload as IUser;
-      
+
       if (!user || user.role !== "ADMIN") {
+        return NextResponse.redirect(new URL("/login", req.url));
+      }
+    } catch (err) {
+      console.error("JWT verification failed:", err);
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
+  }
+
+  // Protect user routes
+  const protectedRoutes = ["/cart", "/checkout", "/account"];
+
+  if (protectedRoutes.some((route) => path.startsWith(route)) && !token) {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
+
+  //Protect if the user is not an admin
+  if (protectedRoutes.some((route) => path.startsWith(route)) && token) {
+    try {
+      const secret = new TextEncoder().encode(jwtSecret);
+
+      const { payload } = await jwtVerify<IUser>(token, secret);
+
+      const user = payload as IUser;
+
+      if (!user || user.role !== "CUSTOMER") {
         return NextResponse.redirect(new URL("/login", req.url));
       }
     } catch (err) {
@@ -36,5 +61,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/cart", "/checkout", "/account/:path*"],
 };

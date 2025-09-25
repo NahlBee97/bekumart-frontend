@@ -25,7 +25,7 @@ const CartPage: NextPage = () => {
           Looks like you haven`t added anything yet. Let`s go shopping!
         </p>
         <Link
-          href="/"
+          href="/products"
           className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-300"
         >
           Continue Shopping
@@ -173,6 +173,7 @@ const CartPage: NextPage = () => {
                 <div className="mt-8">
                   <button
                     type="submit"
+                    onClick={() => window.location.href = '/checkout'}
                     className="w-full bg-blue-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-blue-500 transition-transform transform hover:scale-105"
                   >
                     Proceed to Checkout
