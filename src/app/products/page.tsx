@@ -89,6 +89,8 @@ export default function ProductsPage() {
         let value;
         if (e.target.type === "range") {
           value = Number(e.target.value);
+        } else if (e.target.type === "text") {
+          value = e.target.value;
         } else {
           const category = categories.find((c) => c.name === e.target.value);
           value = category ? category.name : "All";
@@ -109,8 +111,7 @@ export default function ProductsPage() {
     return products
       .filter(
         (product) =>
-          product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          product.category.name.toLowerCase().includes(searchTerm.toLowerCase())
+          product.name.toLowerCase().includes(searchTerm.toLowerCase())
       )
       .filter(
         (product) =>
@@ -159,7 +160,7 @@ export default function ProductsPage() {
             <input
               id="search"
               type="text"
-              placeholder="Search by name or category..."
+              placeholder="Search products..."
               value={searchTerm}
               onChange={handleFilterChange(setSearchTerm)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
