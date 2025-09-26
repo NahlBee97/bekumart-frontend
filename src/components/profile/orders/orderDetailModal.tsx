@@ -2,7 +2,7 @@
 
 import { IOrder, IOrderItem } from "@/interfaces/orderInterface";
 import { useEffect, useState } from "react";
-import StatusBadge from "./statusBadge";
+import StatusBadge from "../../statusBadge";
 import { getCookie } from "cookies-next";
 import axios from "axios";
 import { apiUrl } from "@/config";

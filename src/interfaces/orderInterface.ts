@@ -1,17 +1,21 @@
+import { IUser } from "./authInterfaces";
 import { IProduct } from "./productInterfaces";
+
+export type orderStatuses =
+  | "PENDING"
+  | "PROCESSING"
+  | "READY_FOR_PICKUP"
+  | "OUT_FOR_DELIVERY"
+  | "COMPLETED"
+  | "CANCELLED";
 
 export interface IOrder {
   id: string;
   userId: string;
+  user: IUser;
   totalAmount: number;
   totalWeight: number;
-  status:
-    | "PENDING"
-    | "PROCESSING"
-    | "READY_FOR_PICKUP"
-    | "OUT_FOR_DELIVERY"
-    | "COMPLETED"
-    | "CANCELLED";
+  status: orderStatuses
   fulfillmentType: "DELIVERY" | "PICKUP";
   paymentMethod: "ONLINE" | "INSTORE";
   addressId: string | null;
