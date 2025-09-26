@@ -8,18 +8,20 @@ import { useCartStore } from "@/stores/useCartStore";
 import { IAddresses } from "@/interfaces/addressInterface";
 import { getCookie } from "cookies-next";
 import axios from "axios";
-import { apiUrl } from "@/config";
+import { apiUrl, midtransClientKey } from "@/config";
 import AddressListModal from "@/components/checkout/addressListModal";
 import AddressFormModal from "@/components/checkout/addressFormModal";
+import { useRouter } from "next/navigation";
 
 // --- MAIN PAGE COMPONENT ---
 const CheckoutPage: NextPage = () => {
+  const router = useRouter();
   const { user } = useAuthStore();
-  const { cart } = useCartStore();
+  const { cart, clearCart } = useCartStore();
 
-  
   const [isLoading, setIsLoading] = useState(true);
   const [deliveryMethod, setDeliveryMethod] = useState("DELIVERY");
+  const [paymentMethod, setPaymentMethod] = useState("ONLINE");
 
   // State Management
   const [addresses, setAddresses] = useState<IAddresses[]>([]);
@@ -89,7 +91,20 @@ const CheckoutPage: NextPage = () => {
       alert("error calculating shipping cost.");
       console.error(err);
     }
-  }, [deliveryMethod, selectedAddress,cart]);
+  }, [deliveryMethod, selectedAddress, cart]);
+
+  //midtrans
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://app.sandbox.midtrans.com/snap/snap.js";
+    script.setAttribute("data-client-key", String(midtransClientKey));
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
 
   const handleAddressSubmit = (values: IAddresses) => {
     if (editingAddress) {
@@ -125,12 +140,26 @@ const CheckoutPage: NextPage = () => {
         addressId: selectedAddress?.id,
         totalCheckoutPrice: total,
       };
-      await axios.post(`${apiUrl}/api/orders`, orderData, {
+      const response = await axios.post(`${apiUrl}/api/orders`, orderData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      alert("Order placed successfully");
+
+      const paymentToken = response.data.order.paymentToken;
+      const orderId = response.data.order.newOrder.id;
+      // const orderId = response.data.order.order.id
+
+      if (deliveryMethod === "DELIVERY" && paymentMethod === "ONLINE")
+        window.snap?.pay(paymentToken);
+
+      if (deliveryMethod === "PICKUP" && paymentMethod === "ONLINE")
+        window.snap?.pay(paymentToken);
+
+      if (deliveryMethod === "PICKUP" && paymentMethod === "INSTORE")
+        router.push(`/success?order_id=${orderId}`);
+
+      clearCart();
     } catch (err) {
       alert("Error checking out");
       console.log("Error checking out:", err);
@@ -142,13 +171,13 @@ const CheckoutPage: NextPage = () => {
     setListModalOpen(false);
     setFormModalOpen(true);
   };
-  
+
   const openEditForm = (address: IAddresses) => {
     setEditingAddress(address);
     setListModalOpen(false);
     setFormModalOpen(true);
   };
-  
+
   const subtotal = cart?.items.reduce(
     (acc, item) => acc + item.product.price * item.quantity,
     0
@@ -222,7 +251,10 @@ const CheckoutPage: NextPage = () => {
                           id="delivery"
                           className="sr-only"
                           checked={deliveryMethod === "DELIVERY"}
-                          onChange={(e) => setDeliveryMethod(e.target.value)}
+                          onChange={(e) => {
+                            setDeliveryMethod(e.target.value);
+                            setPaymentMethod("ONLINE");
+                          }}
                         />
                         <div className="flex flex-1">
                           <div className="flex flex-col">
@@ -273,6 +305,68 @@ const CheckoutPage: NextPage = () => {
                       </label>
                     </div>
                   </div>
+
+                  {deliveryMethod === "PICKUP" && (
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Payment Method
+                      </h3>
+                      <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <label
+                          htmlFor="online"
+                          className={`relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm ring-2 focus:outline-none ${
+                            paymentMethod === "ONLINE"
+                              ? "ring-slate-600 border-slate-600"
+                              : "ring-transparent border-gray-300"
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="payment-method"
+                            value="ONLINE"
+                            id="online"
+                            className="sr-only"
+                            checked={paymentMethod === "ONLINE"}
+                            onChange={(e) => {
+                              setPaymentMethod(e.target.value);
+                            }}
+                          />
+                          <div className="flex flex-1">
+                            <div className="flex flex-col">
+                              <span className="block text-sm font-medium text-gray-900">
+                                Online
+                              </span>
+                            </div>
+                          </div>
+                        </label>
+                        <label
+                          htmlFor="instore"
+                          className={`relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm ring-2 focus:outline-none ${
+                            paymentMethod === "INSTORE"
+                              ? "ring-slate-600 border-slate-600"
+                              : "ring-transparent border-gray-300"
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="payment-method"
+                            value="INSTORE"
+                            id="instore"
+                            className="sr-only"
+                            checked={paymentMethod === "INSTORE"}
+                            onChange={(e) => setPaymentMethod(e.target.value)}
+                          />
+                          <div className="flex flex-1">
+                            <div className="flex flex-col">
+                              <span className="block text-sm font-medium text-gray-900">
+                                Instore
+                              </span>
+                            </div>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                  )}
 
                   {deliveryMethod === "DELIVERY" && (
                     <div>
