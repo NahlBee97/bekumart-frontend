@@ -137,7 +137,7 @@ export default function Middle() {
                 <img
                   src={user?.imageUrl}
                   alt="profile-picture"
-                  className="rounded-full w-6 h-6 border-black border-solid border-1"
+                  className="rounded-full w-8 h-8 border-black border-solid border-1"
                 />
               </Link>
             </div>
