@@ -29,7 +29,11 @@ const OrderHistoryPage: NextPage = () => {
       const token = getCookie("access_token") as string;
       const userData = jwtDecode<IUser>(token);
       const fetchOrders = async () => {
-        const response = await axios.get(`${apiUrl}/api/orders/${userData.id}`);
+        const response = await axios.get(`${apiUrl}/api/orders/${userData.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
         setOrders(response.data.data);
       };
       fetchOrders();

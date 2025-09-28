@@ -1,7 +1,6 @@
 import * as Yup from "yup";
 
 export const AddressSchema = Yup.object().shape({
-  name: Yup.string().required("Full name is required"),
   street: Yup.string().required("Street address is required"),
   subdistrict: Yup.string().required("Sub District is required"),
   district: Yup.string().required("District is required"),

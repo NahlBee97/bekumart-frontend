@@ -17,7 +17,7 @@ const OrderDetailModal: React.FC<{
   
     useEffect(() => {
       try {
-        const token = getCookie("acces_token") as string;
+        const token = getCookie("access_token") as string;
         const fetchOrderItems = async () => {
           const response = await axios.get(`${apiUrl}/api/orders/order-items/${order?.id}`, {
             headers: {

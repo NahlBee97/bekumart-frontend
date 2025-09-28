@@ -17,3 +17,8 @@ export interface IUser {
   role: string;
   imageUrl: string;
 }
+
+export interface IPasswordChange {
+  newPassword: string;
+  confirmPassword: string;
+}

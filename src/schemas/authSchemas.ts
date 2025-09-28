@@ -24,3 +24,18 @@ export const LoginSchema = Yup.object().shape({
     )
     .required("Password tidak boleh kosong"),
 });
+
+export const ChangePasswordSchema = Yup.object().shape({
+  newPassword: Yup.string()
+    .matches(
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+      "Minimal delapan karakter, setidaknya satu huruf, satu angka, dan satu karakter khusus"
+    )
+    .required("Password tidak boleh kosong"),
+  confirmPassword: Yup.string()
+    .matches(
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+      "Minimal delapan karakter, setidaknya satu huruf, satu angka, dan satu karakter khusus"
+    )
+    .required("Password tidak boleh kosong"),
+});

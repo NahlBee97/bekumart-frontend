@@ -32,7 +32,7 @@ export async function middleware(req: NextRequest) {
   }
 
   // Protect user routes
-  const protectedRoutes = ["/cart", "/checkout", "/account"];
+  const protectedRoutes = ["/cart", "/checkout", "/profile"];
 
   if (protectedRoutes.some((route) => path.startsWith(route)) && !token) {
     return NextResponse.redirect(new URL("/login", req.url));
@@ -61,5 +61,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/cart", "/checkout", "/account/:path*"],
+  matcher: ["/admin/:path*", "/cart", "/checkout", "/profile/:path*"],
 };
