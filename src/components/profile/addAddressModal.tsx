@@ -1,6 +1,8 @@
 "use client";
 
 import { apiUrl } from "@/config";
+import { IAddresses } from "@/interfaces/addressInterface";
+import { AddressSchema } from "@/schemas/addressSchema";
 import useAuthStore from "@/stores/useAuthStore";
 import axios from "axios";
 import { getCookie } from "cookies-next";
@@ -12,14 +14,15 @@ const AddAddressModal = ({
   isOpen,
   onAdd,
   onClose,
+  address,
 }: {
   isOpen: boolean;
   onAdd: () => void;
   onClose: () => void;
-
+  address: IAddresses | null;
 }) => {
-  // state in redux
   const { user } = useAuthStore();
+  // state in redux
   const [provinces, setProvinces] = useState<{ id: string; name: string }[]>(
     []
   );
@@ -39,6 +42,16 @@ const AddAddressModal = ({
   );
 
   const [selectedDistrict, setSelectedDistrict] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+
+  const [subDistricts, setSubDistricts] = useState<
+    { id: string; name: string }[]
+  >([]);
+
+  // eslint-disable-next-line
+  const [selectedSubDistrict, setSelectedSubDistrict] = useState<{
     id: string;
     name: string;
   } | null>(null);
@@ -88,40 +101,58 @@ const AddAddressModal = ({
 
       fetchDistricts();
     }
-  }, [selectedCity, selectedProvince]); // Dependency array with selectedCity and selectedProvince
+  }, [selectedCity, selectedProvince]);
+
+  useEffect(() => {
+    if (selectedDistrict) {
+      const fetchSubDistricts = async () => {
+        try {
+          const response = await axios.get(
+            `${apiUrl}/api/sub-districts?province=${selectedProvince?.name}&city=${selectedCity?.name}&district=${selectedDistrict.name}`
+          );
+          setSubDistricts(response.data.data);
+        } catch (error) {
+          console.error("Error fetching subdistricts:", error);
+        }
+      };
+
+      fetchSubDistricts();
+    }
+  }, [selectedCity, selectedProvince, selectedDistrict]); // Dependency array with selectedCity and selectedProvince
 
   const formik = useFormik({
     enableReinitialize: true,
-    initialValues: {
-      userId: user.id,
-      name: "",
-      phone: "",
-      address: "",
-      province: "",
-      city: "",
+    validationSchema: AddressSchema,
+    initialValues: address || {
+      street: "",
+      subdistrict: "",
       district: "",
-      isPrimary: true,
+      city: "",
+      province: "",
       postalCode: "",
+      phone: "",
     },
     onSubmit: async (values) => {
       try {
         const token = getCookie("access_token") as string;
-        await axios.post(
-          `${apiUrl}/api/addresses`,
-          {
-            ...values,
-            provinceId: selectedProvince?.id,
-            cityId: selectedCity?.id,
-            districtId: selectedDistrict?.id,
-          },
-          {
+        if (address) {
+          await axios.put(`${apiUrl}/api/addresses/${address.id}`, values, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
-        );
+          });
+        } else {
+          await axios.post(
+            `${apiUrl}/api/addresses`,
+            { ...values, userId: user.id },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+        }
 
-        formik.resetForm();
         onAdd();
         onClose();
 
@@ -157,6 +188,16 @@ const AddAddressModal = ({
     formik.setFieldValue("district", district?.name || "");
   };
 
+  const handleSubDistrictChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const selectedName = event.target.value;
+    const subdistrict =
+      subDistricts.find((s) => s.name === selectedName) || null;
+    setSelectedSubDistrict(subdistrict);
+    formik.setFieldValue("subdistrict", subdistrict?.name || "");
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -176,25 +217,6 @@ const AddAddressModal = ({
           <form onSubmit={formik.handleSubmit}>
             {/* Form fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Nama (Label)
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  {...formik.getFieldProps("name")}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
-                />
-                {formik.touched.name && formik.errors.name ? (
-                  <div className="text-red-500 text-sm mt-1">
-                    {formik.errors.name}
-                  </div>
-                ) : null}
-              </div>
               <div>
                 <label
                   htmlFor="phone"
@@ -222,14 +244,14 @@ const AddAddressModal = ({
                   Alamat Lengkap
                 </label>
                 <textarea
-                  id="address"
-                  {...formik.getFieldProps("address")}
+                  id="street"
+                  {...formik.getFieldProps("street")}
                   rows={3}
                   className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
                 ></textarea>
-                {formik.touched.address && formik.errors.address ? (
+                {formik.touched.street && formik.errors.street ? (
                   <div className="text-red-500 text-sm mt-1">
-                    {formik.errors.address}
+                    {formik.errors.street}
                   </div>
                 ) : null}
               </div>
@@ -312,6 +334,34 @@ const AddAddressModal = ({
                 {formik.touched.district && formik.errors.district ? (
                   <div className="text-red-500 text-sm mt-1">
                     {formik.errors.district}
+                  </div>
+                ) : null}
+              </div>
+              <div>
+                <label
+                  htmlFor="district"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Desa
+                </label>
+                <select
+                  id="subdistrict"
+                  {...formik.getFieldProps("subdistrict")}
+                  onChange={handleSubDistrictChange}
+                  disabled={!formik.values.district}
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100"
+                >
+                  <option value="">Pilih Desa</option>
+                  {formik.values.district &&
+                    subDistricts.map((s) => (
+                      <option key={s.id} value={s.name}>
+                        {s.name}
+                      </option>
+                    ))}
+                </select>
+                {formik.touched.subdistrict && formik.errors.subdistrict ? (
+                  <div className="text-red-500 text-sm mt-1">
+                    {formik.errors.subdistrict}
                   </div>
                 ) : null}
               </div>

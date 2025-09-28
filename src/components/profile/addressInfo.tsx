@@ -17,6 +17,7 @@ export default function AddressInfo() {
   const [isLoading, setIsLoading] = useState(true);
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [addressToEdit, setAddressToEdit] = useState<IAddresses | null>(null);
 
   const fetchUserAddresses = useCallback(async () => {
     const token = getCookie("access_token") as string;
@@ -150,7 +151,13 @@ export default function AddressInfo() {
                           Set as Default
                         </button>
                       )}
-                      <button className="p-1 text-gray-500 hover:text-indigo-600">
+                      <button
+                        className="p-1 text-gray-500 hover:text-indigo-600"
+                        onClick={() => {
+                          setAddressToEdit(address);
+                          setIsModalOpen(true);
+                        }}
+                      >
                         <Edit3 className="h-4 w-4" />
                       </button>
                       <button
@@ -171,6 +178,7 @@ export default function AddressInfo() {
         onClose={() => setIsModalOpen(false)}
         isOpen={isModalOpen}
         onAdd={() => fetchUserAddresses()}
+        address={addressToEdit}
       />
     </div>
   );
