@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import type { NextPage } from "next";
-import { LockIcon, StoreIcon, TruckIcon } from "lucide-react";
+import { StoreIcon, TruckIcon } from "lucide-react";
 import useAuthStore from "@/stores/useAuthStore";
 import { useCartStore } from "@/stores/useCartStore";
 import { IAddresses } from "@/interfaces/addressInterface";
@@ -10,8 +10,8 @@ import { getCookie } from "cookies-next";
 import axios from "axios";
 import { apiUrl, midtransClientKey } from "@/config";
 import AddressListModal from "@/components/checkout/addressListModal";
-import AddressFormModal from "@/components/checkout/addressFormModal";
 import { useRouter } from "next/navigation";
+import AddressCheckoutModal from "@/components/checkout/addressCheckoutModal";
 
 // --- MAIN PAGE COMPONENT ---
 const CheckoutPage: NextPage = () => {
@@ -33,65 +33,101 @@ const CheckoutPage: NextPage = () => {
   const [isFormModalOpen, setFormModalOpen] = useState(false);
   const [editingAddress, setEditingAddress] = useState<IAddresses | null>(null);
 
-  // Initial data loading
-  useEffect(() => {
-    try {
-      const fetchUserAddresses = async () => {
-        const token = getCookie("access_token") as string;
-        if (!token) {
-          throw new Error("No access token found");
-        }
-        const { data } = await axios.get(`${apiUrl}/api/addresses/${user.id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setAddresses(data.data);
-        const mainAddresses = data.data.filter(
-          (address: IAddresses) => address.isDefault
-        );
-        setSelectedAddress(mainAddresses[0]);
-      };
-      fetchUserAddresses();
-    } catch (err) {
-      alert("Error loading user addresses.");
-      console.error(err);
-    } finally {
-      setIsLoading(false);
+  const fetchUserAddresses = useCallback(async () => {
+    // Don't fetch if cart is empty
+    if (!cart?.items.length) {
+      return;
     }
-  }, [user]); // Run only once on mount
+
+    const token = getCookie("access_token") as string;
+    if (!token) {
+      throw new Error("No access token found");
+    }
+    try {
+      const { data } = await axios.get(`${apiUrl}/api/addresses/${user.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (data.data) {
+        setAddresses(data.data);
+        if (!selectedAddress) {
+          const mainAddresses = data.data.filter(
+            (address: IAddresses) => address.isDefault
+          );
+          setSelectedAddress(mainAddresses[0]);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching addresses:", error);
+      throw error; // Re-throw to be caught by the caller
+    }
+  }, [user?.id, selectedAddress, cart?.items.length]);
+
+  useEffect(() => {
+    const loadAddresses = async () => {
+      if (!user?.id || !cart?.items.length) {
+        console.log("No user ID or empty cart");
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        await fetchUserAddresses();
+      } catch (err) {
+        console.error("Error loading user addresses:", err);
+        // Only show alert if cart is not empty (meaningful error)
+        if (cart?.items.length > 0) {
+          alert("Error loading user addresses.");
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    setIsLoading(true); // Set loading state before fetching
+    loadAddresses();
+    // eslint-disable-next-line
+  }, [user?.id, cart?.items.length]);
 
   // Effect to update shipping cost based on delivery method or address change
   useEffect(() => {
-    try {
-      const calculateShipping = async () => {
+    const calculateShipping = async () => {
+      try {
         if (deliveryMethod === "PICKUP") {
           setShippingCost(0);
           return;
         }
 
-        if (cart && selectedAddress) {
-          const token = getCookie("access_token") as string;
-          if (!token) {
-            throw new Error("No access token found");
+        if (!cart || !selectedAddress?.id) {
+          return;
+        }
+
+        const token = getCookie("access_token") as string;
+        if (!token) {
+          throw new Error("No access token found");
+        }
+
+        const { data } = await axios.get(
+          `${apiUrl}/api/shipping-cost/${selectedAddress.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-          const { data } = await axios.get(
-            `${apiUrl}/api/shipping-cost/${selectedAddress.id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+        );
+
+        if (typeof data.shippingCost === "number") {
           setShippingCost(data.shippingCost);
         }
-      };
-      calculateShipping();
-    } catch (err) {
-      alert("error calculating shipping cost.");
-      console.error(err);
-    }
-  }, [deliveryMethod, selectedAddress, cart]);
+      } catch (err) {
+        console.error("Error calculating shipping cost:", err);
+        alert("Error calculating shipping cost.");
+      }
+    };
+
+    calculateShipping();
+  }, [deliveryMethod, selectedAddress?.id, cart]);
 
   //midtrans
   useEffect(() => {
@@ -105,28 +141,6 @@ const CheckoutPage: NextPage = () => {
       document.body.removeChild(script);
     };
   }, []);
-
-  const handleAddressSubmit = (values: IAddresses) => {
-    if (editingAddress) {
-      // Edit address
-      const updatedAddresses = addresses.map((addr) =>
-        addr.id === values.id ? values : addr
-      );
-      setAddresses(updatedAddresses);
-      // If the edited address is the selected one, update it
-      if (selectedAddress?.id === values.id) {
-        setSelectedAddress(values);
-      }
-      console.log("Updating address:", values);
-    } else {
-      // Add new address
-      const newAddress = { ...values, id: Date.now().toString() };
-      const updatedAddresses = [...addresses, newAddress];
-      setAddresses(updatedAddresses);
-      setSelectedAddress(newAddress); // Automatically select the new address
-      console.log("Adding new address:", newAddress);
-    }
-  };
 
   const handleConfirmOrder = async () => {
     try {
@@ -495,12 +509,6 @@ const CheckoutPage: NextPage = () => {
                     Confirm order
                   </button>
                 </div>
-                <div className="mt-6 flex items-center justify-center gap-2">
-                  <LockIcon className="text-gray-400" />
-                  <p className="text-sm text-gray-500">
-                    Secure payment via Stripe
-                  </p>
-                </div>
               </section>
             </div>
           </div>
@@ -516,11 +524,12 @@ const CheckoutPage: NextPage = () => {
         onAddNew={openAddForm}
         onEdit={openEditForm}
       />
-      <AddressFormModal
+      <AddressCheckoutModal
         isOpen={isFormModalOpen}
+        onSave={() => fetchUserAddresses()}
+        onSelect={setSelectedAddress}
         onClose={() => setFormModalOpen(false)}
-        onSubmit={handleAddressSubmit}
-        initialValues={editingAddress}
+        address={editingAddress}
       />
     </>
   );

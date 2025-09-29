@@ -196,7 +196,7 @@ export default function AddressInfo() {
       <AddressModal
         onClose={() => setIsModalOpen(false)}
         isOpen={isModalOpen}
-        onAdd={() => fetchUserAddresses()}
+        onSave={() => fetchUserAddresses()}
         address={addressToEdit}
       />
     </div>

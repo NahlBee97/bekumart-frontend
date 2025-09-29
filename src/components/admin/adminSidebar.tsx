@@ -3,6 +3,7 @@
 import {
   FileText,
   LogOut,
+  Package,
   User,
 } from "lucide-react";
 import { deleteCookie } from "cookies-next";
@@ -10,14 +11,15 @@ import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import useAuthStore from "@/stores/useAuthStore";
 
-export default function Sidebar() {
+export default function AdminSidebar() {
   const { logout } = useAuthStore();
   const router = useRouter();
   const pathname = usePathname();
 
   const navItems = [
-    { icon: User, label: "Profile", link: "/profile" },
-    { icon: FileText, label: "Order History", link: "/profile/orders" },
+    { icon: User, label: "Profile", link: "/admin" },
+    { icon: Package, label: "Order Management", link: "/admin/orders" },
+    { icon: FileText, label: "Product Management", link: "/admin/products" },
   ];
 
   return (

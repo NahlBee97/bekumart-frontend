@@ -10,14 +10,16 @@ import { useFormik } from "formik";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 
-const AddressModal = ({
+const AddressCheckoutModal = ({
   isOpen,
   onSave,
+  onSelect,
   onClose,
   address,
 }: {
   isOpen: boolean;
   onSave: () => void;
+  onSelect: (address: IAddresses) => void;
   onClose: () => void;
   address: IAddresses | null;
 }) => {
@@ -136,14 +138,15 @@ const AddressModal = ({
       try {
         const token = getCookie("access_token") as string;
         if (address) {
-          await axios.put(`${apiUrl}/api/addresses/${address.id}`, values, {
+          const response = await axios.put(`${apiUrl}/api/addresses/${address.id}`, values, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
+          onSelect(response.data.data);
           alert("Alamat berhasil diedit!");
         } else {
-          await axios.post(
+          const response = await axios.post(
             `${apiUrl}/api/addresses`,
             { ...values, userId: user.id },
             {
@@ -152,6 +155,7 @@ const AddressModal = ({
               },
             }
           );
+          onSelect(response.data.data);
           alert("Alamat baru berhasil ditambahkan!");
         }
 
@@ -418,4 +422,4 @@ const AddressModal = ({
   );
 };
 
-export default AddressModal;
+export default AddressCheckoutModal;

@@ -7,11 +7,17 @@ import { IOrder, orderStatuses } from "@/interfaces/orderInterface";
 import { getCookie } from "cookies-next";
 import axios from "axios";
 import { apiUrl } from "@/config";
+import OrderDetailAdminModal from "@/components/admin/orders/orderDetailAdminModal";
 
 // --- MAIN PAGE COMPONENT ---
 const Orders: React.FC = () => {
   const [orders, setOrders] = useState<IOrder[]>([]);
-  const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
+  const [updatingOrderIds, setUpdatingOrderIds] = useState<Set<string>>(
+    new Set()
+  );
+
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [orderToView, setOrderToView] = useState<IOrder | null>(null);
 
   const statusOptions: orderStatuses[] = [
     "PENDING",
@@ -42,39 +48,37 @@ const Orders: React.FC = () => {
     } catch (err) {
       console.log("error fetching orders" + err);
     }
-  }, [fetchOrders]);
+    // eslint-disable-next-line
+  }, []);
 
   // Simulates an API call to update the order status
   const handleStatusChange = async (
     orderId: string,
     newStatus: orderStatuses
   ) => {
-    if (updatingStatus) return; // Prevent multiple updates at once
-    setUpdatingStatus(orderId);
-
-    const token = getCookie("access_token") as string;
     try {
-      const updateOrderStatus = async () => {
-        if (orderId) {
-          await axios.patch(
-            `${apiUrl}/api/orders/${orderId}`,
-            {
-              status: newStatus,
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+      setUpdatingOrderIds((prev) => new Set(prev).add(orderId));
+      const token = getCookie("access_token") as string;
+      await axios.patch(
+        `${apiUrl}/api/orders/${orderId}`,
+        {
+          status: newStatus,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-        setUpdatingStatus(null);
-      };
-      updateOrderStatus();
-
-      fetchOrders();
+      );
+      await fetchOrders();
     } catch (err) {
-      console.log("error updating status" + err);
+      console.error("Error updating status:", err);
+    } finally {
+      setUpdatingOrderIds((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(orderId);
+        return newSet;
+      });
     }
   };
 
@@ -111,6 +115,9 @@ const Orders: React.FC = () => {
                     <th scope="col" className="px-6 py-3 text-right">
                       Total
                     </th>
+                    <th scope="col" className="px-6 py-3 text-right">
+                      Fullfilment Method
+                    </th>
                     <th scope="col" className="px-6 py-3 text-center">
                       Status
                     </th>
@@ -123,6 +130,10 @@ const Orders: React.FC = () => {
                   {orders.map((order) => (
                     <tr
                       key={order.id}
+                      onClick={() => {
+                        setIsModalOpen(true);
+                        setOrderToView(order);
+                      }}
                       className="bg-white border-b border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-200"
                     >
                       <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -133,6 +144,7 @@ const Orders: React.FC = () => {
                       <td className="px-6 py-4 text-right">
                         ${order.totalAmount.toFixed(2)}
                       </td>
+                      <td className="px-6 py-4">{order.fulfillmentType}</td>
                       <td className="px-6 py-4 text-center">
                         <StatusBadge status={order.status} />
                       </td>
@@ -146,7 +158,6 @@ const Orders: React.FC = () => {
                                 e.target.value as orderStatuses
                               )
                             }
-                            disabled={updatingStatus === order.id}
                             className="appearance-none w-48 text-center bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block py-2 px-4 transition"
                           >
                             {statusOptions.map((option) => (
@@ -156,7 +167,7 @@ const Orders: React.FC = () => {
                             ))}
                           </select>
                           <ChevronDown className="absolute top-1/2 right-3 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none" />
-                          {updatingStatus === order.id && (
+                          {updatingOrderIds.has(order.id) && (
                             <div className="absolute inset-0 bg-white/50 dark:bg-gray-800/50 flex items-center justify-center rounded-lg">
                               <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                             </div>
@@ -170,6 +181,11 @@ const Orders: React.FC = () => {
             </div>
           </div>
         </main>
+        <OrderDetailAdminModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          order={orderToView}
+        />
       </div>
     </div>
   );

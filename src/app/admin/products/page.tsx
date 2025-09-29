@@ -8,6 +8,7 @@ import { getCookie } from "cookies-next";
 import { CameraIcon, DeleteIcon, EditIcon, PlusIcon } from "@/components/admin/products/icons";
 import ProductFormModal from "@/components/admin/products/productFormModal";
 import ImageUploadModal from "@/components/admin/products/productImageModal";
+import { FileText } from "lucide-react";
 
 // --- MAIN COMPONENT ---
 // Renders the entire product table page.
@@ -123,14 +124,17 @@ export default function ProductsTable() {
     <div className="bg-gray-50 min-h-screen text-gray-800 font-sans">
       <div className="container mx-auto p-4 sm:p-6 lg:p-8">
         <div className="mb-6 md:flex md:items-center md:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              Manajemen Produk
-            </h1>
-            <p className="mt-1 text-gray-600">
-              Atur stok, harga, dan informasi produk lainnya.
+          <header className="mb-8">
+            <div className="flex items-center space-x-3">
+              <FileText className="h-8 w-8 text-gray-800 dark:text-gray-200" />
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                Product Management
+              </h1>
+            </div>
+            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+              View, manage, and update all stock products.
             </p>
-          </div>
+          </header>
           <button
             onClick={handleOpenAddModal}
             className="mt-4 md:mt-0 flex items-center gap-2 bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition-all"

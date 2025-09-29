@@ -29,17 +29,17 @@ const AddressListModal = ({
         </button>
         <h3 className="mb-6 text-xl font-semibold">Shipping Address</h3>
         <div className="space-y-4 max-h-96 overflow-y-auto">
-          {addresses.map((addr) => (
-            <div key={addr.id} className="rounded-md border p-4">
+          {addresses.map((address) => (
+            <div key={address.id} className="rounded-md border p-4">
               <p>
-                {addr.street}, {addr.subdistrict}, {addr.district} {addr.city}
+                {address.street}, {address.subdistrict}, {address.district} {address.city}
               </p>
-              <p>{addr.province}</p>
-              <p>{addr.phone}</p>
+              <p>{address.province}</p>
+              <p>{address.phone}</p>
               <div className="mt-4 flex gap-2">
                 <button
                   onClick={() => {
-                    onSelect(addr);
+                    onSelect(address);
                     onClose();
                   }}
                   className="rounded-md bg-slate-700 px-4 py-1 text-sm text-white hover:bg-slate-800"
@@ -47,7 +47,7 @@ const AddressListModal = ({
                   Use this address
                 </button>
                 <button
-                  onClick={() => onEdit(addr)}
+                  onClick={() => onEdit(address)}
                   className="rounded-md border border-gray-300 px-4 py-1 text-sm text-gray-700 hover:bg-gray-100"
                 >
                   Edit

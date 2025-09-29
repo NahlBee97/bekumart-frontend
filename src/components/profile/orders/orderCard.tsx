@@ -1,5 +1,6 @@
 "use client";
 
+import StatusBadge from "@/components/statusBadge";
 import { IOrder } from "@/interfaces/orderInterface";
 
 // The main component for an individual order
@@ -19,6 +20,10 @@ const OrderCard: React.FC<{
           <div>
             <p className="font-medium text-gray-900">Date Placed</p>
             <p>{order.createdAt}</p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-900">Status</p>
+            <StatusBadge status={order.status}/>
           </div>
           <div>
             <p className="font-medium text-gray-900">Total Amount</p>
