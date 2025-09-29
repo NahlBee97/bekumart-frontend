@@ -9,10 +9,12 @@ import axios from "axios";
 import { getCookie } from "cookies-next";
 import { jwtDecode } from "jwt-decode";
 import type { NextPage } from "next";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
 // --- MAIN PAGE COMPONENT ---
 const OrderHistoryPage: NextPage = () => {
+  const router = useRouter();
   const [orders, setOrders] = useState<IOrder[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<IOrder | null>(null);
 
@@ -99,9 +101,10 @@ const OrderHistoryPage: NextPage = () => {
               <div className="mt-6">
                 <button
                   type="button"
+                  onClick={() => router.push("/products")}
                   className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
-                  Start Shopping
+                  Mulai Belanja
                 </button>
               </div>
             </div>

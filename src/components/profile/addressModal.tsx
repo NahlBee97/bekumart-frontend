@@ -10,7 +10,7 @@ import { useFormik } from "formik";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 
-const AddAddressModal = ({
+const AddressModal = ({
   isOpen,
   onAdd,
   onClose,
@@ -141,6 +141,7 @@ const AddAddressModal = ({
               Authorization: `Bearer ${token}`,
             },
           });
+          alert("Alamat berhasil diedit!");
         } else {
           await axios.post(
             `${apiUrl}/api/addresses`,
@@ -151,12 +152,16 @@ const AddAddressModal = ({
               },
             }
           );
+          alert("Alamat baru berhasil ditambahkan!");
         }
+
+        setSelectedProvince(null);
+        setSelectedCity(null);
+        setSelectedDistrict(null);
+        setSelectedSubDistrict(null);
 
         onAdd();
         onClose();
-
-        alert("Alamat baru berhasil ditambahkan!");
       } catch (err) {
         alert("Error adding new address: " + err);
       }
@@ -204,7 +209,9 @@ const AddAddressModal = ({
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col">
         <div className="p-4 border-b flex justify-between items-center">
-          <h2 className="text-xl font-semibold">Tambah Alamat Baru</h2>
+          <h2 className="text-xl font-semibold">
+            {address ? "Edit Alamat" : "Tambah Alamat Baru"}
+          </h2>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-800"
@@ -228,7 +235,7 @@ const AddAddressModal = ({
                   type="text"
                   id="phone"
                   {...formik.getFieldProps("phone")}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                 />
                 {formik.touched.phone && formik.errors.phone ? (
                   <div className="text-red-500 text-sm mt-1">
@@ -247,7 +254,7 @@ const AddAddressModal = ({
                   id="street"
                   {...formik.getFieldProps("street")}
                   rows={3}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                 ></textarea>
                 {formik.touched.street && formik.errors.street ? (
                   <div className="text-red-500 text-sm mt-1">
@@ -266,7 +273,7 @@ const AddAddressModal = ({
                   id="province"
                   {...formik.getFieldProps("province")}
                   onChange={handleProvinceChange}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="">Pilih Provinsi</option>
                   {provinces.map((p) => (
@@ -293,7 +300,7 @@ const AddAddressModal = ({
                   {...formik.getFieldProps("city")}
                   onChange={handleCityChange}
                   disabled={!formik.values.province}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100"
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
                 >
                   <option value="">Pilih Kota</option>
                   {formik.values.province &&
@@ -321,7 +328,7 @@ const AddAddressModal = ({
                   {...formik.getFieldProps("district")}
                   onChange={handleDistrictChange}
                   disabled={!formik.values.city}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100"
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
                 >
                   <option value="">Pilih Kecamatan</option>
                   {formik.values.city &&
@@ -349,7 +356,7 @@ const AddAddressModal = ({
                   {...formik.getFieldProps("subdistrict")}
                   onChange={handleSubDistrictChange}
                   disabled={!formik.values.district}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100"
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
                 >
                   <option value="">Pilih Desa</option>
                   {formik.values.district &&
@@ -376,7 +383,7 @@ const AddAddressModal = ({
                   type="text"
                   id="postalCode"
                   {...formik.getFieldProps("postalCode")}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                 />
                 {formik.touched.postalCode && formik.errors.postalCode ? (
                   <div className="text-red-500 text-sm mt-1">
@@ -393,12 +400,21 @@ const AddAddressModal = ({
               >
                 Batal
               </button>
-              <button
-                type="submit"
-                className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
-              >
-                {formik.isSubmitting ? "Menambahkan..." : "Tambah Alamat"}
-              </button>
+              {address ? (
+                <button
+                  type="submit"
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                >
+                  {formik.isSubmitting ? "Mengubah..." : "Ubah Alamat"}
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                >
+                  {formik.isSubmitting ? "Menambahkan..." : "Tambah Alamat"}
+                </button>
+              )}
             </div>
           </form>
         </div>
@@ -407,4 +423,4 @@ const AddAddressModal = ({
   );
 };
 
-export default AddAddressModal;
+export default AddressModal;

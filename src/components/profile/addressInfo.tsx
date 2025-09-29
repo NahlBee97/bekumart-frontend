@@ -7,7 +7,7 @@ import axios from "axios";
 import { apiUrl } from "@/config";
 import { getCookie } from "cookies-next";
 import { IAddresses } from "@/interfaces/addressInterface";
-import AddAddressModal from "./addAddressModal";
+import AddressModal from "./addressModal";
 
 // --- Main Component ---
 export default function AddressInfo() {
@@ -24,24 +24,40 @@ export default function AddressInfo() {
     if (!token) {
       throw new Error("No access token found");
     }
-    const { data } = await axios.get(`${apiUrl}/api/addresses/${user.id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    setAddresses(data.data);
-  }, [user]);
+    try {
+      const { data } = await axios.get(`${apiUrl}/api/addresses/${user.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setAddresses(data.data);
+    } catch (error) {
+      console.error("Error fetching addresses:", error);
+      throw error; // Re-throw to be caught by the caller
+    }
+  }, [user?.id]);
 
   useEffect(() => {
-    try {
-      fetchUserAddresses();
-    } catch (err) {
-      alert("Error loading user addresses.");
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [user, fetchUserAddresses]); // Run only once on mount
+    const loadAddresses = async () => {
+      if (!user?.id) {
+        console.log("No user ID available");
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        await fetchUserAddresses();
+      } catch (err) {
+        alert("Error loading user addresses.");
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadAddresses();
+    // eslint-disable-next-line
+  }, [user?.id]);
 
   // --- Event Handlers ---
   const handleDeleteAddress = async (id: string) => {
@@ -111,7 +127,10 @@ export default function AddressInfo() {
             </p>
           </div>
           <button
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => {
+              setAddressToEdit(null);
+              setIsModalOpen(true);
+            }}
             className="inline-flex items-center justify-center gap-2 rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           >
             <PlusCircle className="h-5 w-5" />
@@ -174,7 +193,7 @@ export default function AddressInfo() {
           )}
         </div>
       </div>
-      <AddAddressModal
+      <AddressModal
         onClose={() => setIsModalOpen(false)}
         isOpen={isModalOpen}
         onAdd={() => fetchUserAddresses()}

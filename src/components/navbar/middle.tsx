@@ -7,7 +7,7 @@ import { useCartStore } from "@/stores/useCartStore";
 import axios from "axios";
 import { getCookie } from "cookies-next";
 import { jwtDecode } from "jwt-decode";
-import { Leaf, ShoppingCart } from "lucide-react";
+import { ShoppingCart, Snowflake } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
 
@@ -59,9 +59,9 @@ export default function Middle() {
       "
       >
         <div className="flex items-center gap-2 w-full md:w-auto">
-          <Leaf className="w-8 h-8 text-green-400" />
+          <Snowflake className="w-8 h-8 text-blue-400" />
           <p className="font-semibold text-2xl sm:text-3xl xl:text-[32px] text-black">
-            Ecobazar
+            BekuMart
           </p>
           {/* Cart/Wishlist - display on mobile */}
           <div className="flex md:hidden items-center gap-4 sm:gap-6 w-full md:w-auto justify-end">
@@ -97,7 +97,7 @@ export default function Middle() {
                   <div
                     className="
                 absolute -top-1 -right-1
-                bg-green-700
+                bg-red-700
                 rounded-full
                 w-4 h-4
                 text-white
@@ -152,7 +152,7 @@ export default function Middle() {
                   <div
                     className="
                 absolute -top-1 -right-1
-                bg-green-700
+                bg-red-700
                 rounded-full
                 w-4 h-4
                 text-white
@@ -160,7 +160,7 @@ export default function Middle() {
                 flex items-center justify-center
               "
                   >
-                    {cart.totalQuantity}
+                    {cart ? cart.totalQuantity : 0}
                   </div>
                 )}
               </div>

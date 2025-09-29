@@ -108,7 +108,7 @@ export default function LoginForm() {
                 className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 ${
                   formik.touched.email && formik.errors.email
                     ? "border-red-500 focus:ring-red-500"
-                    : "border-gray-300 focus:ring-green-500"
+                    : "border-gray-300 focus:ring-blue-500"
                 }`}
               />
             </div>
@@ -128,7 +128,7 @@ export default function LoginForm() {
                 className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 ${
                   formik.touched.password && formik.errors.password
                     ? "border-red-500 focus:ring-red-500"
-                    : "border-gray-300 focus:ring-green-500"
+                    : "border-gray-300 focus:ring-blue-500"
                 }`}
               />
               <EyeIcon onClick={() => setShowPassword(!showPassword)} />
@@ -144,14 +144,14 @@ export default function LoginForm() {
           <button
             type="submit"
             disabled={!formik.isValid || !formik.dirty || formik.isSubmitting}
-            className="w-full py-3 mt-4 px-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            className="w-full py-3 mt-4 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             {formik.isSubmitting ? "Login Akun..." : "Login"}
           </button>
 
           {/* Display Success or Error Messages */}
           {formSuccess && (
-            <div className="text-green-600 bg-green-100 p-3 rounded-md">
+            <div className="text-blue-600 bg-blue-100 p-3 rounded-md">
               {formSuccess}
             </div>
           )}
@@ -166,7 +166,7 @@ export default function LoginForm() {
           Belum punya akun?
           <Link
             href="/register"
-            className="font-bold text-green-600 hover:underline ml-1"
+            className="font-bold text-blue-600 hover:underline ml-1"
           >
             Daftar
           </Link>

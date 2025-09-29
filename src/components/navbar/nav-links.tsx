@@ -49,7 +49,7 @@ export default function NavLinks() {
                   rounded
                   ${
                     isActive
-                      ? "bg-green-500 text-white font-semibold"
+                      ? "bg-blue-500 text-white font-semibold"
                       : "hover:text-white hover:font-semibold hover:bg-gray-600"
                   }
                 `}

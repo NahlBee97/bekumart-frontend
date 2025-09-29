@@ -35,7 +35,7 @@ export default function Sidebar() {
                   className={`flex items-center p-3 my-1 rounded-lg transition-colors
                     ${
                       isActive
-                        ? "bg-green-500 text-white font-semibold"
+                        ? "bg-blue-500 text-white font-semibold"
                         : "hover:bg-gray-600 hover:text-white hover:font-semibold"
                     }
                   `}
@@ -49,7 +49,7 @@ export default function Sidebar() {
           })}
         </ul>
         <button
-          className="flex w-full gap-2 items-center p-3 my-1 rounded-lg transition-colors hover:bg-gray-400 hover:text-red-500 hover:font-semibold focus:bg-green-500"
+          className="flex w-full gap-2 items-center p-3 my-1 rounded-lg transition-colors hover:bg-gray-400 hover:text-red-500 hover:font-semibold focus:bg-blue-500"
           onClick={() => {
             deleteCookie("access_token");
             localStorage.removeItem("activeMenuItem");
