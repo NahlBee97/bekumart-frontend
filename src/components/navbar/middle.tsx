@@ -10,11 +10,13 @@ import { jwtDecode } from "jwt-decode";
 import { ShoppingCart, Snowflake } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
+import { BurgerMenu } from "./burgerMenu";
+import { ProfileMenu } from "./profileMenu";
 
 export default function Middle() {
   const token = getCookie("access_token") as string;
   const { cart, setCart } = useCartStore();
-  const { user, isLoggedIn, login } = useAuthStore();
+  const { isLoggedIn, login } = useAuthStore();
 
   useEffect(() => {
     if (token) {
@@ -49,7 +51,7 @@ export default function Middle() {
       <div
         className="
         w-full
-        flex flex-col md:flex-row
+        flex md:flex-row
         items-center
         justify-between
         gap-1 sm:gap-6
@@ -58,94 +60,41 @@ export default function Middle() {
         border-b border-neutral-100
       "
       >
-        <div className="flex items-center gap-2 w-full md:w-auto">
-          <Snowflake className="w-8 h-8 text-blue-400" />
-          <p className="font-semibold text-2xl sm:text-3xl xl:text-[32px] text-black">
+        <div className="flex items-center gap-2 md:w-auto">
+          <Snowflake className="w-6 h-6 sm:w-8 sm:h-8 xl:w-10 xl:h-10 text-blue-400" />
+          <p className="font-semibold text-xl sm:text-2xl xl:text-3xl text-blue-500">
             BekuMart
           </p>
-          {/* Cart/Wishlist - display on mobile */}
-          <div className="flex md:hidden items-center gap-4 sm:gap-6 w-full md:w-auto justify-end">
-            {/* Avatar */}
+        </div>
+
+        <div className="flex gap-2">
+          <div className="flex items-center justify-end md:justify-end md:gap-4 gap-2 md:w-auto md:mt-0">
             {!isLoggedIn ? (
-              <div className="flex gap-2 sm:gap-3 xl:gap-2">
-                <Link href="/login" className="hover:text-black">
-                  Sign In
+              <>
+                <Link
+                  href="/login"
+                  className="px-3 py-1 md:px-5 md:py-2 text-xs md:text-base text-center text-blue-500 font-semibold rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors"
+                >
+                  Masuk
                 </Link>
-                <p>/</p>
-                <Link href="/register" className="hover:text-black">
-                  Sign Up
+                <Link
+                  href="/register"
+                  className="px-3 py-1 md:px-5 md:py-2 text-xs md:text-base text-center text-white font-semibold bg-blue-500 rounded-lg hover:bg-blue-600 transition-colors"
+                >
+                  Daftar
                 </Link>
-              </div>
+              </>
             ) : (
-              <div className="flex justify-center items-center gap-2 sm:gap-3 xl:gap-2">
-                <Link href="/profile">
-                  {/* eslint-disable-next-line */}
-                  <img
-                    src={user?.imageUrl}
-                    alt="profile-picture"
-                    className="rounded-full w-6 h-6 border-black border-solid border-1"
-                  />
-                </Link>
-              </div>
-            )}
-            {isLoggedIn && (
-              <div className="flex items-center gap-3">
-                <div className="relative">
-                  <Link href={"/cart"} className="flex items-center">
-                    <ShoppingCart className="w-6 h-6" />
-                  </Link>
-                  <div
-                    className="
-                absolute -top-1 -right-1
-                bg-red-700
-                rounded-full
-                w-4 h-4
-                text-white
-                text-[10px]
-                flex items-center justify-center
-              "
-                  >
-                    {cart ? cart.totalQuantity : 0}
-                  </div>
-                </div>
-                <div className="hidden sm:block">
-                  <p className="text-xs text-neutral-500">Shopping Cart:</p>
-                  <p className="text-sm font-medium">
-                    IDR {cart ? cart.totalPrice : 0}
-                  </p>
-                </div>
+              <div className="flex items-center">
+                <ProfileMenu />
               </div>
             )}
           </div>
-        </div>
 
-        <div className="hidden md:flex items-center gap-4 sm:gap-6 w-full md:w-auto justify-end">
-          {!isLoggedIn ? (
-            <div className="flex gap-2 sm:gap-3 xl:gap-2">
-              <Link href="/login" className="hover:text-black">
-                Sign In
-              </Link>
-              <p>/</p>
-              <Link href="/register" className="hover:text-black">
-                Sign Up
-              </Link>
-            </div>
-          ) : (
-            <div className="flex justify-center items-center gap-2 sm:gap-3 xl:gap-2">
-              <Link href="/profile">
-                {/* eslint-disable-next-line */}
-                <img
-                  src={user?.imageUrl}
-                  alt="profile-picture"
-                  className="rounded-full w-8 h-8 border-black border-solid border-1"
-                />
-              </Link>
-            </div>
-          )}
           {isLoggedIn && (
             <div className="flex items-center gap-3">
               <div className="relative">
-                <Link href={"/cart"} className="flex items-center">
+                <Link href={"/cart"} className="flex items-center mr-1">
                   <ShoppingCart className="w-6 h-6" />
                 </Link>
                 {cart && (
@@ -172,6 +121,9 @@ export default function Middle() {
               </div>
             </div>
           )}
+          <div className="md:hidden">
+            <BurgerMenu />
+          </div>
         </div>
       </div>
     </div>

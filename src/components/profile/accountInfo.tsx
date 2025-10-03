@@ -79,15 +79,15 @@ export default function AccountInfo() {
   return (
     <div className="bg-white shadow-md sm:rounded-lg overflow-hidden">
       <div className="p-6">
-        <h2 className="text-xl font-semibold text-gray-900">
-          Profile Information
+        <h2 className="text-base md:text-xl font-semibold text-blue-500">
+          Informasi Akun
         </h2>
-        <p className="mt-1 text-sm text-gray-500">
-          Update your account`s profile information.
+        <p className="mt-1 text-xs md:text-sm text-gray-500">
+          Perbaharui informasi akunmu.
         </p>
 
-        <div className="grid grid-cols-2">
-          <div className="mt-6 flex items-center justify-center gap-5">
+        <div className="flex items-center justify-center gap-10 md:gap-20">
+          <div className="group relative mt-6 flex cursor-pointer items-center justify-center gap-5">
             {/* eslint-disable-next-line */}
             <img
               src={
@@ -96,36 +96,34 @@ export default function AccountInfo() {
                   : "https://placehold.co/128x128/6366f1/ffffff?text=Image"
               }
               alt="Profile picture"
-              className="h-44 w-44 object-cover rounded-xl bg-gray-200"
+              className="h-32 w-32 rounded-xl border border-gray-300 object-cover shadow-sm transition-all duration-300 group-hover:brightness-75 md:h-44 md:w-44 bg-gray-200"
               onError={(e) => {
                 e.currentTarget.src =
                   "https://placehold.co/128x128/e0e0e0/757575?text=??";
               }}
             />
 
-            <div>
-              <button
-                type="button"
-                onClick={() => setIsImageModalOpen(true)}
-                className="inline-flex items-center gap-2 rounded-md bg-white px-3.5 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-              >
-                <Camera className="h-4 w-4 text-gray-600" />
-                Change
-              </button>
-              <p className="mt-2 text-xs leading-5 text-gray-500">
-                PNG, JPG, GIF up to 5MB.
-              </p>
-            </div>
+            <button
+              type="button"
+              onClick={() => setIsImageModalOpen(true)}
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 inline-flex items-center gap-2 rounded-md bg-white px-3.5 py-2 text-sm font-semibold text-gray-900 opacity-0 shadow-sm ring-1 ring-inset ring-gray-300 transition-opacity duration-300 hover:bg-gray-50 group-hover:opacity-100"
+            >
+              <Camera className="h-5 w-5 text-gray-600" />
+              <span className="hidden md:block">Change</span>
+            </button>
           </div>
 
-          <form onSubmit={formik.handleSubmit} className="mt-6 space-y-6">
+          <form
+            onSubmit={formik.handleSubmit}
+            className="md:w-[400px] w-[200px] mt-6 space-y-6"
+          >
             {/* Username Input */}
             <div className="sm:col-span-2">
               <label
                 htmlFor="name"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
-                Username
+                Nama
               </label>
               {isEditMode ? (
                 <>
@@ -190,23 +188,23 @@ export default function AccountInfo() {
               {isEditMode ? (
                 <button
                   type="submit"
-                  className="inline-flex w-full sm:w-auto justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-6 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-400 disabled:cursor-wait"
+                  className="inline-flex w-full sm:w-auto justify-center text-xs text-center rounded-md border border-transparent bg-indigo-600 py-2 px-6 md:text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-400 disabled:cursor-wait"
                 >
                   {formik.isSubmitting ? "Saving Changes..." : "Save Change"}
                 </button>
               ) : (
                 <div
-                  className="inline-flex w-full sm:w-auto justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-6 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-400 disabled:cursor-wait"
+                  className="inline-flex w-full sm:w-auto justify-center items-center text-xs text-center rounded-md border border-transparent bg-indigo-600 py-1 px-3 md:py-2 md:px-6 md:text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-400 disabled:cursor-wait"
                   onClick={() => setIsEditMode(true)}
                 >
-                  Edit Information
+                  Edit
                 </div>
               )}
               <div
-                className="inline-flex w-full sm:w-auto justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-6 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-400 disabled:cursor-wait"
+                className="inline-flex w-full sm:w-auto justify-center text-xs text-center rounded-md border border-transparent bg-red-600  py-1 px-3 md:py-2 md:px-6 md:text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-400 disabled:cursor-wait"
                 onClick={() => setIsPasswordModalOpen(true)}
               >
-                Change Password
+                Ganti Password
               </div>
             </div>
           </form>

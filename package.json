@@ -12,6 +12,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "axios": "^1.12.2",
     "cookies-next": "^6.1.0",
+    "date-fns": "^4.1.0",
     "formik": "^2.4.6",
     "jose": "^6.1.0",
     "jwt-decode": "^4.0.0",

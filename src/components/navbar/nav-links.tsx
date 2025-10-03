@@ -1,66 +1,46 @@
+"use client";
+
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import React, { useState, useEffect } from "react";
 
 export default function NavLinks() {
+  
+  const [activeLink, setActiveLink] = useState("");
   const links = [
     { name: "Home", link: "/" },
-    { name: "Products", link: "/products" },
     { name: "About Us", link: "/about" },
     { name: "Contact Us", link: "/contact" },
   ];
 
-  const pathname = usePathname();
+  useEffect(() => {
+    if (!activeLink) setActiveLink(window.location.pathname);
+  }, [activeLink]);
 
   return (
-    <div
-      className="
-      w-full
-      bg-neutral-800
-      text-neutral-400
-      flex flex-col md:flex-row
-      items-center
-      justify-between
-      px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[150px] 2xl:px-[300px]
-      py-3 md:py-4
-      gap-3 md:gap-0
-    "
-    >
-      {/* Navigation Links */}
-      <ul
-        className="
-        flex
-        flex-wrap justify-center md:justify-start
-        gap-x-5 sm:gap-x-6
-        gap-y-2
-        w-full md:w-auto
-        text-sm sm:text-[14px]
-        
-      "
-      >
-        {links.map((link, index) => {
-          const isActive = pathname === link.link;
-          return (
-            <li key={index}>
-              <Link
-                href={link.link}
-                className={`
-                  transition-colors
-                  p-2
-                  rounded
-                  ${
-                    isActive
-                      ? "bg-blue-500 text-white font-semibold"
-                      : "hover:text-white hover:font-semibold hover:bg-gray-600"
-                  }
-                `}
-                aria-label={link.name}
-              >
-                {link.name}
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+    <nav className="w-full h-1 md:h-10 md:flex md:items-center md:gap-5 bg-neutral-800 text-neutral-400 shadow-lg top-0 z-50">
+      {/* Desktop Navigation Links */}
+      <div className="hidden md:block">
+        <ul className="flex items-baseline space-x-4">
+          {links.map((link) => {
+            return (
+              <li key={link.name}>
+                <Link
+                  href={link.link}
+                  onClick={() => setActiveLink(link.link)}
+                  className={`px-3 py-2 rounded-md text-xs font-medium transition-colors duration-200 ${
+                    activeLink === link.link
+                      ? "bg-blue-600 text-white"
+                      : "hover:bg-neutral-700 hover:text-white"
+                  }`}
+                  aria-current={activeLink === link.link ? "page" : undefined}
+                >
+                  {link.name}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </nav>
   );
 }

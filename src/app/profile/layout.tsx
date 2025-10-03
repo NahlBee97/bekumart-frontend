@@ -10,7 +10,7 @@ export default function ProfileLayout({
       <main className="container mx-auto py-4 lg:py-8">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar */}
-          <div className="w-full lg:w-auto">
+          <div className="hidden md:block w-full lg:w-auto">
             <Sidebar />
           </div>
 

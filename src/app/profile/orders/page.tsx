@@ -54,16 +54,12 @@ const OrderHistoryPage: NextPage = () => {
   }, [selectedOrder]);
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans text-gray-900">
-      <div className="container mx-auto max-w-5xl px-4 py-8 sm:py-12">
-        <header className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            My Orders
+    <div className="min-h-screen font-sans text-gray-900">
+      <div className="container mx-auto max-w-5xl px-4 py-2 sm:py-8">
+        <header className="mb-6">
+          <h1 className="text-xl md:text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            Riwayat Pesanan
           </h1>
-          <p className="mt-2 text-lg text-gray-600">
-            Check the status of recent orders, manage returns, and discover
-            similar products.
-          </p>
         </header>
 
         <main>
@@ -92,12 +88,8 @@ const OrderHistoryPage: NextPage = () => {
                 />
               </svg>
               <h3 className="mt-2 text-lg font-medium text-gray-900">
-                No Orders Yet
+                Belum Ada Pesanan
               </h3>
-              <p className="mt-1 text-sm text-gray-500">
-                You haven`t placed any orders with us. Start shopping to see
-                them here!
-              </p>
               <div className="mt-6">
                 <button
                   type="button"

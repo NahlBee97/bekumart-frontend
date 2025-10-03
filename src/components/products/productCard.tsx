@@ -14,13 +14,13 @@ const ProductCard: React.FC<{ product: IProduct }> = ({ product }) => {
         window.location.href = `/products/${product.id}`;
       }}
     >
-      <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
+      <div className="flex justify-center items-center aspect-w-1 aspect-h-1 w-full overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
         {/* Product Image */}
         {/* eslint-disable-next-line */}
         <img
           src={product.imageUrl}
           alt="product-image"
-          className="h-full w-full object-cover object-center group-hover:opacity-75 transition-opacity duration-300"
+          className="h-50 w-full object-cover object-center group-hover:opacity-75 transition-opacity duration-300"
           onError={(e) => {
             // Fallback placeholder image on error
             const target = e.target as HTMLImageElement;
@@ -31,18 +31,18 @@ const ProductCard: React.FC<{ product: IProduct }> = ({ product }) => {
       </div>
       <div className="p-4 flex-grow flex flex-col">
         {/* Product Name */}
-        <h3 className="text-m text-gray-700 font-semibold truncate">
+        <h3 className="md:text-m text-sm text-gray-700 font-semibold truncate">
           {product.name}
         </h3>
         <div className="flex justify-between items-center mt-1">
           {/* Product Category */}
           <div>
-            <p className="py-1 my-2 text-xs font-semibold text-green-800 rounded-full">
+            <p className="py-1 text-xs font-semibold text-green-800">
               {product.category.name}
             </p>
             {/* Product Weight */}
             <p className="mt-1 text-xs text-gray-500">
-              {product.weightInKg} kg
+              Berat: {product.weightInKg} kg
             </p>
           </div>
           <div className="mt-1 scale-75 self-end">
@@ -54,8 +54,8 @@ const ProductCard: React.FC<{ product: IProduct }> = ({ product }) => {
         <div className="flex-grow" />
 
         {/* Price and Rating Container */}
-        <div className="mt-3 flex items-center justify-between">
-          <p className="text-lg font-semibold text-gray-900">
+        <div className="flex items-center justify-between gap-4">
+          <p className="md:text-lg text-base font-semibold text-blue-500">
             {new Intl.NumberFormat("id-ID", {
               style: "currency",
               currency: "IDR",
