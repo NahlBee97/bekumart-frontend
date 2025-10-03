@@ -10,8 +10,8 @@ export const BurgerMenu: FC = () => {
   const [activeLink, setActiveLink] = useState("");
   const links = [
     { name: "Home", link: "/" },
-    { name: "About Us", link: "/about" },
-    { name: "Contact Us", link: "/contact" },
+    { name: "Tentang Kami", link: "/about" },
+    { name: "Hubungi Kami", link: "/contact" },
   ];
 
   useEffect(() => {

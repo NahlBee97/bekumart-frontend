@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { IOrder, IOrderItem } from "@/interfaces/orderInterface";
 import { useEffect, useState } from "react";
@@ -6,33 +6,35 @@ import StatusBadge from "../../statusBadge";
 import { getCookie } from "cookies-next";
 import axios from "axios";
 import { apiUrl } from "@/config";
+import { format } from "date-fns";
 
 // --- MODAL COMPONENT ---
 const OrderDetailModal: React.FC<{
   order: IOrder | null;
   onClose: () => void;
 }> = ({ order, onClose }) => {
-
   const [orderItems, setOrderItems] = useState<IOrderItem[]>([]);
-  
-    useEffect(() => {
-      try {
-        const token = getCookie("access_token") as string;
-        const fetchOrderItems = async () => {
-          const response = await axios.get(`${apiUrl}/api/orders/order-items/${order?.id}`, {
+
+  useEffect(() => {
+    try {
+      const token = getCookie("access_token") as string;
+      const fetchOrderItems = async () => {
+        const response = await axios.get(
+          `${apiUrl}/api/orders/order-items/${order?.id}`,
+          {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          });
-          setOrderItems(response.data.data);
-        };
-        fetchOrderItems();
-      } catch (err) {
-        console.log("fail fetching order items" + err);
-      }
-    }, [order]);
-  
-  
+          }
+        );
+        setOrderItems(response.data.data);
+      };
+      fetchOrderItems();
+    } catch (err) {
+      console.log("fail fetching order items" + err);
+    }
+  }, [order]);
+
   // Effect to handle Escape key press for closing the modal
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
@@ -45,7 +47,7 @@ const OrderDetailModal: React.FC<{
       document.removeEventListener("keydown", handleEscape);
     };
   }, [onClose]);
-  
+
   // Return null if no order is selected to render nothing
   if (!order) {
     return null;
@@ -63,10 +65,10 @@ const OrderDetailModal: React.FC<{
         {/* Modal Header */}
         <div className="flex items-start justify-between rounded-t border-b p-4">
           <div>
-            <h3 className="text-xl font-semibold text-gray-900">
-              Order Details
+            <h3 className="md:text-xl font-semibold text-blue-500">
+              Detail Pesanan
             </h3>
-            <p className="text-sm text-gray-500">Order #{order.id}</p>
+            <p className="text-sm text-gray-500">Nomor Pesanan: {order.id}</p>
           </div>
           <button
             type="button"
@@ -97,7 +99,9 @@ const OrderDetailModal: React.FC<{
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div>
               <p className="text-sm font-medium text-gray-500">Order Date</p>
-              <p className="text-base text-gray-800">{order.createdAt}</p>
+              <p className="text-base text-gray-800">
+                {format(order.createdAt, "dd MMMM yyy")}
+              </p>
             </div>
             <div>
               <p className="text-sm font-medium text-gray-500">Status</p>
@@ -105,14 +109,14 @@ const OrderDetailModal: React.FC<{
             </div>
             <div>
               <p className="text-sm font-medium text-gray-500">Total</p>
-              <p className="text-base font-semibold text-gray-800">
-                ${order.totalAmount.toFixed(2)}
+              <p className="text-base font-semibold text-blue-500">
+                Rp {order.totalAmount.toLocaleString()}
               </p>
             </div>
           </div>
 
           <div className="space-y-4">
-            <h4 className="font-semibold text-gray-800">Items in this order</h4>
+            <h4 className="font-semibold text-sm md:text-base text-gray-800">Daftar Pesanan:</h4>
             <div className="flow-root">
               <ul className="-my-4 divide-y divide-gray-200">
                 {orderItems.map((item) => (
@@ -124,33 +128,24 @@ const OrderDetailModal: React.FC<{
                     <img
                       src={item.product.imageUrl}
                       alt={item.product.name}
-                      className="h-16 w-16 flex-shrink-0 rounded-md object-cover"
+                      className="h-16 w-16 border border-gray-200 flex-shrink-0 rounded-md object-cover"
                     />
                     <div className="flex-1">
-                      <p className="font-medium text-gray-900">{item.product.name}</p>
+                      <p className="font-medium text-gray-900">
+                        {item.product.name}
+                      </p>
                       <p className="text-sm text-gray-500">
-                        Qty: {item.quantity}
+                        Jumlah: {item.quantity}
                       </p>
                     </div>
-                    <p className="font-medium text-gray-900">
-                      ${(item.product.price * item.quantity).toFixed(2)}
+                    <p className="font-semibold text-blue-500">
+                      Rp {(item.product.price * item.quantity).toLocaleString()}
                     </p>
                   </li>
                 ))}
               </ul>
             </div>
           </div>
-        </div>
-
-        {/* Modal Footer */}
-        <div className="flex items-center justify-end space-x-2 rounded-b border-t border-gray-200 p-4">
-          <button
-            onClick={onClose}
-            type="button"
-            className="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-800 shadow-sm hover:bg-gray-100 focus:z-10 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          >
-            Close
-          </button>
         </div>
       </div>
     </div>

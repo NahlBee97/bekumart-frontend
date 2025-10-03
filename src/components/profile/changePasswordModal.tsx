@@ -58,8 +58,8 @@ const ChangePasswordModal: FC<ChangePasswordModalProps> = ({
     <div className="fixed inset-0 bg-black/60 z-50 flex justify-center items-center p-4 transition-opacity duration-300 ease-in-out">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-md transform transition-all duration-300 ease-in-out scale-95 opacity-0 animate-fade-in-scale">
         <div className="flex justify-between items-center p-5 border-b border-gray-200 rounded-t-lg">
-          <h2 className="text-xl font-semibold text-gray-900">
-            Change Password
+          <h2 className="text-xl font-semibold text-blue-500">
+            Mengganti Password
           </h2>
           <button
             onClick={onClose}
@@ -88,7 +88,7 @@ const ChangePasswordModal: FC<ChangePasswordModalProps> = ({
                 htmlFor="newPassword"
                 className="block mb-2 text-sm font-medium text-gray-700"
               >
-                New Password
+                Password Baru
               </label>
               <div className="relative">
                 <input
@@ -115,7 +115,7 @@ const ChangePasswordModal: FC<ChangePasswordModalProps> = ({
                 htmlFor="confirmPassword"
                 className="block mb-2 text-sm font-medium text-gray-700"
               >
-                Confirm Password
+                Konfirmasi Password
               </label>
               <div className="relative">
                 <input
@@ -146,14 +146,14 @@ const ChangePasswordModal: FC<ChangePasswordModalProps> = ({
               onClick={onClose}
               className="px-6 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
-              Cancel
+              Batalkan
             </button>
             <button
               type="submit"
               disabled={formik.isSubmitting}
               className="px-6 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-lg shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400 disabled:cursor-not-allowed"
             >
-              {formik.isSubmitting ? "Saving..." : "Save Changes"}
+              {formik.isSubmitting ? "Menyimpan..." : "Simpan"}
             </button>
           </div>
         </form>

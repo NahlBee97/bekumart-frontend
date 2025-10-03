@@ -1,5 +1,5 @@
 import { IAddresses } from "@/interfaces/addressInterface";
-import { XIcon } from "lucide-react";
+import { PlusCircle, XIcon } from "lucide-react";
 
 const AddressListModal = ({
   isOpen,
@@ -27,12 +27,15 @@ const AddressListModal = ({
         >
           <XIcon />
         </button>
-        <h3 className="mb-6 text-xl font-semibold">Shipping Address</h3>
+        <h3 className="mb-6 text-xl text-blue-500 font-semibold">
+          Pilih Alamat Pengiriman
+        </h3>
         <div className="space-y-4 max-h-96 overflow-y-auto">
           {addresses.map((address) => (
             <div key={address.id} className="rounded-md border p-4">
               <p>
-                {address.street}, {address.subdistrict}, {address.district} {address.city}
+                {address.street}, {address.subdistrict}, {address.district}{" "}
+                {address.city}
               </p>
               <p>{address.province}</p>
               <p>{address.phone}</p>
@@ -42,9 +45,9 @@ const AddressListModal = ({
                     onSelect(address);
                     onClose();
                   }}
-                  className="rounded-md bg-slate-700 px-4 py-1 text-sm text-white hover:bg-slate-800"
+                  className="rounded-md bg-blue-500 px-4 py-1 text-sm text-white hover:bg-blue-600"
                 >
-                  Use this address
+                  Gunakan
                 </button>
                 <button
                   onClick={() => onEdit(address)}
@@ -58,9 +61,9 @@ const AddressListModal = ({
         </div>
         <button
           onClick={onAddNew}
-          className="mt-6 w-full rounded-md border border-slate-800 px-6 py-2 text-slate-800 hover:bg-slate-100"
+          className="mt-6 w-full rounded-md inline-flex items-center justify-center gap-2 border border-transparent bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
-          Add New Address
+          <PlusCircle/> Add New Address
         </button>
       </div>
     </div>

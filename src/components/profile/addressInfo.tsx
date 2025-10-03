@@ -119,22 +119,19 @@ export default function AddressInfo() {
       <div className="p-6">
         <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
           <div>
-            <h2 className="text-xl font-semibold text-gray-900">
-              Shipping Addresses
+            <h2 className="md:text-xl font-semibold text-blue-500">
+              Alamat Pengiriman
             </h2>
-            <p className="mt-1 text-sm text-gray-500">
-              Manage your saved addresses for faster checkout.
-            </p>
           </div>
           <button
             onClick={() => {
               setAddressToEdit(null);
               setIsModalOpen(true);
             }}
-            className="inline-flex items-center justify-center gap-2 rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            className="inline-flex items-center justify-center gap-2 rounded-md border border-transparent bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             <PlusCircle className="h-5 w-5" />
-            Add New Address
+            Tambahkan Alamat Baru
           </button>
         </div>
         <div className="mt-6 flow-root">
@@ -149,10 +146,10 @@ export default function AddressInfo() {
                       <MapPin className="h-6 w-6 text-gray-400 mt-1 flex-shrink-0" />
                       <div className="text-sm">
                         <p className="font-medium text-gray-900">
-                          {address.street}, {address.city}
+                          {address.street}
                         </p>
                         <p className="text-gray-500">
-                          {address.city}, {address.postalCode}
+                          {address.subdistrict}, {address.district}, {address.postalCode}
                         </p>
                       </div>
                     </div>
@@ -165,13 +162,13 @@ export default function AddressInfo() {
                       {!address.isDefault && (
                         <button
                           onClick={() => handleSetDefault(address.id)}
-                          className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                          className="text-sm font-medium text-blue-600 hover:text-blue-500"
                         >
                           Set as Default
                         </button>
                       )}
                       <button
-                        className="p-1 text-gray-500 hover:text-indigo-600"
+                        className="p-1 text-gray-500 hover:text-blue-600"
                         onClick={() => {
                           setAddressToEdit(address);
                           setIsModalOpen(true);

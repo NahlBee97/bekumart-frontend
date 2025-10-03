@@ -74,10 +74,10 @@ const ProfileImageUploadModal: FC<ImageUploadModalProps> = ({
     <div className="fixed inset-0 bg-black/50 z-50 flex justify-center items-center p-4">
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-md">
         <div className="p-6 border-b">
-          <h2 className="text-xl font-bold text-gray-800">
-            Change Profile Image
+          <h2 className="text-xl font-bold text-blue-500">
+            Mengganti Foto Profil
           </h2>
-          <p className="text-sm text-gray-600">for {user.name}</p>
+          <p className="text-sm text-gray-600">untuk {user.name}</p>
         </div>
         <div className="p-6 space-y-4">
           {/* eslint-disable-next-line */}
@@ -94,7 +94,7 @@ const ProfileImageUploadModal: FC<ImageUploadModalProps> = ({
               htmlFor="file-upload"
               className="cursor-pointer bg-white border border-gray-300 rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 w-full text-center block"
             >
-              {file ? `Selected: ${file.name}` : "Choose a file..."}
+              {file ? `Memilih: ${file.name}` : "Pilih Foto..."}
             </label>
             <input
               id="file-upload"
@@ -119,7 +119,7 @@ const ProfileImageUploadModal: FC<ImageUploadModalProps> = ({
             disabled={!file || loading}
             className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:outline-none disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
-            {loading ? "Uploading..." : "Upload & Save"}
+            {loading ? "Menyimpan..." : "Upload & Simpan"}
           </button>
         </div>
       </div>

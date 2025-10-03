@@ -1,4 +1,5 @@
 import useAuthStore from "@/stores/useAuthStore";
+import { deleteCookie } from "cookies-next";
 import { LogOut } from "lucide-react";
 import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
@@ -12,8 +13,8 @@ export const ProfileMenu: FC = () => {
 
   const [activeLink, setActiveLink] = useState("");
   const links = [
-    { name: "Profile", link: "/profile" },
-    { name: "Order History", link: "/profile/orders" },
+    { name: "Akun", link: "/profile" },
+    { name: "Riwayat Pesanan", link: "/profile/orders" },
   ];
 
   useEffect(() => {
@@ -49,7 +50,7 @@ export const ProfileMenu: FC = () => {
     <div ref={dropdownRef} className="relative inline-block text-left">
       {/* Burger Button */}
       <button
-      className="flex items-center justify-center"
+        className="flex items-center justify-center"
         type="button"
         onClick={toggleMenu}
         aria-haspopup="true"
@@ -98,10 +99,13 @@ export const ProfileMenu: FC = () => {
           })}
           <li>
             <button
-              onClick={() => logout()}
-              className="flex justify-center items-center gap-2 px-3 py-2 rounded-md text-xs font-medium transition-colors duration-200 hover:bg-neutral-700 hover:text-white"
+              onClick={() => {
+                logout();
+                deleteCookie("access_token");
+              }}
+              className="flex justify-center items-center gap-2 px-3 py-2 rounded-md text-xs font-medium transition-colors duration-200 hover:bg-red-500 hover:text-white"
             >
-              <p>Log out</p> <LogOut className="w-4 h-4" />
+              <p>Keluar</p> <LogOut className="w-4 h-4" />
             </button>
           </li>
         </ul>

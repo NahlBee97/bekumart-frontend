@@ -23,7 +23,6 @@ interface CartState {
   clearCart: () => void;
 }
 
-const token = getCookie("access_token") as string;
 
 export const useCartStore = create<CartState>((set) => ({
   // 1. Initial State
@@ -33,13 +32,14 @@ export const useCartStore = create<CartState>((set) => ({
 
   // 2. Actions
   setCart: (cart: ICart) => set({ cart }),
-
+  
   // Corrected async action
   addToCart: async (userId: string, productId: string) => {
     // Set loading state to true before the API call
     set({ isLoading: true, error: null });
-
+    
     try {
+      const token = getCookie("access_token") as string;
       if (!token) {
         alert("You must be logged in to add items to the cart.");
         throw new Error("No authorization token found.");
@@ -70,12 +70,13 @@ export const useCartStore = create<CartState>((set) => ({
 
   updateItemQuantity: async (userId: string, itemId: string, quantity: number) => {
     set({ isLoading: true, error: null });
-
+    
     try {
+      const token = getCookie("access_token") as string;
       if (!token) {
         throw new Error("No authorization token found.");
       }
-
+      
       await axios.put(
         `${apiUrl}/api/carts/items/${itemId}`,
         { quantity },

@@ -69,7 +69,6 @@ export default function ProductDetailPage({ params }: PageProps) {
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden grid grid-cols-1 md:grid-cols-2 lg:gap-x-12">
           {/* Product Image Section */}
           <div className="relative w-full aspect-square p-8 md:p-12 flex items-center justify-center">
-            {/* Replaced next/image with a standard img tag to resolve the compilation error */}
             {/* eslint-disable-next-line */}
             <img
               src={product.imageUrl}
@@ -81,16 +80,18 @@ export default function ProductDetailPage({ params }: PageProps) {
           {/* Product Details Section */}
           <div className="p-6 md:p-8 flex flex-col justify-center">
             <div>
-              <span className="text-sm font-medium text-blue-600 uppercase tracking-wider">
-                {product.category.name}
-              </span>
-              <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mt-2 mb-4">
+              <h1 className="text-2xl lg:text-4xl font-bold text-blue-500 mt-2 mb-4">
                 {product.name}
               </h1>
+              <span className="text-sm font-medium text-green-600 tracking-wider">
+                {product.category.name}
+              </span>
               <p className="text-gray-600 mb-6 leading-relaxed">
                 {product.description}
               </p>
-
+              <p className="text-gray-600 mb-6 leading-relaxed">
+                Berat: {product.weightInKg} Kg
+              </p>
               <div className="flex items-center space-x-3 mb-6">
                 <StarRatingDetail rating={product.rating} />
                 <span className="text-gray-500 text-sm">10 reviews</span>
@@ -100,19 +101,15 @@ export default function ProductDetailPage({ params }: PageProps) {
             {/* Price and Action Button */}
             <div className="mt-auto pt-6 border-t border-gray-200">
               <div className="flex items-center justify-between">
-                <p className="text-4xl font-extrabold text-gray-900">
-                  {new Intl.NumberFormat("id-ID", {
-                    style: "currency",
-                    currency: "IDR",
-                    minimumFractionDigits: 0,
-                  }).format(product.price)}
+                <p className="text-2xl md:text-4xl font-extrabold text-blue-500">
+                  Rp {product.price.toLocaleString()}
                 </p>
                 <button
                   type="button"
-                  className="flex gap-3 bg-blue-600 text-white font-bold py-3 px-8 rounded-full shadow-md hover:bg-blue-700 transition-all duration-300 ease-in-out transform hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-blue-300"
+                  className="flex items-center gap-3 bg-blue-600 text-sm text-white font-bold py-1.5 md:py-3 px-4 md:px-:4 rounded-full shadow-md hover:bg-blue-700 transition-all duration-300 ease-in-out transform hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-blue-300"
                   onClick={() => addToCart(user.id, product.id)}
                 >
-                  Add to Cart <ShoppingCart className="w-6 h-6" />
+                  Add to Cart <ShoppingCart className="w-4 h-4 md:w-6 md:h-6" />
                 </button>
               </div>
             </div>

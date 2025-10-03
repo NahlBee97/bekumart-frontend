@@ -204,7 +204,7 @@ const AddressModal = ({
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col">
         <div className="p-4 border-b flex justify-between items-center">
-          <h2 className="text-xl font-semibold">
+          <h2 className="md:text-xl font-semibold text-blue-500">
             {address ? "Edit Alamat" : "Tambah Alamat Baru"}
           </h2>
           <button
@@ -218,7 +218,26 @@ const AddressModal = ({
         <div className="p-6 overflow-y-auto">
           <form onSubmit={formik.handleSubmit}>
             {/* Form fields */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="col-span-2">
+                <label
+                  htmlFor="address"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Alamat Lengkap
+                </label>
+                <textarea
+                  id="street"
+                  {...formik.getFieldProps("street")}
+                  rows={3}
+                  className="px-2 py-2 mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                ></textarea>
+                {formik.touched.street && formik.errors.street ? (
+                  <div className="text-red-500 text-sm mt-1">
+                    {formik.errors.street}
+                  </div>
+                ) : null}
+              </div>
               <div>
                 <label
                   htmlFor="phone"
@@ -230,30 +249,11 @@ const AddressModal = ({
                   type="text"
                   id="phone"
                   {...formik.getFieldProps("phone")}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  className="mt-1 px-2 py-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                 />
                 {formik.touched.phone && formik.errors.phone ? (
                   <div className="text-red-500 text-sm mt-1">
                     {formik.errors.phone}
-                  </div>
-                ) : null}
-              </div>
-              <div className="md:col-span-2">
-                <label
-                  htmlFor="address"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Alamat Lengkap
-                </label>
-                <textarea
-                  id="street"
-                  {...formik.getFieldProps("street")}
-                  rows={3}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                ></textarea>
-                {formik.touched.street && formik.errors.street ? (
-                  <div className="text-red-500 text-sm mt-1">
-                    {formik.errors.street}
                   </div>
                 ) : null}
               </div>
@@ -268,7 +268,7 @@ const AddressModal = ({
                   id="province"
                   {...formik.getFieldProps("province")}
                   onChange={handleProvinceChange}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  className="mt-1 px-2 py-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="">Pilih Provinsi</option>
                   {provinces.map((p) => (
@@ -295,7 +295,7 @@ const AddressModal = ({
                   {...formik.getFieldProps("city")}
                   onChange={handleCityChange}
                   disabled={!formik.values.province}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
+                  className="mt-1 px-2 py-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
                 >
                   <option value="">Pilih Kota</option>
                   {formik.values.province &&
@@ -323,7 +323,7 @@ const AddressModal = ({
                   {...formik.getFieldProps("district")}
                   onChange={handleDistrictChange}
                   disabled={!formik.values.city}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
+                  className="mt-1 px-2 py-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
                 >
                   <option value="">Pilih Kecamatan</option>
                   {formik.values.city &&
@@ -341,7 +341,7 @@ const AddressModal = ({
               </div>
               <div>
                 <label
-                  htmlFor="district"
+                  htmlFor="subdistrict"
                   className="block text-sm font-medium text-gray-700"
                 >
                   Desa
@@ -351,7 +351,7 @@ const AddressModal = ({
                   {...formik.getFieldProps("subdistrict")}
                   onChange={handleSubDistrictChange}
                   disabled={!formik.values.district}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
+                  className="mt-1 px-2 py-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
                 >
                   <option value="">Pilih Desa</option>
                   {formik.values.district &&
@@ -378,7 +378,7 @@ const AddressModal = ({
                   type="text"
                   id="postalCode"
                   {...formik.getFieldProps("postalCode")}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  className="mt-1 px-2 py-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                 />
                 {formik.touched.postalCode && formik.errors.postalCode ? (
                   <div className="text-red-500 text-sm mt-1">
