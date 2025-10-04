@@ -13,6 +13,7 @@ interface CartState {
   addToCart: (
     userId: string,
     productId: string,
+    quantity: number
   ) => Promise<void>;
   updateItemQuantity: (
     userId: string,
@@ -34,7 +35,7 @@ export const useCartStore = create<CartState>((set) => ({
   setCart: (cart: ICart) => set({ cart }),
   
   // Corrected async action
-  addToCart: async (userId: string, productId: string) => {
+  addToCart: async (userId: string, productId: string, quantity: number) => {
     // Set loading state to true before the API call
     set({ isLoading: true, error: null });
     
@@ -48,7 +49,7 @@ export const useCartStore = create<CartState>((set) => ({
       // Perform the async API call and wait for the response
       await axios.post(
         `${apiUrl}/api/carts/items`,
-        { userId, productId },
+        { userId, productId, quantity },
         {
           headers: { Authorization: `Bearer ${token}` },
         }

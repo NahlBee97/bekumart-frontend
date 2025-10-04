@@ -2,13 +2,12 @@
 
 import { IProduct } from "@/interfaces/productInterfaces";
 import { StarRating } from "./starRating";
-import AddToCartButton from "../addToCartButton";
 
 // This component displays a single product's information in a styled card.
 const ProductCard: React.FC<{ product: IProduct }> = ({ product }) => {
   return (
     <div
-      className="group relative border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300 ease-in-out bg-white flex flex-col"
+      className="h-[250px] group relative border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300 ease-in-out bg-white flex flex-col"
       onClick={() => {
         // Navigate to product detail page on card click
         window.location.href = `/products/${product.id}`;
@@ -29,40 +28,19 @@ const ProductCard: React.FC<{ product: IProduct }> = ({ product }) => {
           }}
         />
       </div>
-      <div className="p-4 flex-grow flex flex-col">
+      <div className="p-2 flex-grow flex flex-col">
         {/* Product Name */}
-        <h3 className="md:text-m text-sm text-gray-700 font-semibold truncate">
+        <h3 className="md:text-m text-sm text-gray-700 font-semibold line-clamp-2">
           {product.name}
         </h3>
-        <div className="flex justify-between items-center mt-1">
-          {/* Product Category */}
-          <div>
-            <p className="py-1 text-xs font-semibold text-green-800">
-              {product.category.name}
-            </p>
-            {/* Product Weight */}
-            <p className="mt-1 text-xs text-gray-500">
-              Berat: {product.weightInKg} kg
-            </p>
-          </div>
-          <div className="mt-1 scale-75 self-end">
-            <AddToCartButton productId={product.id} />
-          </div>
-        </div>
-
-        {/* Spacer to push price and rating to the bottom */}
-        <div className="flex-grow" />
-
-        {/* Price and Rating Container */}
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col gap-1 mt-1">
           <p className="md:text-lg text-base font-semibold text-blue-500">
-            {new Intl.NumberFormat("id-ID", {
-              style: "currency",
-              currency: "IDR",
-              minimumFractionDigits: 0,
-            }).format(product.price)}
+            Rp {product.price.toLocaleString()}
           </p>
-          <StarRating rating={product.rating} />
+          <div className="flex gap-2">
+            <StarRating rating={product.rating} />
+            <p className="text-xs text-gray-800">1k+ terjual</p>
+          </div>
         </div>
       </div>
     </div>
