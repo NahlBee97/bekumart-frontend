@@ -12,11 +12,14 @@ import Link from "next/link";
 import { useEffect } from "react";
 import { BurgerMenu } from "./burgerMenu";
 import { ProfileMenu } from "./profileMenu";
+import { usePathname } from "next/navigation";
 
 export default function Middle() {
   const token = getCookie("access_token") as string;
   const { cart, setCart } = useCartStore();
   const { isLoggedIn, login } = useAuthStore();
+
+   const pathname = usePathname();
 
   useEffect(() => {
     if (token) {
@@ -72,7 +75,7 @@ export default function Middle() {
             {!isLoggedIn ? (
               <>
                 <Link
-                  href="/login"
+                  href={`/login?callbackUrl=${pathname}`}
                   className="px-3 py-1 md:px-5 md:py-2 text-xs md:text-base text-center text-blue-500 font-semibold rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors"
                 >
                   Masuk

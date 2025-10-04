@@ -19,6 +19,10 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const callbackUrl = urlParams.get("callbackUrl");
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -39,12 +43,14 @@ export default function LoginForm() {
         });
         setFormSuccess("Berhasil login.");
 
-        const userData = jwtDecode<IUser>(token); 
-        
+        const userData = jwtDecode<IUser>(token);
+
         if (userData.role === "ADMIN") {
           router.push("/admin");
+        } else if (callbackUrl && callbackUrl !== "/login" && callbackUrl !== "/register" && userData.role === "CUSTOMER") {
+          router.push(callbackUrl);
         } else {
-          router.push("/");
+          router.push("/home");
         }
       } catch (err) {
         if (axios.isAxiosError(err)) {
