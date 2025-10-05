@@ -86,7 +86,7 @@ export default function AccountInfo() {
           Perbaharui informasi akunmu.
         </p>
 
-        <div className="flex items-center justify-center gap-10 md:gap-20">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-5 md:gap-20">
           <div className="group relative mt-6 flex cursor-pointer items-center justify-center gap-5">
             {/* eslint-disable-next-line */}
             <img
@@ -115,7 +115,7 @@ export default function AccountInfo() {
 
           <form
             onSubmit={formik.handleSubmit}
-            className="md:w-[400px] w-[200px] mt-6 space-y-6"
+            className="md:w-[400px] w-[200px] space-y-4"
           >
             {/* Username Input */}
             <div className="sm:col-span-2">
@@ -190,7 +190,7 @@ export default function AccountInfo() {
                   type="submit"
                   className="inline-flex w-full sm:w-auto justify-center text-xs text-center rounded-md border border-transparent bg-indigo-600 py-2 px-6 md:text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-400 disabled:cursor-wait"
                 >
-                  {formik.isSubmitting ? "Saving Changes..." : "Save Change"}
+                  {formik.isSubmitting ? "Menyimpan..." : "Simpan"}
                 </button>
               ) : (
                 <div
@@ -200,12 +200,21 @@ export default function AccountInfo() {
                   Edit
                 </div>
               )}
-              <div
-                className="inline-flex w-full sm:w-auto justify-center text-xs text-center rounded-md border border-transparent bg-red-600  py-1 px-3 md:py-2 md:px-6 md:text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-400 disabled:cursor-wait"
-                onClick={() => setIsPasswordModalOpen(true)}
-              >
-                Ganti Password
-              </div>
+              {isEditMode ? (
+                <div
+                  className="inline-flex w-full sm:w-auto justify-center items-center text-xs text-center rounded-md border border-transparent bg-red-600 py-1 px-3 md:py-2 md:px-6 md:text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:bg-indigo-400 disabled:cursor-wait"
+                  onClick={() => setIsPasswordModalOpen(false)}
+                >
+                  Batal
+                </div>
+              ) : (
+                <div
+                  className="inline-flex w-full sm:w-auto justify-center items-center text-xs text-center rounded-md border border-transparent bg-red-600 py-1 px-3 md:py-2 md:px-6 md:text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:bg-indigo-400 disabled:cursor-wait"
+                  onClick={() => setIsPasswordModalOpen(true)}
+                >
+                  Ganti Password
+                </div>
+              )}
             </div>
           </form>
         </div>

@@ -39,7 +39,7 @@ const ProductCard: React.FC<{ product: IProduct }> = ({ product }) => {
           </p>
           <div className="flex gap-2">
             <StarRating rating={product.rating} />
-            <p className="text-xs text-gray-800">1k+ terjual</p>
+            <p className="text-xs text-gray-800">{product.sale} terjual</p>
           </div>
         </div>
       </div>

@@ -240,7 +240,7 @@ const CheckoutPage: NextPage = () => {
                       Nama Penerima
                     </h3>
                     <div className="mt-4 rounded-md border border-gray-200 p-4">
-                      <p className="font-medium">{user?.name}</p>
+                      <p className="font-medium">{selectedAddress?.receiver}</p>
                       <p className="text-sm text-gray-500">{user?.email}</p>
                     </div>
                   </div>

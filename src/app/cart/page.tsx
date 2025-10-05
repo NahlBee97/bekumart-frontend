@@ -24,7 +24,7 @@ const CartPage: NextPage = () => {
           Sepertinya kamu belum menambahkan sesuatu, mari belanja!
         </p>
         <Link
-          href="/home"
+          href="/"
           className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-300"
         >
           Lanjut Belanja

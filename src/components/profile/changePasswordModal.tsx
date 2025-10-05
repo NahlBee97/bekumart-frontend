@@ -7,7 +7,6 @@ import axios from "axios";
 import { getCookie } from "cookies-next";
 import { useFormik } from "formik";
 import { FC, useState } from "react";
-import { EyeIcon } from "../register/icons";
 
 // --- IMAGE UPLOAD MODAL ---
 interface ChangePasswordModalProps {
@@ -101,7 +100,6 @@ const ChangePasswordModal: FC<ChangePasswordModalProps> = ({
                       : "border-gray-300 focus:ring-green-500"
                   }`}
                 />
-                <EyeIcon onClick={() => setShowPassword(!showPassword)} />
               </div>
               {formik.touched.newPassword && formik.errors.newPassword && (
                 <p className="text-red-500 text-xs mt-1">
@@ -129,7 +127,6 @@ const ChangePasswordModal: FC<ChangePasswordModalProps> = ({
                       : "border-gray-300 focus:ring-green-500"
                   }`}
                 />
-                <EyeIcon onClick={() => setShowPassword(!showPassword)} />
               </div>
               {formik.touched.confirmPassword &&
                 formik.errors.confirmPassword && (
@@ -137,6 +134,13 @@ const ChangePasswordModal: FC<ChangePasswordModalProps> = ({
                     {formik.errors.confirmPassword}
                   </p>
                 )}
+              <input
+                className="mt-2"
+                type="checkbox"
+                checked={showPassword}
+                onChange={() => setShowPassword(!showPassword)}
+              />{" "}
+              <label>Lihat Password</label>
             </div>{" "}
           </div>
 

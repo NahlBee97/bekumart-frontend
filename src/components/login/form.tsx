@@ -50,7 +50,7 @@ export default function LoginForm() {
         } else if (callbackUrl && callbackUrl !== "/login" && callbackUrl !== "/register" && userData.role === "CUSTOMER") {
           router.push(callbackUrl);
         } else {
-          router.push("/home");
+          router.push("/");
         }
       } catch (err) {
         if (axios.isAxiosError(err)) {

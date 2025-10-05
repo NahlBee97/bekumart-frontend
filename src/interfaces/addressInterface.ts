@@ -1,5 +1,6 @@
 export interface IAddresses {
   id: string;
+  receiver: string;
   street: string;
   subdistrict: string;
   district: string;

@@ -8,6 +8,7 @@ export interface IProduct {
   stock: number;
   weightInKg: number;
   rating: number;
+  sale: number;
   updatedAt: Date;
 }
 

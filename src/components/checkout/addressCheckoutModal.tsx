@@ -24,39 +24,33 @@ const AddressCheckoutModal = ({
   address: IAddresses | null;
 }) => {
   const { user } = useAuthStore();
-  // state in redux
+
   const [provinces, setProvinces] = useState<{ id: string; name: string }[]>(
     []
   );
-  const [selectedProvince, setSelectedProvince] = useState<{
-    id: string;
-    name: string;
-  } | null>(null);
-
   const [cities, setCities] = useState<{ id: string; name: string }[]>([]);
-  const [selectedCity, setSelectedCity] = useState<{
-    id: string;
-    name: string;
-  } | null>(null);
-
   const [districts, setDistricts] = useState<{ id: string; name: string }[]>(
     []
   );
-
-  const [selectedDistrict, setSelectedDistrict] = useState<{
-    id: string;
-    name: string;
-  } | null>(null);
-
   const [subDistricts, setSubDistricts] = useState<
     { id: string; name: string }[]
   >([]);
 
+  const [selectedProvince, setSelectedProvince] = useState<string>("");
+  const [selectedCity, setSelectedCity] = useState<string>("");
+  const [selectedDistrict, setSelectedDistrict] = useState<string>("");
+
   // eslint-disable-next-line
-  const [selectedSubDistrict, setSelectedSubDistrict] = useState<{
-    id: string;
-    name: string;
-  } | null>(null);
+  const [selectedSubDistrict, setSelectedSubDistrict] = useState<string>("");
+
+  useEffect(() => {
+    if (address) {
+      setSelectedProvince(address.province);
+      setSelectedCity(address.city);
+      setSelectedDistrict(address.district);
+      setSelectedSubDistrict(address.subdistrict);
+    }
+  }, [address]);
 
   useEffect(() => {
     const fetchProvinces = async () => {
@@ -76,7 +70,7 @@ const AddressCheckoutModal = ({
       const fetchCities = async () => {
         try {
           const response = await axios.get(
-            `${apiUrl}/api/cities/${selectedProvince.name}`
+            `${apiUrl}/api/cities/${selectedProvince}`
           );
           setCities(response.data.data);
         } catch (error) {
@@ -93,7 +87,7 @@ const AddressCheckoutModal = ({
       const fetchDistricts = async () => {
         try {
           const response = await axios.get(
-            `${apiUrl}/api/districts?province=${selectedProvince?.name}&city=${selectedCity.name}`
+            `${apiUrl}/api/districts?province=${selectedProvince}&city=${selectedCity}`
           );
           setDistricts(response.data.data);
         } catch (error) {
@@ -110,7 +104,7 @@ const AddressCheckoutModal = ({
       const fetchSubDistricts = async () => {
         try {
           const response = await axios.get(
-            `${apiUrl}/api/sub-districts?province=${selectedProvince?.name}&city=${selectedCity?.name}&district=${selectedDistrict.name}`
+            `${apiUrl}/api/sub-districts?province=${selectedProvince}&city=${selectedCity}&district=${selectedDistrict}`
           );
           setSubDistricts(response.data.data);
         } catch (error) {
@@ -126,6 +120,7 @@ const AddressCheckoutModal = ({
     enableReinitialize: true,
     validationSchema: AddressSchema,
     initialValues: address || {
+      receiver: "",
       street: "",
       subdistrict: "",
       district: "",
@@ -138,11 +133,15 @@ const AddressCheckoutModal = ({
       try {
         const token = getCookie("access_token") as string;
         if (address) {
-          const response = await axios.put(`${apiUrl}/api/addresses/${address.id}`, values, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          const response = await axios.put(
+            `${apiUrl}/api/addresses/${address.id}`,
+            values,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
           onSelect(response.data.data);
           alert("Alamat berhasil diedit!");
         } else {
@@ -171,15 +170,15 @@ const AddressCheckoutModal = ({
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const selectedName = event.target.value;
-    const province = provinces.find((p) => p.name === selectedName) || null;
-    setSelectedProvince(province);
+    const province = provinces.find((p) => p.name === selectedName);
+    if (province) setSelectedProvince(province.name);
     formik.setFieldValue("province", province?.name || "");
   };
 
   const handleCityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedName = event.target.value;
-    const city = cities.find((c) => c.name === selectedName) || null;
-    setSelectedCity(city);
+    const city = cities.find((c) => c.name === selectedName);
+    if (city) setSelectedCity(city.name);
     formik.setFieldValue("city", city?.name || "");
   };
 
@@ -187,8 +186,8 @@ const AddressCheckoutModal = ({
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const selectedName = event.target.value;
-    const district = districts.find((d) => d.name === selectedName) || null;
-    setSelectedDistrict(district);
+    const district = districts.find((d) => d.name === selectedName);
+    if (district) setSelectedDistrict(district.name);
     formik.setFieldValue("district", district?.name || "");
   };
 
@@ -196,9 +195,8 @@ const AddressCheckoutModal = ({
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const selectedName = event.target.value;
-    const subdistrict =
-      subDistricts.find((s) => s.name === selectedName) || null;
-    setSelectedSubDistrict(subdistrict);
+    const subdistrict = subDistricts.find((s) => s.name === selectedName);
+    if (subdistrict) setSelectedSubDistrict(subdistrict.name);
     formik.setFieldValue("subdistrict", subdistrict?.name || "");
   };
 
@@ -223,6 +221,25 @@ const AddressCheckoutModal = ({
           <form onSubmit={formik.handleSubmit}>
             {/* Form fields */}
             <div className="grid grid-cols-2 gap-4">
+              <div className="col-span-2">
+                <label
+                  htmlFor="receiver"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Nama Penerima
+                </label>
+                <input
+                  type="text"
+                  id="receiver"
+                  {...formik.getFieldProps("receiver")}
+                  className="mt-1 px-2 py-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                />
+                {formik.touched.receiver && formik.errors.receiver ? (
+                  <div className="text-red-500 text-sm mt-1">
+                    {formik.errors.receiver}
+                  </div>
+                ) : null}
+              </div>
               <div className="col-span-2">
                 <label
                   htmlFor="address"
