@@ -17,17 +17,17 @@ const OrderCard: React.FC<{
       {/* Order Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 p-4 sm:p-6">
         <div className="w-full grid md:grid-cols-2 gap-x-6 gap-y-2 text-sm text-gray-600 sm:flex sm:gap-x-8">
-          <div className="flex justify-between">
-            <div className="flex items-center gap-2 text-white bg-blue-300 px-2 rounded-sm">
+          <div className="flex flex-col gap-2 justify-between">
+            <div className="flex items-center gap-1 text-white bg-blue-300 px-2 rounded-sm">
               <p className="font-medium text-sm">Nomor Pesanan:</p>
               <p className="text-xs text-gray-800">{order.id}</p>
             </div>
-          </div>
-          <div className="w-full flex justify-between gap-8">
-            <div>
-              <p className="font-medium text-sm text-gray-900">Tanggal</p>
+            <div className="flex gap-1">
+              <p className="font-medium text-sm text-gray-900">Tanggal:</p>
               <p>{format(order.createdAt, "dd MMMM yyyy")}</p>
             </div>
+          </div>
+          <div className="w-full flex justify-between gap-8">
             <div>
               <p className="font-medium text-sm text-gray-900">Status</p>
               <StatusBadge status={order.status} />

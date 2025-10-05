@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { apiUrl } from "@/config";
 import { ILogin, IUser } from "@/interfaces/authInterfaces";
 import { EyeIcon } from "../register/icons";
@@ -15,13 +15,20 @@ import { jwtDecode } from "jwt-decode";
 export default function LoginForm() {
   const [formSuccess, setFormSuccess] = useState("");
   const [formError, setFormError] = useState("");
+  const [callbackUrl, setCallbackUrl] = useState<string | null>(null);
 
   const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const callbackUrl = urlParams.get("callbackUrl");
+  useEffect(() => {
+    // This code only runs in the browser
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlFromParams = urlParams.get("callbackUrl");
+    if (urlFromParams) {
+      setCallbackUrl(urlFromParams);
+    }
+  }, []);
 
   const formik = useFormik({
     initialValues: {

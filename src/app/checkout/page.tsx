@@ -12,6 +12,7 @@ import { apiUrl, midtransClientKey } from "@/config";
 import AddressListModal from "@/components/checkout/addressListModal";
 import { useRouter } from "next/navigation";
 import AddressCheckoutModal from "@/components/checkout/addressCheckoutModal";
+import Link from "next/link";
 
 // --- MAIN PAGE COMPONENT ---
 const CheckoutPage: NextPage = () => {
@@ -215,10 +216,16 @@ const CheckoutPage: NextPage = () => {
   if (cart?.items.length === 0) {
     return (
       <div className="flex h-screen items-center justify-center bg-gray-50">
-        <div className="text-center">
+        <div className="flex flex-col gap-4 justify-center items-center">
           <h2 className="mt-4 text-xl font-semibold text-gray-700">
             Tidak ada produk untuk checkout
           </h2>
+          <Link
+            href="/"
+            className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-300"
+          >
+            Lanjut Belanja
+          </Link>
         </div>
       </div>
     );
@@ -451,9 +458,7 @@ const CheckoutPage: NextPage = () => {
                             Rp{" "}
                             {(
                               item.product.price * item.quantity
-                            ).toLocaleString("id-ID", {
-                              minimumFractionDigits: 0,
-                            })}
+                            ).toLocaleString("id-ID")}
                           </p>
                         </div>
                       </div>
@@ -465,27 +470,21 @@ const CheckoutPage: NextPage = () => {
                     <dt className="text-sm text-gray-600">Subtotal</dt>
                     <dd className="text-sm font-medium text-gray-900">
                       Rp{" "}
-                      {subtotal?.toLocaleString("id-ID", {
-                        minimumFractionDigits: 0,
-                      })}
+                      {subtotal?.toLocaleString("id-ID")}
                     </dd>
                   </div>
                   <div className="flex items-center justify-between">
                     <dt className="text-sm text-gray-600">Pengiriman</dt>
                     <dd className="text-sm font-medium text-gray-900">
                       Rp{" "}
-                      {shippingCost.toLocaleString("id-ID", {
-                        minimumFractionDigits: 0,
-                      })}
+                      {shippingCost.toLocaleString("id-ID")}
                     </dd>
                   </div>
                   <div className="flex items-center justify-between">
                     <dt className="text-sm text-gray-600">PPN 11%</dt>
                     <dd className="text-sm font-medium text-gray-900">
                       Rp{" "}
-                      {tax.toLocaleString("id-ID", {
-                        minimumFractionDigits: 0,
-                      })}
+                      {tax.toLocaleString("id-ID")}
                     </dd>
                   </div>
                   <div className="flex items-center justify-between border-t border-gray-200 pt-4">

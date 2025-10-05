@@ -3,7 +3,7 @@ export interface IProduct {
   name: string;
   description: string;
   price: number;
-  imageUrl: string;
+  productPhotos: IProductPhoto[];
   category: ICategory;
   stock: number;
   weightInKg: number;
@@ -15,4 +15,12 @@ export interface IProduct {
 export interface ICategory {
   id: string;
   name: string;
+}
+
+export interface IProductPhoto {
+  id: string;
+  productId: string;
+  imageUrl: string;
+  isDefault: boolean;
+  updatedAt: Date;
 }

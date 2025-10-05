@@ -7,8 +7,8 @@ import { apiUrl } from "@/config";
 import { getCookie } from "cookies-next";
 import { CameraIcon, DeleteIcon, EditIcon, PlusIcon } from "@/components/admin/products/icons";
 import ProductFormModal from "@/components/admin/products/productFormModal";
-import ImageUploadModal from "@/components/admin/products/productImageModal";
 import { FileText } from "lucide-react";
+import ProductPhotoModal from "@/components/admin/products/productPhotoModal";
 
 // --- MAIN COMPONENT ---
 // Renders the entire product table page.
@@ -209,7 +209,7 @@ export default function ProductsTable() {
                           {/* eslint-disable-next-line */}
                           <img
                             src={
-                              product.imageUrl ||
+                              product.productPhotos.find((photo => photo.isDefault === true))?.imageUrl ||
                               "https://placehold.co/40x40/e2e8f0/64748b?text=N/A"
                             }
                             alt={product.name}
@@ -331,7 +331,7 @@ export default function ProductsTable() {
         onSave={handleProductSave}
         productToEdit={productToEdit}
       />
-      <ImageUploadModal
+      <ProductPhotoModal
         isOpen={isImageModalOpen}
         onClose={() => setIsImageModalOpen(false)}
         onSave={handleImageSave}

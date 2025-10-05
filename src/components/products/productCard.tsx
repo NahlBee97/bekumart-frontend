@@ -17,7 +17,7 @@ const ProductCard: React.FC<{ product: IProduct }> = ({ product }) => {
         {/* Product Image */}
         {/* eslint-disable-next-line */}
         <img
-          src={product.imageUrl}
+          src={product.productPhotos.find((photo) => photo.isDefault === true)?.imageUrl}
           alt="product-image"
           className="h-50 w-full object-cover object-center group-hover:opacity-75 transition-opacity duration-300"
           onError={(e) => {
