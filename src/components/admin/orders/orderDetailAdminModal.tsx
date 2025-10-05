@@ -122,7 +122,11 @@ const OrderDetailAdminModal: React.FC<{
                   >
                     {/* eslint-disable-next-line */}
                     <img
-                      src={item.product.imageUrl}
+                      src={
+                        item.product.productPhotos.find(
+                          (photo) => photo.isDefault === true
+                        )?.imageUrl
+                      }
                       alt={item.product.name}
                       className="h-16 w-16 flex-shrink-0 rounded-md object-cover"
                     />

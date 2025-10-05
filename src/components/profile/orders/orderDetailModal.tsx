@@ -116,7 +116,9 @@ const OrderDetailModal: React.FC<{
           </div>
 
           <div className="space-y-4">
-            <h4 className="font-semibold text-sm md:text-base text-gray-800">Daftar Pesanan:</h4>
+            <h4 className="font-semibold text-sm md:text-base text-gray-800">
+              Daftar Pesanan:
+            </h4>
             <div className="flow-root">
               <ul className="-my-4 divide-y divide-gray-200">
                 {orderItems.map((item) => (
@@ -126,7 +128,11 @@ const OrderDetailModal: React.FC<{
                   >
                     {/* eslint-disable-next-line */}
                     <img
-                      src={item.product.imageUrl}
+                      src={
+                        item.product.productPhotos.find(
+                          (photo) => photo.isDefault === true
+                        )?.imageUrl
+                      }
                       alt={item.product.name}
                       className="h-16 w-16 border border-gray-200 flex-shrink-0 rounded-md object-cover"
                     />
