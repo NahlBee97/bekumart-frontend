@@ -438,7 +438,7 @@ const CheckoutPage: NextPage = () => {
                       <div className="flex-shrink-0">
                         {/* eslint-disable-next-line */}
                         <img
-                          src={item.product.imageUrl}
+                          src={item.product.productPhotos.find((photo) => photo.isDefault === true)?.imageUrl}
                           alt={`Image of ${item.product.name}`}
                           className="h-24 w-24 rounded-md border border-gray-300 object-cover object-center sm:h-32 sm:w-32"
                         />
