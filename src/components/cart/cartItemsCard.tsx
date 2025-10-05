@@ -54,7 +54,10 @@ const CartItemCard: React.FC<{ item: ICartItem }> = ({ item }) => {
       <div className="flex-shrink-0">
         {/* eslint-disable-next-line */}
         <img
-          src={item.product.imageUrl}
+          src={
+            item.product.productPhotos.find((photo) => photo.isDefault === true)
+              ?.imageUrl
+          }
           alt="product image"
           className="w-24 h-24 border border-gray-300 rounded-md object-cover sm:w-32 sm:h-32"
         />
