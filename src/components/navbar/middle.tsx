@@ -2,7 +2,6 @@
 
 import { apiUrl } from "@/config";
 import { IUser } from "@/interfaces/authInterfaces";
-import useAuthStore from "@/stores/useAuthStore";
 import { useCartStore } from "@/stores/useCartStore";
 import axios from "axios";
 import { getCookie } from "cookies-next";
@@ -13,6 +12,7 @@ import { useEffect } from "react";
 import { BurgerMenu } from "./burgerMenu";
 import { ProfileMenu } from "./profileMenu";
 import { usePathname } from "next/navigation";
+import useAuthStore from "@/stores/useAuthStore";
 
 export default function Middle() {
   const token = getCookie("access_token") as string;
@@ -97,7 +97,7 @@ export default function Middle() {
           {isLoggedIn && (
             <div className="flex items-center gap-3">
               <div className="relative">
-                <Link href={"/cart"} className="flex items-center mr-1">
+                <Link href={`/cart?callbackUrl=${pathname}`} className="flex items-center mr-1">
                   <ShoppingCart className="w-6 h-6" />
                 </Link>
                 {cart && (

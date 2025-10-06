@@ -1,14 +1,36 @@
 "use client";
 
 import type { NextPage } from "next";
-import { ShoppingCart } from "lucide-react";
+import { ArrowLeft, ShoppingCart } from "lucide-react";
 import { useCartStore } from "@/stores/useCartStore";
 import Link from "next/link";
 import CartItemCard from "@/components/cart/cartItemsCard";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const CartPage: NextPage = () => {
+  const router = useRouter();
   const { cart } = useCartStore();
+  const [isLoading, setIsLoading] = useState(false);
+  const [callbackUrl, setCallbackUrl] = useState<string | null>(null);
 
+  useEffect(() => {
+    // This code only runs in the browser
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlFromParams = urlParams.get("callbackUrl");
+    if (urlFromParams) {
+      setCallbackUrl(urlFromParams);
+    }
+  }, []);
+
+  const handleArrowClicked = () => {
+    const forbiddenRoutes = ["/login", "/register", "/checkout"];
+    if (callbackUrl && !forbiddenRoutes.includes(callbackUrl)) {
+      router.push(callbackUrl);
+    } else {
+      router.push("/");
+    }
+  };
   // Empty Cart View
   if (cart?.items.length === 0) {
     return (
@@ -37,7 +59,11 @@ const CartPage: NextPage = () => {
   return (
     <>
       <div className="min-h-screen">
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <ArrowLeft
+          className="h-6 w-6 mt-2 ml-2 text-blue-500"
+          onClick={handleArrowClicked}
+        />
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-xl md:text-3xl font-extrabold tracking-tight text-blue-500 sm:text-4xl mb-8">
               Keranjang Belanja
@@ -45,10 +71,7 @@ const CartPage: NextPage = () => {
 
             <div className="flex flex-col lg:gap-8">
               {/* Cart Items List */}
-              <section
-                aria-labelledby="cart-heading"
-                className="lg:col-span-7"
-              >
+              <section aria-labelledby="cart-heading" className="lg:col-span-7">
                 <ul role="list">
                   {cart?.items.map((item) => (
                     <li key={item.id} className="flex mb-4">
@@ -66,7 +89,7 @@ const CartPage: NextPage = () => {
                   id="summary-heading"
                   className="text-xl font-bold text-blue-500"
                 >
-                  Order Summary
+                  Ringkasan Pesanan
                 </h2>
 
                 <dl className="mt-6 space-y-4">
@@ -83,11 +106,18 @@ const CartPage: NextPage = () => {
 
                 <div className="mt-4">
                   <button
-                    type="submit"
-                    onClick={() => (window.location.href = "/checkout")}
-                    className="w-full font-bold bg-blue-500 border border-transparent rounded-md shadow-sm py-3 px-4 text-base  text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-blue-500 transition-transform transform hover:scale-105"
+                    onClick={() => {
+                      setIsLoading(true);
+                      window.location.href = "/checkout";
+                    }}
+                    disabled={isLoading}
+                    className="w-full flex items-center justify-center font-bold bg-blue-500 border border-transparent rounded-md shadow-sm py-3 px-4 text-base text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-blue-500 transition-transform transform hover:scale-105"
                   >
-                    Checkout
+                    {isLoading ? (
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                    ) : (
+                      "Checkout"
+                    )}
                   </button>
                 </div>
               </section>

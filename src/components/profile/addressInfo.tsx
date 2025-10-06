@@ -8,6 +8,7 @@ import { apiUrl } from "@/config";
 import { getCookie } from "cookies-next";
 import { IAddresses } from "@/interfaces/addressInterface";
 import AddressModal from "./addressModal";
+import { AddressInfoSkeleton } from "./addressInfoSkeleton";
 
 // --- Main Component ---
 export default function AddressInfo() {
@@ -25,12 +26,17 @@ export default function AddressInfo() {
       throw new Error("No access token found");
     }
     try {
+      if (!user?.id) {
+        setIsLoading(false);
+        return;
+      }
       const { data } = await axios.get(`${apiUrl}/api/addresses/${user.id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       setAddresses(data.data);
+      setIsLoading(false);
     } catch (error) {
       console.error("Error fetching addresses:", error);
       throw error; // Re-throw to be caught by the caller
@@ -38,31 +44,21 @@ export default function AddressInfo() {
   }, [user?.id]);
 
   useEffect(() => {
-    const loadAddresses = async () => {
-      if (!user?.id) {
-        console.log("No user ID available");
-        setIsLoading(false);
-        return;
-      }
-
-      try {
-        await fetchUserAddresses();
-      } catch (err) {
-        alert("Error loading user addresses.");
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadAddresses();
-    // eslint-disable-next-line
-  }, [user?.id]);
+    fetchUserAddresses();
+  }, [fetchUserAddresses]);
 
   // --- Event Handlers ---
   const handleDeleteAddress = async (id: string) => {
     try {
+      confirm("apakah kamu yakin ingin menghapus alamat ini?");
       const token = getCookie("access_token") as string;
+      const mainAddress = addresses.find(
+        (address) => address.isDefault === true
+      );
+      if (mainAddress) {
+        alert("Tidak dapat menghapus alamat utama.");
+        return;
+      }
       await axios.delete(`${apiUrl}/api/addresses/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -97,22 +93,7 @@ export default function AddressInfo() {
     }
   };
 
-  const SkeletonLoader = () => (
-    <div className="space-y-4">
-      {[...Array(2)].map((_, i) => (
-        <div
-          key={i}
-          className="flex justify-between items-center py-4 animate-pulse"
-        >
-          <div className="space-y-2">
-            <div className="h-4 bg-gray-200 rounded w-48"></div>
-            <div className="h-4 bg-gray-200 rounded w-32"></div>
-          </div>
-          <div className="h-8 bg-gray-200 rounded w-24"></div>
-        </div>
-      ))}
-    </div>
-  );
+  if (isLoading) return <AddressInfoSkeleton/>
 
   return (
     <div className="bg-white shadow-md sm:rounded-lg overflow-hidden">
@@ -135,59 +116,56 @@ export default function AddressInfo() {
           </button>
         </div>
         <div className="mt-6 flow-root">
-          {isLoading ? (
-            <SkeletonLoader />
-          ) : (
-            <ul role="list" className="-my-5 divide-y divide-gray-200">
-              {addresses.map((address) => (
-                <li key={address.id} className="py-5">
-                  <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
-                    <div className="flex items-start gap-3">
-                      <MapPin className="h-6 w-6 text-gray-400 mt-1 flex-shrink-0" />
-                      <div className="text-sm">
-                        <p className="font-medium text-gray-900">
-                          {address.street}
-                        </p>
-                        <p className="text-gray-500">
-                          {address.subdistrict}, {address.district}, {address.postalCode}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4 self-end sm:self-center">
-                      {address.isDefault && (
-                        <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
-                          Default
-                        </span>
-                      )}
-                      {!address.isDefault && (
-                        <button
-                          onClick={() => handleSetDefault(address.id)}
-                          className="text-sm font-medium text-blue-600 hover:text-blue-500"
-                        >
-                          Set as Default
-                        </button>
-                      )}
-                      <button
-                        className="p-1 text-gray-500 hover:text-blue-600"
-                        onClick={() => {
-                          setAddressToEdit(address);
-                          setIsModalOpen(true);
-                        }}
-                      >
-                        <Edit3 className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteAddress(address.id)}
-                        className="p-1 text-gray-500 hover:text-red-600"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
+          <ul role="list" className="-my-5 divide-y divide-gray-200">
+            {addresses.map((address) => (
+              <li key={address.id} className="py-5">
+                <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+                  <div className="flex items-start gap-3">
+                    <MapPin className="h-6 w-6 text-gray-400 mt-1 flex-shrink-0" />
+                    <div className="text-sm">
+                      <p className="font-medium text-gray-900">
+                        {address.street}
+                      </p>
+                      <p className="text-gray-500">
+                        {address.subdistrict}, {address.district},{" "}
+                        {address.postalCode}
+                      </p>
                     </div>
                   </div>
-                </li>
-              ))}
-            </ul>
-          )}
+                  <div className="flex items-center gap-4 self-end sm:self-center">
+                    {address.isDefault && (
+                      <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+                        Utama
+                      </span>
+                    )}
+                    {!address.isDefault && (
+                      <button
+                        onClick={() => handleSetDefault(address.id)}
+                        className="text-sm font-medium text-blue-600 hover:text-blue-500"
+                      >
+                        Jadikan Alamat Utama
+                      </button>
+                    )}
+                    <button
+                      className="p-1 text-gray-500 hover:text-blue-600"
+                      onClick={() => {
+                        setAddressToEdit(address);
+                        setIsModalOpen(true);
+                      }}
+                    >
+                      <Edit3 className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteAddress(address.id)}
+                      className="p-1 text-gray-500 hover:text-red-600"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
       <AddressModal

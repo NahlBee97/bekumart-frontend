@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import type { NextPage } from "next";
-import { StoreIcon, TruckIcon } from "lucide-react";
+import { NextPage } from "next";
+import { ArrowLeft, StoreIcon, TruckIcon } from "lucide-react";
 import useAuthStore from "@/stores/useAuthStore";
 import { useCartStore } from "@/stores/useCartStore";
 import { IAddresses } from "@/interfaces/addressInterface";
@@ -13,6 +13,7 @@ import AddressListModal from "@/components/checkout/addressListModal";
 import { useRouter } from "next/navigation";
 import AddressCheckoutModal from "@/components/checkout/addressCheckoutModal";
 import Link from "next/link";
+import Loading from "@/components/loading";
 
 // --- MAIN PAGE COMPONENT ---
 const CheckoutPage: NextPage = () => {
@@ -30,8 +31,10 @@ const CheckoutPage: NextPage = () => {
     null
   );
   const [shippingCost, setShippingCost] = useState(0);
-  const [isListModalOpen, setListModalOpen] = useState(false);
-  const [isFormModalOpen, setFormModalOpen] = useState(false);
+  const [isListModalOpen, setListModalOpen] = useState<boolean>(false);
+  const [isFormModalOpen, setFormModalOpen] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isCalculating, setIsCalculating] = useState<boolean>(false);
   const [editingAddress, setEditingAddress] = useState<IAddresses | null>(null);
 
   const fetchUserAddresses = useCallback(async () => {
@@ -66,37 +69,18 @@ const CheckoutPage: NextPage = () => {
   }, [user?.id, selectedAddress, cart?.items.length]);
 
   useEffect(() => {
-    const loadAddresses = async () => {
-      if (!user?.id || !cart?.items.length) {
-        console.log("No user ID or empty cart");
-        setIsLoading(false);
-        return;
-      }
-
-      try {
-        await fetchUserAddresses();
-      } catch (err) {
-        console.error("Error loading user addresses:", err);
-        // Only show alert if cart is not empty (meaningful error)
-        if (cart?.items.length > 0) {
-          alert("Error loading user addresses.");
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    setIsLoading(true); // Set loading state before fetching
-    loadAddresses();
-    // eslint-disable-next-line
-  }, [user?.id, cart?.items.length]);
+    fetchUserAddresses();
+    setIsLoading(false);
+  }, [fetchUserAddresses]);
 
   // Effect to update shipping cost based on delivery method or address change
   useEffect(() => {
     const calculateShipping = async () => {
       try {
+        setIsCalculating(true);
         if (deliveryMethod === "PICKUP") {
           setShippingCost(0);
+          setIsCalculating(false);
           return;
         }
 
@@ -121,6 +105,7 @@ const CheckoutPage: NextPage = () => {
         if (typeof data.shippingCost === "number") {
           setShippingCost(data.shippingCost);
         }
+        setIsCalculating(false);
       } catch (err) {
         console.error("Error calculating shipping cost:", err);
         alert("Error calculating shipping cost.");
@@ -145,6 +130,7 @@ const CheckoutPage: NextPage = () => {
 
   const handleConfirmOrder = async () => {
     try {
+      setIsSubmitting(true);
       const token = getCookie("access_token") as string;
       if (!token) {
         throw new Error("No access token found");
@@ -175,6 +161,7 @@ const CheckoutPage: NextPage = () => {
         router.push(`/success?order_id=${orderId}`);
 
       clearCart();
+      setIsSubmitting(false);
     } catch (err) {
       alert("Error checking out");
       console.log("Error checking out:", err);
@@ -200,18 +187,7 @@ const CheckoutPage: NextPage = () => {
   const tax = subtotal ? subtotal * 0.11 : 0;
   const total = subtotal ? subtotal + shippingCost + tax : 0;
 
-  if (isLoading) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin border-slate-600"></div>
-          <h2 className="mt-4 text-xl font-semibold text-gray-700">
-            Verifying your cart...
-          </h2>
-        </div>
-      </div>
-    );
-  }
+  if (isLoading) return <Loading />;
 
   if (cart?.items.length === 0) {
     return (
@@ -234,7 +210,11 @@ const CheckoutPage: NextPage = () => {
   return (
     <>
       <div className="min-h-screen font-sans text-gray-800">
-        <main className="mx-auto max-w-7xl px-4 pb-8 pt-8 sm:px-6 lg:px-8">
+        <ArrowLeft
+          className="h-6 w-6 mt-2 ml-2 text-blue-500"
+          onClick={() => router.push("/cart")}
+        />
+        <main className="mx-auto max-w-7xl px-4 pb-4 pt-2 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl lg:max-w-none">
             <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-blue-500 sm:text-4xl">
               Checkout
@@ -438,7 +418,11 @@ const CheckoutPage: NextPage = () => {
                       <div className="flex-shrink-0">
                         {/* eslint-disable-next-line */}
                         <img
-                          src={item.product.productPhotos.find((photo) => photo.isDefault === true)?.imageUrl}
+                          src={
+                            item.product.productPhotos.find(
+                              (photo) => photo.isDefault === true
+                            )?.imageUrl
+                          }
                           alt={`Image of ${item.product.name}`}
                           className="h-24 w-24 rounded-md border border-gray-300 object-cover object-center sm:h-32 sm:w-32"
                         />
@@ -453,7 +437,9 @@ const CheckoutPage: NextPage = () => {
                           </p>
                         </div>
                         <div className="flex items-end justify-between text-sm">
-                          <p className="text-gray-700">Jumlah {item.quantity}</p>
+                          <p className="text-gray-700">
+                            Jumlah {item.quantity}
+                          </p>
                           <p className="font-medium text-gray-900">
                             Rp{" "}
                             {(
@@ -469,22 +455,23 @@ const CheckoutPage: NextPage = () => {
                   <div className="flex items-center justify-between">
                     <dt className="text-sm text-gray-600">Subtotal</dt>
                     <dd className="text-sm font-medium text-gray-900">
-                      Rp{" "}
-                      {subtotal?.toLocaleString("id-ID")}
+                      Rp {subtotal?.toLocaleString("id-ID")}
                     </dd>
                   </div>
                   <div className="flex items-center justify-between">
                     <dt className="text-sm text-gray-600">Pengiriman</dt>
                     <dd className="text-sm font-medium text-gray-900">
-                      Rp{" "}
-                      {shippingCost.toLocaleString("id-ID")}
+                      {isCalculating ? (
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
+                      ) : (
+                        `Rp ${shippingCost.toLocaleString("id-ID")}`
+                      )}
                     </dd>
                   </div>
                   <div className="flex items-center justify-between">
                     <dt className="text-sm text-gray-600">PPN 11%</dt>
                     <dd className="text-sm font-medium text-gray-900">
-                      Rp{" "}
-                      {tax.toLocaleString("id-ID")}
+                      Rp {tax.toLocaleString("id-ID")}
                     </dd>
                   </div>
                   <div className="flex items-center justify-between border-t border-gray-200 pt-4">
@@ -503,9 +490,13 @@ const CheckoutPage: NextPage = () => {
                   <button
                     type="submit"
                     onClick={handleConfirmOrder}
-                    className="w-full rounded-md border border-transparent bg-blue-500 px-4 py-3 text-base font-semibold text-white shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+                    className="w-full flex items-center justify-center rounded-md border border-transparent bg-blue-500 px-4 py-3 text-base font-semibold text-white shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-50"
                   >
-                    Konfirmasi Pembelanjaan
+                    {isSubmitting ? (
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                    ) : (
+                      "Konfirmasi Pembelanjaan"
+                    )}
                   </button>
                 </div>
               </section>

@@ -15,6 +15,17 @@ const OrderDetailModal: React.FC<{
 }> = ({ order, onClose }) => {
   const [orderItems, setOrderItems] = useState<IOrderItem[]>([]);
 
+  // --- CHANGE 1: Add state and useEffect for the animation ---
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    if (order) {
+      // When an order is passed, start the enter animation
+      const timer = setTimeout(() => setShow(true), 10);
+      return () => clearTimeout(timer);
+    }
+  }, [order]);
+
   useEffect(() => {
     try {
       const token = getCookie("access_token") as string;
@@ -48,6 +59,16 @@ const OrderDetailModal: React.FC<{
     };
   }, [onClose]);
 
+  // --- FIX 2: Create a function to handle the exit animation ---
+  const handleClose = () => {
+    // 1. Start the exit animation
+    setShow(false);
+    // 2. Wait for the animation to finish (300ms), then call the parent's onClose
+    setTimeout(() => {
+      onClose();
+    }, 300); // This duration MUST match your CSS transition duration
+  };
+
   // Return null if no order is selected to render nothing
   if (!order) {
     return null;
@@ -55,11 +76,15 @@ const OrderDetailModal: React.FC<{
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 transition-opacity duration-300 animate-fadeIn"
-      onClick={onClose} // Close modal on overlay click
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 transition-opacity duration-300 ease-in-out ${
+        show ? "opacity-100" : "opacity-0"
+      }`}
+      onClick={handleClose} // Close modal on overlay click
     >
       <div
-        className="relative mx-4 w-full max-w-2xl transform rounded-lg bg-white text-left shadow-xl transition-all animate-scaleIn"
+        className={`relative mx-4 w-full max-w-2xl transform rounded-lg bg-white text-left shadow-xl transition-all ease-in-out ${
+          show ? "scale-100 opacity-100" : "scale-95 opacity-0"
+        }`}
         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
       >
         {/* Modal Header */}

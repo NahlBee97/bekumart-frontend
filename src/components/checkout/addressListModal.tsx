@@ -1,5 +1,8 @@
+"use client"
+
 import { IAddresses } from "@/interfaces/addressInterface";
 import { PlusCircle, XIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const AddressListModal = ({
   isOpen,
@@ -16,11 +19,28 @@ const AddressListModal = ({
   onAddNew: () => void;
   onEdit: (address: IAddresses) => void;
 }) => {
+ // --- CHANGE 1: Add state and useEffect for the animation ---
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      // Use a tiny timeout to let the element render before starting the transition
+      const timer = setTimeout(() => setShow(true), 10);
+      return () => clearTimeout(timer);
+    } else {
+      setShow(false);
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="relative w-full max-w-lg rounded-lg bg-white p-8 shadow-xl">
+    <div className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 transition-opacity duration-300 ease-in-out ${
+        show ? "opacity-100" : "opacity-0"
+      }`}>
+      <div className={`relative w-full max-w-lg rounded-lg bg-white p-8 shadow-xl transform transition-all duration-300 ease-in-out ${
+          show ? "scale-100 opacity-100" : "scale-95 opacity-0"
+        }`}>
         <button
           onClick={onClose}
           className="absolute right-4 top-4 text-gray-500 hover:text-gray-800"

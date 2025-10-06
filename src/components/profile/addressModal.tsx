@@ -22,7 +22,7 @@ const AddressModal = ({
   address: IAddresses | null;
 }) => {
   const { user } = useAuthStore();
-  
+
   const [provinces, setProvinces] = useState<{ id: string; name: string }[]>(
     []
   );
@@ -40,7 +40,9 @@ const AddressModal = ({
 
   // eslint-disable-next-line
   const [selectedSubDistrict, setSelectedSubDistrict] = useState<string>("");
-
+  // --- CHANGE 1: Add a state to control the animation ---
+  const [show, setShow] = useState(false);
+  
   useEffect(() => {
     if (address) {
       setSelectedProvince(address.province);
@@ -49,6 +51,17 @@ const AddressModal = ({
       setSelectedSubDistrict(address.subdistrict);
     }
   }, [address]);
+
+  // --- CHANGE 2: Use useEffect to trigger the animation ---
+  useEffect(() => {
+    if (isOpen) {
+      // Use a tiny timeout to allow the component to mount before starting the transition
+      const timer = setTimeout(() => setShow(true), 10);
+      return () => clearTimeout(timer);
+    } else {
+      setShow(false);
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     const fetchProvinces = async () => {
@@ -195,8 +208,16 @@ const AddressModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+    <div
+      className={`fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4 transition-opacity duration-300 ease-in-out ${
+        show ? "opacity-100" : "opacity-0"
+      }`}
+    >
+      <div
+        className={`bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col transition-all duration-300 ease-in-out ${
+          show ? "opacity-100 scale-100" : "opacity-0 scale-95"
+        }`}
+      >
         <div className="p-4 border-b flex justify-between items-center">
           <h2 className="md:text-xl font-semibold text-blue-500">
             {address ? "Edit Alamat" : "Tambah Alamat Baru"}
@@ -411,16 +432,24 @@ const AddressModal = ({
               {address ? (
                 <button
                   type="submit"
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                  className="w-40 flex items-center justify-center bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
                 >
-                  {formik.isSubmitting ? "Mengubah..." : "Ubah Alamat"}
+                  {formik.isSubmitting ? (
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                  ) : (
+                    "Ubah Alamat"
+                  )}
                 </button>
               ) : (
                 <button
                   type="submit"
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                  className="w-40 flex items-center justify-center bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
                 >
-                  {formik.isSubmitting ? "Menambahkan..." : "Tambah Alamat"}
+                  {formik.isSubmitting ? (
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                  ) : (
+                    "Tambah Alamat"
+                  )}
                 </button>
               )}
             </div>

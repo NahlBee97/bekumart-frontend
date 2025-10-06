@@ -5,10 +5,11 @@ import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { apiUrl } from "@/config";
 import { StarRating } from "@/components/products/starRating";
-// import { useCartStore } from "@/stores/useCartStore";
-// import useAuthStore from "@/stores/useAuthStore";
 import StickyAddToCart from "@/components/products/stickyAddToCart";
 import ImageSlider from "@/components/products/imageSlider";
+import Loading from "@/components/loading";
+import { ArrowLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export interface PageProps {
   params: Promise<{
@@ -18,18 +19,17 @@ export interface PageProps {
 
 // --- MAIN PAGE COMPONENT ---
 export default function ProductDetailPage({ params }: PageProps) {
+  const router = useRouter();
   const [product, setProduct] = useState<IProduct | null>(null);
   const [photos, setPhotos] = useState<IProductPhoto[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [resolvedParams, setResolvedParams] = useState<{
     id: string;
   } | null>(null);
-  // const { user } = useAuthStore();
-  // const { addToCart } = useCartStore();
 
   const fetchProductPhotos = useCallback(async () => {
-    setIsLoading(true);
     try {
+      setIsLoading(true);
       const { data } = await axios.get(
         `${apiUrl}/api/product-photos/${product?.id}`
       );
@@ -76,22 +76,18 @@ export default function ProductDetailPage({ params }: PageProps) {
     }
   }, [product, fetchProductPhotos]);
 
-  // This handles the fallback state from getStaticPaths.
-  // While 'blocking' waits for the page to generate, this is good practice.
-  if (!product) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div>Loading product details...</div>
-      </div>
-    );
-  }
+  if (!product || isLoading) return <Loading />;
 
   return (
     <main className="container">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:gap-x-12">
+        <ArrowLeft
+          className="h-6 w-6 mt-2 ml-2 text-blue-500"
+          onClick={() => router.push("/")}
+        />
         {/* Product Image Section */}
         <div className="relative w-full aspect-square p-8 md:p-12 flex items-center justify-center">
-          <ImageSlider photos={photos}/>
+          <ImageSlider photos={photos} />
         </div>
 
         {/* Product Main title Section */}

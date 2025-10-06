@@ -102,6 +102,7 @@ export const ProfileMenu: FC = () => {
               onClick={() => {
                 logout();
                 deleteCookie("access_token");
+                window.location.href = "/";
               }}
               className="flex justify-center items-center gap-2 px-3 py-2 rounded-md text-xs font-medium transition-colors duration-200 hover:bg-red-500 hover:text-white"
             >

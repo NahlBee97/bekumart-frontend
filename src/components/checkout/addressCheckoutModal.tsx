@@ -42,6 +42,8 @@ const AddressCheckoutModal = ({
 
   // eslint-disable-next-line
   const [selectedSubDistrict, setSelectedSubDistrict] = useState<string>("");
+  // --- CHANGE 1: Add state and useEffect for the animation ---
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     if (address) {
@@ -51,6 +53,16 @@ const AddressCheckoutModal = ({
       setSelectedSubDistrict(address.subdistrict);
     }
   }, [address]);
+
+  useEffect(() => {
+    if (isOpen) {
+      // Use a tiny timeout to let the element render before starting the transition
+      const timer = setTimeout(() => setShow(true), 10);
+      return () => clearTimeout(timer);
+    } else {
+      setShow(false);
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     const fetchProvinces = async () => {
@@ -203,8 +215,12 @@ const AddressCheckoutModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+    <div className={`fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4 transition-opacity duration-300 ease-in-out ${
+        show ? "opacity-100" : "opacity-0"
+      }`}>
+      <div className={`bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col transform transition-all duration-300 ease-in-out ${
+          show ? "scale-100 opacity-100" : "scale-95 opacity-0"
+        }`}>
         <div className="p-4 border-b flex justify-between items-center">
           <h2 className="text-xl text-blue-500 font-semibold">
             {address ? "Edit Alamat" : "Tambah Alamat Baru"}
@@ -419,16 +435,24 @@ const AddressCheckoutModal = ({
               {address ? (
                 <button
                   type="submit"
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                  className="w-40 flex items-center justify-center bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
                 >
-                  {formik.isSubmitting ? "Mengubah..." : "Ubah Alamat"}
+                  {formik.isSubmitting ? (
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                  ) : (
+                    "Ubah Alamat"
+                  )}
                 </button>
               ) : (
                 <button
                   type="submit"
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                  className="w-40 flex items-center justify-center bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
                 >
-                  {formik.isSubmitting ? "Menambahkan..." : "Tambah Alamat"}
+                  {formik.isSubmitting ? (
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                  ) : (
+                    "Tambah Alamat"
+                  )}
                 </button>
               )}
             </div>

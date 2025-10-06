@@ -1,5 +1,6 @@
 "use client";
 
+import Loading from "@/components/loading";
 import ProductCard from "@/components/products/productCard";
 import { apiUrl } from "@/config";
 import { ICategory, IProduct } from "@/interfaces/productInterfaces";
@@ -109,9 +110,8 @@ export default function Home() {
 
   const filteredProducts = useMemo(() => {
     return products
-      .filter(
-        (product) =>
-          product.name.toLowerCase().includes(searchTerm.toLowerCase())
+      .filter((product) =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase())
       )
       .filter(
         (product) =>
@@ -131,13 +131,7 @@ export default function Home() {
   );
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
-  if (loading) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-gray-50">
-        <p className="text-xl text-gray-600">Loading products...</p>
-      </div>
-    );
-  }
+  if (loading) return <Loading />;
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -273,9 +267,7 @@ export default function Home() {
           </div>
         ) : (
           <div className="text-center py-10">
-            <p className="text-gray-500">
-              No products found matching your filters.
-            </p>
+            <p className="text-gray-500">Produk tidak ditemukan.</p>
           </div>
         )}
 

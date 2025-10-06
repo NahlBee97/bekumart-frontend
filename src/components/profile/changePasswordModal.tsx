@@ -6,7 +6,7 @@ import { ChangePasswordSchema } from "@/schemas/authSchemas";
 import axios from "axios";
 import { getCookie } from "cookies-next";
 import { useFormik } from "formik";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 // --- IMAGE UPLOAD MODAL ---
 interface ChangePasswordModalProps {
@@ -21,6 +21,19 @@ const ChangePasswordModal: FC<ChangePasswordModalProps> = ({
   user,
 }) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
+
+  // --- CHANGE 1: Add state and useEffect for the animation ---
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      // Use a tiny timeout to let the element render before starting the transition
+      const timer = setTimeout(() => setShow(true), 10);
+      return () => clearTimeout(timer);
+    } else {
+      setShow(false);
+    }
+  }, [isOpen]);
 
   const formik = useFormik<IPasswordChange>({
     initialValues: {
@@ -54,8 +67,18 @@ const ChangePasswordModal: FC<ChangePasswordModalProps> = ({
   if (!isOpen || !user) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 z-50 flex justify-center items-center p-4 transition-opacity duration-300 ease-in-out">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-md transform transition-all duration-300 ease-in-out scale-95 opacity-0 animate-fade-in-scale">
+    // --- CHANGE 2: Add transition and conditional opacity to the backdrop ---
+    <div
+      className={`fixed inset-0 bg-black/60 z-50 flex justify-center items-center p-4 transition-opacity duration-300 ease-in-out ${
+        show ? "opacity-100" : "opacity-0"
+      }`}
+    >
+      {/* --- CHANGE 3: Remove the keyframes class and use conditional transition classes --- */}
+      <div
+        className={`bg-white rounded-lg shadow-xl w-full max-w-md transform transition-all duration-300 ease-in-out ${
+          show ? "scale-100 opacity-100" : "scale-95 opacity-0"
+        }`}
+      >
         <div className="flex justify-between items-center p-5 border-b border-gray-200 rounded-t-lg">
           <h2 className="text-xl font-semibold text-blue-500">
             Mengganti Password
@@ -155,29 +178,16 @@ const ChangePasswordModal: FC<ChangePasswordModalProps> = ({
             <button
               type="submit"
               disabled={formik.isSubmitting}
-              className="px-6 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-lg shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400 disabled:cursor-not-allowed"
+              className="w-40 flex items-center justify-center px-6 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-lg shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400 disabled:cursor-not-allowed"
             >
-              {formik.isSubmitting ? "Menyimpan..." : "Simpan"}
+              {formik.isSubmitting ? (
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+              ) : (
+                "Simpan"
+              )}
             </button>
           </div>
         </form>
-
-        {/* This is a simple animation style block you might need to add to your global CSS or a style tag */}
-        <style jsx global>{`
-          @keyframes fade-in-scale {
-            0% {
-              opacity: 0;
-              transform: scale(0.95);
-            }
-            100% {
-              opacity: 1;
-              transform: scale(1);
-            }
-          }
-          .animate-fade-in-scale {
-            animation: fade-in-scale 0.3s ease-out forwards;
-          }
-        `}</style>
       </div>
     </div>
   );

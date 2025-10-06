@@ -24,6 +24,19 @@ const ProfileImageUploadModal: FC<ImageUploadModalProps> = ({
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  // --- CHANGE 1: Add state and useEffect for the animation ---
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      // Use a tiny timeout to let the element render before starting the transition
+      const timer = setTimeout(() => setShow(true), 10);
+      return () => clearTimeout(timer);
+    } else {
+      setShow(false);
+    }
+  }, [isOpen]);
+
   useEffect(() => {
     if (user) {
       setPreviewUrl(user.imageUrl || null);
@@ -71,8 +84,16 @@ const ProfileImageUploadModal: FC<ImageUploadModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex justify-center items-center p-4">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-md">
+    <div
+      className={`fixed inset-0 bg-black/60 z-50 flex justify-center items-center p-4 transition-opacity duration-300 ease-in-out ${
+        show ? "opacity-100" : "opacity-0"
+      }`}
+    >
+      <div
+        className={`bg-white rounded-xl shadow-2xl w-full max-w-md transform transition-all duration-300 ease-in-out ${
+          show ? "scale-100 opacity-100" : "scale-95 opacity-0"
+        }`}
+      >
         <div className="p-6 border-b">
           <h2 className="text-xl font-bold text-blue-500">
             Mengganti Foto Profil
@@ -117,9 +138,13 @@ const ProfileImageUploadModal: FC<ImageUploadModalProps> = ({
           <button
             onClick={handleSave}
             disabled={!file || loading}
-            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:outline-none disabled:bg-gray-400 disabled:cursor-not-allowed"
+            className="w-40 flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:outline-none disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
-            {loading ? "Menyimpan..." : "Upload & Simpan"}
+            {loading ? (
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+            ) : (
+              "Upload & Simpan"
+            )}
           </button>
         </div>
       </div>

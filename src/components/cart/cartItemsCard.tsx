@@ -13,6 +13,7 @@ const CartItemCard: React.FC<{ item: ICartItem }> = ({ item }) => {
   const { updateItemQuantity, deleteItem } = useCartStore();
   // 1. Manage quantity with local state for instant UI feedback
   const [localQuantity, setLocalQuantity] = useState(item.quantity);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Sync local state with prop when item quantity changes
   useEffect(() => {
@@ -28,7 +29,9 @@ const CartItemCard: React.FC<{ item: ICartItem }> = ({ item }) => {
 
     const handler = setTimeout(async () => {
       try {
+        setIsLoading(true);
         await updateItemQuantity(user.id, item.id, localQuantity);
+        setIsLoading(false);
       } catch (error) {
         // Revert to item quantity on error
         setLocalQuantity(item.quantity);
@@ -75,39 +78,43 @@ const CartItemCard: React.FC<{ item: ICartItem }> = ({ item }) => {
             Rp {item.product.price.toLocaleString("id-ID")}
           </p>
           <div className="mt-4 sm:mt-0 sm:pr-9">
-            <div className="flex items-center border border-gray-300 rounded-md w-fit">
-              {localQuantity === 1 ? (
+            {isLoading ? (
+              <div className="h-9 w-26 animate-pulse rounded-md bg-gray-200"></div>
+            ) : (
+              <div className="flex items-center border border-gray-300 rounded-md w-fit">
+                {localQuantity === 1 ? (
+                  <button
+                    type="button"
+                    onClick={() => deleteItem(user.id, item.id)}
+                    className="p-2 font-medium text-red-600 hover:text-red-500 flex items-center gap-1"
+                    disabled={item.quantity > 1}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleDecrement}
+                    className="p-2 text-gray-500 hover:bg-gray-100 rounded-l-md disabled:opacity-50"
+                    disabled={localQuantity <= 1}
+                  >
+                    <Minus className="h-4 w-4" />
+                  </button>
+                )}
+                <span
+                  className={`px-4 text-center text-sm font-medium text-gray-700 tabular-nums`}
+                >
+                  {localQuantity}
+                </span>
                 <button
                   type="button"
-                  onClick={() => deleteItem(user.id, item.id)}
-                  className="p-2 font-medium text-red-600 hover:text-red-500 flex items-center gap-1"
-                  disabled={item.quantity > 1}
+                  onClick={handleIncrement}
+                  className="p-2 text-gray-500 hover:bg-gray-100 rounded-r-md"
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Plus className="h-4 w-4" />
                 </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleDecrement}
-                  className="p-2 text-gray-500 hover:bg-gray-100 rounded-l-md disabled:opacity-50"
-                  disabled={localQuantity <= 1}
-                >
-                  <Minus className="h-4 w-4" />
-                </button>
-              )}
-              <span
-                className={`px-4 text-center text-sm font-medium text-gray-700 tabular-nums`}
-              >
-                {localQuantity}
-              </span>
-              <button
-                type="button"
-                onClick={handleIncrement}
-                className="p-2 text-gray-500 hover:bg-gray-100 rounded-r-md"
-              >
-                <Plus className="h-4 w-4" />
-              </button>
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -8,6 +8,7 @@ import { IOrder } from "@/interfaces/orderInterface";
 import { getCookie } from "cookies-next";
 import axios from "axios";
 import { apiUrl } from "@/config";
+import Loading from "@/components/loading";
 
 // --- MAIN PAGE COMPONENT ---
 const OrderHistoryPage: NextPage = () => {
@@ -71,13 +72,7 @@ const OrderHistoryPage: NextPage = () => {
   };
 
   const renderContent = () => {
-    if (isLoading) {
-      return (
-        <div className="text-center py-16">
-          <p className="text-lg text-gray-600">Memuat pesanan...</p>
-        </div>
-      );
-    }
+    if (isLoading) return <Loading/>
 
     if (orders.length > 0) {
       return (

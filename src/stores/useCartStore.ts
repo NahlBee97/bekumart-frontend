@@ -7,8 +7,6 @@ import { getCookie } from "cookies-next";
 // Define the shape of your store's state and actions
 interface CartState {
   cart: ICart | null;
-  isLoading: boolean;
-  error: string | null;
   setCart: (cart: ICart) => void;
   addToCart: (
     userId: string,
@@ -28,17 +26,12 @@ interface CartState {
 export const useCartStore = create<CartState>((set) => ({
   // 1. Initial State
   cart: null,
-  isLoading: false,
-  error: null,
 
   // 2. Actions
   setCart: (cart: ICart) => set({ cart }),
   
   // Corrected async action
-  addToCart: async (userId: string, productId: string, quantity: number) => {
-    // Set loading state to true before the API call
-    set({ isLoading: true, error: null });
-    
+  addToCart: async (userId: string, productId: string, quantity: number) => {    
     try {
       const token = getCookie("access_token") as string;
       if (!token) {
@@ -59,19 +52,13 @@ export const useCartStore = create<CartState>((set) => ({
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // On success, update the state with the new cart data
-      set({ cart: cartResponse.data.data, isLoading: false });
-      alert("Item added to cart successfully!");
+      set({ cart: cartResponse.data.data });
     } catch (err) {
-      console.error("Failed to add item to cart:", err);
-      // On failure, update the error state
-      set({ isLoading: false, error: "Could not add item to cart." });
+      console.log("Failed to add item to cart:", err);
     }
   },
 
   updateItemQuantity: async (userId: string, itemId: string, quantity: number) => {
-    set({ isLoading: true, error: null });
-    
     try {
       const token = getCookie("access_token") as string;
       if (!token) {
@@ -91,16 +78,13 @@ export const useCartStore = create<CartState>((set) => ({
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      set({ cart: cartResponse.data.data, isLoading: false });
+      set({ cart: cartResponse.data.data });
     } catch (err) {
-      console.error("Failed to update item quantity:", err);
-      set({ isLoading: false, error: "Could not update item quantity." });
+      console.log("Failed to update item quantity:", err);
     }
   },
 
   deleteItem: async (userId: string, itemId: string) => {
-    set({ isLoading: true, error: null });
-
     try {
       const token = getCookie("access_token") as string;
       if (!token) {
@@ -116,10 +100,9 @@ export const useCartStore = create<CartState>((set) => ({
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      set({ cart: cartResponse.data.data, isLoading: false });
+      set({ cart: cartResponse.data.data });
     } catch (err) {
-      console.error("Failed to delete item from cart:", err);
-      set({ isLoading: false, error: "Could not delete item from cart." });
+      console.log("Failed to delete item from cart:", err);
     }
   },
 

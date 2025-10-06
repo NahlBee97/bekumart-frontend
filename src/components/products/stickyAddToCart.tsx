@@ -5,23 +5,44 @@ import useAuthStore from "@/stores/useAuthStore";
 import { useCartStore } from "@/stores/useCartStore";
 import { MessageSquareIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
+import { StickyAddToCartSkeleton } from "./stickyAddToCartSkeleton";
 
 interface StickyAddToCartProps {
-  product: IProduct;
+  product: IProduct; // Make product optional
 }
 
-const StickyAddToCart: React.FC<StickyAddToCartProps> = ({ product }) => {
+const StickyAddToCart: React.FC<StickyAddToCartProps> = ({
+  product,
+}) => {
   const { user } = useAuthStore();
   const { addToCart } = useCartStore();
   const [quantity, setQuantity] = useState(1);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // Functions to increment and decrement the quantity
+  // Show skeleton if isLoading is true or product is not available yet
+  if (isLoading) {
+    return <StickyAddToCartSkeleton />;
+  }
+
   const incrementQuantity = () => {
     setQuantity((prevQuantity) => prevQuantity + 1);
   };
 
   const decrementQuantity = () => {
     setQuantity((prevQuantity) => (prevQuantity > 1 ? prevQuantity - 1 : 1));
+  };
+
+  const handleAddToCart = async () => {
+    try {
+      setIsLoading(true);
+      await addToCart(user.id, product.id, quantity);
+      alert("Berhasil menambahkan ke dalam keranjang");
+    } catch (error) {
+      console.log(error);
+      alert("Gagal menambahkan ke dalam keranjang");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -38,6 +59,7 @@ const StickyAddToCart: React.FC<StickyAddToCartProps> = ({ product }) => {
             <div className="flex items-center border border-gray-300 rounded-md">
               <button
                 onClick={decrementQuantity}
+                disabled={isLoading}
                 className="px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-l-md transition duration-200 focus:outline-none"
                 aria-label="Decrement quantity"
               >
@@ -48,6 +70,7 @@ const StickyAddToCart: React.FC<StickyAddToCartProps> = ({ product }) => {
               </span>
               <button
                 onClick={incrementQuantity}
+                disabled={isLoading}
                 className="px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-r-md transition duration-200 focus:outline-none"
                 aria-label="Increment quantity"
               >
@@ -57,8 +80,9 @@ const StickyAddToCart: React.FC<StickyAddToCartProps> = ({ product }) => {
 
             {/* Add to Cart Button */}
             <button
-              onClick={() => addToCart(user.id, product.id, quantity)}
-              className="flex gap-2 px-4 py-3 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300 ease-in-out transform hover:-translate-y-1"
+              onClick={handleAddToCart}
+              disabled={isLoading}
+              className="flex gap-2 px-4 py-3 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300 ease-in-out transform hover:-translate-y-1 disabled:bg-blue-300 disabled:cursor-not-allowed"
             >
               <PlusIcon />
               <p>Keranjang</p>

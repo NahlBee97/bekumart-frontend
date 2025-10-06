@@ -19,33 +19,37 @@ export default function AccountInfo() {
   // --- State Management ---
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
-
-  const fetchUser = useCallback(async () => {
-    const token = getCookie("access_token") as string;
-    const response = await axios.get(`${apiUrl}/api/users/${user.id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    const newToken = response.data.data;
-
-    const userData = jwtDecode<IUser>(newToken);
-
-    login(userData);
-
-    deleteCookie("access_token");
-
-    setCookie("access_token", newToken, {
-      expires: new Date(Date.now() + 60 * 60 * 1000),
-    });
-  }, [user, login]);
-
-  // --- Formik Setup for Profile Information ---
   const [isEditMode, setIsEditMode] = useState(false);
 
+  const fetchUser = useCallback(async () => {
+    try {
+      const token = getCookie("access_token") as string;
+      const response = await axios.get(`${apiUrl}/api/users/${user.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      const newToken = response.data.data;
+  
+      const userData = jwtDecode<IUser>(newToken);
+  
+      login(userData);
+  
+      deleteCookie("access_token");
+  
+      setCookie("access_token", newToken, {
+        expires: new Date(Date.now() + 60 * 60 * 1000),
+      });
+    } catch (error) {
+      console.error("Error fetching addresses:", error);
+      throw error; 
+    }
+  }, [user, login]);
+
   const formik = useFormik({
-    initialValues: {
+    enableReinitialize: true,
+    initialValues: user || {
       name: "",
       email: "",
     },
@@ -97,10 +101,6 @@ export default function AccountInfo() {
               }
               alt="Profile picture"
               className="h-32 w-32 rounded-xl border border-gray-300 object-cover shadow-sm transition-all duration-300 group-hover:brightness-75 md:h-44 md:w-44 bg-gray-200"
-              onError={(e) => {
-                e.currentTarget.src =
-                  "https://placehold.co/128x128/e0e0e0/757575?text=??";
-              }}
             />
 
             <button
@@ -129,7 +129,6 @@ export default function AccountInfo() {
                 <>
                   <input
                     id="name"
-                    placeholder={user.name}
                     {...formik.getFieldProps("name")}
                     className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 ${
                       formik.touched.name && formik.errors.name
@@ -162,7 +161,6 @@ export default function AccountInfo() {
                   <input
                     id="email"
                     type="email"
-                    placeholder={user.email}
                     {...formik.getFieldProps("email")}
                     className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 ${
                       formik.touched.email && formik.errors.email
@@ -188,9 +186,13 @@ export default function AccountInfo() {
               {isEditMode ? (
                 <button
                   type="submit"
-                  className="inline-flex w-full sm:w-auto justify-center text-xs text-center rounded-md border border-transparent bg-indigo-600 py-2 px-6 md:text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-400 disabled:cursor-wait"
+                  className="inline-flex w-full sm:w-auto items-center justify-center text-xs text-center rounded-md border border-transparent bg-indigo-600 py-2 px-6 md:text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-400 disabled:cursor-wait"
                 >
-                  {formik.isSubmitting ? "Menyimpan..." : "Simpan"}
+                  {formik.isSubmitting ? (
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                  ) : (
+                    "Simpan"
+                  )}
                 </button>
               ) : (
                 <div
@@ -203,7 +205,7 @@ export default function AccountInfo() {
               {isEditMode ? (
                 <div
                   className="inline-flex w-full sm:w-auto justify-center items-center text-xs text-center rounded-md border border-transparent bg-red-600 py-1 px-3 md:py-2 md:px-6 md:text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:bg-indigo-400 disabled:cursor-wait"
-                  onClick={() => setIsPasswordModalOpen(false)}
+                  onClick={() => setIsEditMode(false)}
                 >
                   Batal
                 </div>
