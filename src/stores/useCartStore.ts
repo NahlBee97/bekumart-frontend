@@ -33,10 +33,16 @@ export const useCartStore = create<CartState>((set) => ({
   // Corrected async action
   addToCart: async (userId: string, productId: string, quantity: number) => {    
     try {
+      const pathname: string = encodeURIComponent(window.location.pathname);
       const token = getCookie("access_token") as string;
       if (!token) {
-        alert("You must be logged in to add items to the cart.");
-        throw new Error("No authorization token found.");
+        const isConfirmed = confirm("Log in terlebih dahulu, apakah kamu mau login?");
+        if (isConfirmed) {
+          window.location.href=`/login?callbackUrl=${pathname}`
+          return;
+        } else {
+          return;
+        }
       }
 
       // Perform the async API call and wait for the response

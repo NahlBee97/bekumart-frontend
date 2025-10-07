@@ -36,7 +36,6 @@ const StickyAddToCart: React.FC<StickyAddToCartProps> = ({
     try {
       setIsLoading(true);
       await addToCart(user.id, product.id, quantity);
-      alert("Berhasil menambahkan ke dalam keranjang");
     } catch (error) {
       console.log(error);
       alert("Gagal menambahkan ke dalam keranjang");
@@ -46,7 +45,7 @@ const StickyAddToCart: React.FC<StickyAddToCartProps> = ({
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 w-full bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.1)] z-50 animate-slideUp">
+    <div className="fixed bottom-0 left-0 right-0 w-full bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.1)] z-50">
       <div className="container mx-auto px-3 sm:px-4 lg:px-6">
         <div className="flex items-center justify-between h-18">
           {/* Actions */}
@@ -90,22 +89,6 @@ const StickyAddToCart: React.FC<StickyAddToCartProps> = ({
           </div>
         </div>
       </div>
-      {/* Basic CSS for the slide-up animation */}
-      <style jsx>{`
-        @keyframes slideUp {
-          from {
-            transform: translateY(100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateY(0);
-            opacity: 1;
-          }
-        }
-        .animate-slideUp {
-          animation: slideUp 0.3s ease-out;
-        }
-      `}</style>
     </div>
   );
 };
