@@ -33,6 +33,7 @@ export const ChangePasswordSchema = Yup.object().shape({
     )
     .required("Password tidak boleh kosong"),
   confirmPassword: Yup.string()
+  .oneOf([Yup.ref("newPassword"), undefined], "password tidak sesuai")
     .matches(
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
       "Minimal delapan karakter, setidaknya satu huruf, satu angka, dan satu karakter khusus"

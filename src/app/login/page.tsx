@@ -12,11 +12,10 @@ import { setCookie } from "cookies-next";
 import { jwtDecode } from "jwt-decode";
 
 export default function LoginPage() {
-  const [formSuccess, setFormSuccess] = useState("");
-  const [formError, setFormError] = useState("");
   const [callbackUrl, setCallbackUrl] = useState<string | null>(null);
 
   const [showPassword, setShowPassword] = useState(false);
+  const [isCorrectPassword, setIsCorrectPassword] = useState(true);
 
   const router = useRouter();
 
@@ -35,9 +34,7 @@ export default function LoginPage() {
       password: "",
     },
     validationSchema: LoginSchema,
-    onSubmit: async (values: ILogin, { setErrors }) => {
-      setFormSuccess("");
-      setFormError("");
+    onSubmit: async (values: ILogin) => {
       try {
         const { data } = await axios.post(`${apiUrl}/api/auth/login`, values);
 
@@ -47,7 +44,6 @@ export default function LoginPage() {
         setCookie("access_token", token, {
           expires: new Date(Date.now() + 60 * 60 * 1000),
         });
-        setFormSuccess("Berhasil login.");
 
         const userData = jwtDecode<IUser>(token);
 
@@ -63,49 +59,26 @@ export default function LoginPage() {
         } else {
           router.push("/");
         }
+        alert("Successfully Logged In");
       } catch (err) {
-        if (axios.isAxiosError(err)) {
-          if (err.response) {
-            const status = err.response.status;
-            const data = err.response.data;
-
-            if (status === 400 || status === 422) {
-              if (data.errors) {
-                setErrors(data.errors); // Assuming Formik's setErrors for field-specific messages
-                setFormError("Silakan perbaiki kesalahan di bawah ini.");
-              } else {
-                setFormError(
-                  data.message || "Terjadi masalah dengan validasi."
-                );
-              }
-            } else if (status >= 500) {
-              setFormError(
-                "Terjadi kesalahan pada server. Silakan coba lagi nanti."
-              );
-            } else {
-              setFormError(
-                data.message ||
-                  "Terjadi kesalahan. Silakan periksa detail Anda."
-              );
-            }
-          } else if (err.request) {
-            setFormError(
-              "Tidak dapat terhubung ke server. Silakan periksa koneksi jaringan Anda."
-            );
-          } else {
-            setFormError(
-              "Terjadi kesalahan yang tidak terduga saat mengirim permintaan Anda."
-            );
-          }
+        if (axios.isAxiosError(err) && err.response) {
+          if (err.response.data.message === "Incorrect Password")
+            setIsCorrectPassword(false);
+          const errorMessage = err.response.data.message;
+          alert(`${errorMessage}`);
         } else {
-          console.error("An unexpected non-API error occurred:", err);
-          setFormError(
-            "Terjadi kesalahan yang tidak terduga. Silakan coba lagi."
-          );
+          alert("An unexpected error occurred");
         }
       }
     },
   });
+
+  const handleResetPassword = async () => {
+    const email = formik.values.email;
+    await axios.post(`${apiUrl}/api/auth/verify-reset`, { email });
+    alert("kami sudah mengirimkan email untuk mengatur ulang password");
+  }
+
 
   return (
     <div className="bg-gray-100 flex items-center justify-center min-h-screen font-sans px-4">
@@ -137,6 +110,11 @@ export default function LoginPage() {
           {/* Password Field */}
           <div>
             <div className="relative">
+              {!isCorrectPassword && (
+                <div className="text-xs text-red-500" onClick={handleResetPassword}>
+                  Lupa Password?
+                </div>
+              )}
               <input
                 id="password"
                 type={showPassword ? "text" : "password"}
@@ -149,12 +127,12 @@ export default function LoginPage() {
                 }`}
               />
               <input
-                className="mt-2"
+                className="mt-2 h-2"
                 type="checkbox"
                 checked={showPassword}
                 onChange={() => setShowPassword(!showPassword)}
               />{" "}
-              <label className="text-gray-600">Lihat Password</label>
+              <label className="text-gray-600 text-xs">Lihat Password</label>
             </div>
             {formik.touched.password && formik.errors.password && (
               <p className="text-red-500 text-xs mt-1">
@@ -175,18 +153,6 @@ export default function LoginPage() {
               "Login"
             )}
           </button>
-
-          {/* Display Success or Error Messages */}
-          {formSuccess && (
-            <div className="text-blue-600 bg-blue-100 p-3 rounded-md">
-              {formSuccess}
-            </div>
-          )}
-          {formError && (
-            <div className="text-red-600 bg-red-100 p-3 rounded-md">
-              {formError}
-            </div>
-          )}
         </form>
 
         <p className="text-center text-sm text-gray-600 mt-8">
