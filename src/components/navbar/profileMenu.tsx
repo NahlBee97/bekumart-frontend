@@ -2,11 +2,15 @@ import useAuthStore from "@/stores/useAuthStore";
 import { deleteCookie } from "cookies-next";
 import { LogOut } from "lucide-react";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useState, useEffect, useRef } from "react";
 import type { FC } from "react";
 
 // You can move this component to its own file and import it
 export const ProfileMenu: FC = () => {
+  const pathname = usePathname();
+  const router = useRouter();
+
   const { user, logout } = useAuthStore();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -45,6 +49,17 @@ export const ProfileMenu: FC = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  const handleLogOut = () => {
+    const forbiddenPath = ["/cart", "/checkout", "/profile/:path*"];
+    logout();
+    deleteCookie("access_token");
+    if (!forbiddenPath.includes(pathname)) {
+      router.push(pathname);
+    } else {
+      router.push("/");
+    }
+  };
 
   return (
     <div ref={dropdownRef} className="relative inline-block text-left">
@@ -99,11 +114,7 @@ export const ProfileMenu: FC = () => {
           })}
           <li>
             <button
-              onClick={() => {
-                logout();
-                deleteCookie("access_token");
-                window.location.href = "/";
-              }}
+              onClick={handleLogOut}
               className="flex justify-center items-center gap-2 px-3 py-2 rounded-md text-xs font-medium transition-colors duration-200 hover:bg-red-500 hover:text-white"
             >
               <p>Keluar</p> <LogOut className="w-4 h-4" />

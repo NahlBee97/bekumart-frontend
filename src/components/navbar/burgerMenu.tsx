@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import type { FC } from "react";
 
 // You can move this component to its own file and import it
@@ -9,7 +9,7 @@ export const BurgerMenu: FC = () => {
 
   const [activeLink, setActiveLink] = useState("");
   const links = [
-    { name: "Home", link: "/" },
+    { name: "Toko", link: "/" },
     { name: "Tentang Kami", link: "/about" },
     { name: "Hubungi Kami", link: "/contact" },
   ];

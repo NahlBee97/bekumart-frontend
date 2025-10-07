@@ -45,7 +45,7 @@ const CheckoutPage: NextPage = () => {
 
     const token = getCookie("access_token") as string;
     if (!token) {
-      throw new Error("No access token found");
+      return;
     }
     try {
       const { data } = await axios.get(`${apiUrl}/api/addresses/${user.id}`, {
