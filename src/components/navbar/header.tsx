@@ -3,6 +3,7 @@
 import { apiUrl } from "@/config";
 import { IUser } from "@/interfaces/authInterfaces";
 import { useCartStore } from "@/stores/useCartStore";
+import useAuthStore from "@/stores/useAuthStore";
 import axios from "axios";
 import { getCookie } from "cookies-next";
 import { jwtDecode } from "jwt-decode";
@@ -12,42 +13,37 @@ import { useEffect } from "react";
 import { BurgerMenu } from "./burgerMenu";
 import { ProfileMenu } from "./profileMenu";
 import { usePathname } from "next/navigation";
-import useAuthStore from "@/stores/useAuthStore";
 
-export default function Middle() {
+// Consider renaming the file and component to "Header.tsx"
+export default function Header() {
   const token = getCookie("access_token") as string;
   const { cart, setCart } = useCartStore();
   const { isLoggedIn, login } = useAuthStore();
+  const pathname = usePathname();
 
-   const pathname = usePathname();
-
+  // Consolidated useEffect to handle both auth and cart fetching
   useEffect(() => {
     if (token) {
-      const userData = jwtDecode<IUser>(token);
-      login(userData);
-    }
-  }, [token, login]);
+      try {
+        const userData = jwtDecode<IUser>(token);
+        login(userData); // Set user auth state
 
-  useEffect(() => {
-    try {
-      if (token) {
         const fetchUserCart = async () => {
-          const userData = jwtDecode<IUser>(token);
           const userId = userData.id;
           const { data } = await axios.get(`${apiUrl}/api/carts/${userId}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` },
           });
           setCart(data.data);
         };
 
         fetchUserCart();
+      } catch (error) {
+        // Improved error handling - logs to console without alerting the user
+        console.error("Failed to fetch user cart or decode token:", error);
+        throw new Error("Failed to fetch user cart or decode token");
       }
-    } catch (err) {
-      alert(err);
     }
-  }, [token, setCart]);
+  }, [token, login, setCart]);
 
   return (
     <div className="w-full">
@@ -97,27 +93,28 @@ export default function Middle() {
           {isLoggedIn && (
             <div className="flex items-center gap-3">
               <div className="relative">
-                <Link href={`/cart?callbackUrl=${pathname}`} className="flex items-center mr-1">
+                <Link href={`/cart`} className="flex items-center mr-1">
                   <ShoppingCart className="w-6 h-6" />
                 </Link>
-                {cart && (
+                {/* Refined Badge Display: Only shows if items are in the cart */}
+                {cart && cart.totalQuantity > 0 && (
                   <div
                     className="
-                absolute -top-1 -right-1
-                bg-red-700
-                rounded-full
-                w-4 h-4
-                text-white
-                text-[10px]
-                flex items-center justify-center
-              "
+                  absolute -top-1 -right-1
+                  bg-red-700
+                  rounded-full
+                  w-4 h-4
+                  text-white
+                  text-[10px]
+                  flex items-center justify-center
+                "
                   >
-                    {cart ? cart.totalQuantity : 0}
+                    {cart.totalQuantity}
                   </div>
                 )}
               </div>
               <div className="hidden sm:block">
-                <p className="text-xs text-neutral-500">Shopping Cart:</p>
+                <p className="text-xs text-neutral-500">Keranjang Belanja:</p>
                 <p className="text-sm font-medium">
                   Rp {cart ? cart.totalPrice.toLocaleString("id-ID") : 0}
                 </p>

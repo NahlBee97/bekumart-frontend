@@ -1,4 +1,4 @@
-import Middle from "./middle";
+import Middle from "./header";
 import NavLinks from "./nav-links";
 
 export default function Navbar() {

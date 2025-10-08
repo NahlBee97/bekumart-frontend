@@ -10,6 +10,7 @@ import { ILogin, IUser } from "@/interfaces/authInterfaces";
 import { LoginSchema } from "@/schemas/authSchemas";
 import { setCookie } from "cookies-next";
 import { jwtDecode } from "jwt-decode";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
   const [callbackUrl, setCallbackUrl] = useState<string | null>(null);
@@ -36,10 +37,10 @@ export default function LoginPage() {
     validationSchema: LoginSchema,
     onSubmit: async (values: ILogin) => {
       try {
-        const { data } = await axios.post(`${apiUrl}/api/auth/login`, values);
+        const response = await axios.post(`${apiUrl}/api/auth/login`, values);
 
         // set token to cookie
-        const token = data.data;
+        const token = response.data.data;
 
         setCookie("access_token", token, {
           expires: new Date(Date.now() + 60 * 60 * 1000),
@@ -59,15 +60,14 @@ export default function LoginPage() {
         } else {
           router.push("/");
         }
-        alert("Successfully Logged In");
-      } catch (err) {
-        if (axios.isAxiosError(err) && err.response) {
-          if (err.response.data.message === "Incorrect Password")
+        toast.success("Berhasil Login");
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          if (error.response.data.message === "Incorrect Password")
             setIsCorrectPassword(false);
-          const errorMessage = err.response.data.message;
-          alert(`${errorMessage}`);
+          toast.error("Password Salah!");
         } else {
-          alert("An unexpected error occurred");
+          toast.error("An unexpected error occurred");
         }
       }
     },
@@ -76,7 +76,7 @@ export default function LoginPage() {
   const handleResetPassword = async () => {
     const email = formik.values.email;
     await axios.post(`${apiUrl}/api/auth/verify-reset`, { email });
-    alert("kami sudah mengirimkan email untuk mengatur ulang password");
+    toast("Kami sudah mengirimkan email untuk mengatur ulang password");
   }
 
 

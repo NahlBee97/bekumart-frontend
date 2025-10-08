@@ -8,11 +8,9 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { apiUrl } from "@/config";
 import { IRegister } from "@/interfaces/authInterfaces";
+import toast from "react-hot-toast";
 
 export default function RegisterPage() {
-  const [formSuccess, setFormSuccess] = useState("");
-  const [formError, setFormError] = useState("");
-
   const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
@@ -23,50 +21,18 @@ export default function RegisterPage() {
       password: "",
     },
     validationSchema: RegisterSchema,
-    onSubmit: async (
-      values: IRegister,
-      { setErrors }
-    ) => {
-      setFormSuccess("");
-      setFormError("");
+    onSubmit: async (values: IRegister) => {
       try {
         await axios.post(`${apiUrl}/api/auth/register`, values);
 
-        setFormSuccess("Berhasil membuat akun. Silakan login.");
+        toast.success("Berhasil membuat akun. Silakan login.");
 
         router.push("/login");
-      } catch (err) {
-        if (axios.isAxiosError(err)) {
-          if (err.response) {
-            const status = err.response.status;
-            const data = err.response.data;
-
-            if (status === 400 || status === 422) {
-              if (data.errors) {
-                setErrors(data.errors); // Assuming Formik's setErrors for field-specific messages
-                setFormError("Silakan perbaiki kesalahan di bawah ini.");
-              } else {
-                setFormError(data.message || "Terjadi masalah dengan validasi.");
-              }
-            } else if (status >= 500) {
-              setFormError("Terjadi kesalahan pada server. Silakan coba lagi nanti.");
-            } else {
-              setFormError(
-                data.message || "Terjadi kesalahan. Silakan periksa detail Anda."
-              );
-            }
-          } else if (err.request) {
-            setFormError(
-              "Tidak dapat terhubung ke server. Silakan periksa koneksi jaringan Anda."
-            );
-          } else {
-            setFormError(
-              "Terjadi kesalahan yang tidak terduga saat mengirim permintaan Anda."
-            );
-          }
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          toast.error(error.response.data.message);
         } else {
-          console.error("An unexpected non-API error occurred:", err);
-          setFormError("Terjadi kesalahan yang tidak terduga. Silakan coba lagi.");
+          toast.error("An unexpected error occurred");
         }
       }
     },
@@ -134,12 +100,12 @@ export default function RegisterPage() {
                 }`}
               />
               <input
-                className="mt-2"
+                className="mt-2 h-2"
                 type="checkbox"
                 checked={showPassword}
                 onChange={() => setShowPassword(!showPassword)}
               />{" "}
-              <label className="text-gray-600">Lihat Password</label>
+              <label className="text-gray-600 text-xs">Lihat Password</label>
             </div>
             {formik.touched.password && formik.errors.password && (
               <p className="text-red-500 text-xs mt-1">
@@ -160,18 +126,6 @@ export default function RegisterPage() {
               "Buat Akun"
             )}
           </button>
-
-          {/* Display Success or Error Messages */}
-          {formSuccess && (
-            <div className="text-blue-600 bg-blue-100 p-3 rounded-md">
-              {formSuccess}
-            </div>
-          )}
-          {formError && (
-            <div className="text-red-600 bg-red-100 p-3 rounded-md">
-              {formError}
-            </div>
-          )}
         </form>
 
         <p className="text-center text-sm text-gray-600 mt-8">
