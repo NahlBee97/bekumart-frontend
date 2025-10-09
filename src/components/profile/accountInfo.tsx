@@ -1,49 +1,55 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useFormik } from "formik";
 import { Camera } from "lucide-react";
-import useAuthStore from "@/stores/useAuthStore";
-import ProfileImageUploadModal from "@/components/profile/profileImageModal";
-import axios from "axios";
 import { apiUrl } from "@/config";
 import { deleteCookie, getCookie, setCookie } from "cookies-next";
 import { IUser } from "@/interfaces/authInterfaces";
 import { jwtDecode } from "jwt-decode";
 import { UpdateProfileSchema } from "@/schemas/profileSchemas";
+import ProfileImageUploadModal from "@/components/profile/profileImageModal";
+import axios from "axios";
 import ChangePasswordModal from "./changePasswordModal";
+import useAuthStore from "@/stores/useAuthStore";
 
-// --- Main Component ---
-export default function AccountInfo() {
-  const { user, login } = useAuthStore();
-  // --- State Management ---
+export default function AccountInfo({ initialUser }: { initialUser: IUser }) {
+  const { login } = useAuthStore();
+  const [user, setUser] = useState<IUser | null>(null);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
 
-  const fetchUser = useCallback(async () => {
+  useEffect(() => {
+    if (initialUser) {
+      setUser(initialUser);
+    }
+  }, [initialUser, setUser]);
+
+  const refreshUser = useCallback(async () => {
     try {
       const token = getCookie("access_token") as string;
-      const response = await axios.get(`${apiUrl}/api/users/${user.id}`, {
+      const response = await axios.get(`${apiUrl}/api/users/${user?.id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-  
+
       const newToken = response.data.data;
-  
+
       const userData = jwtDecode<IUser>(newToken);
-  
+
       login(userData);
-  
+      setUser(userData);
+
       deleteCookie("access_token");
-  
+
       setCookie("access_token", newToken, {
         expires: new Date(Date.now() + 60 * 60 * 1000),
       });
     } catch (error) {
       console.error("Error fetching addresses:", error);
-      throw error; 
+      throw error;
     }
   }, [user, login]);
 
@@ -58,13 +64,13 @@ export default function AccountInfo() {
       try {
         const token = getCookie("access_token") as string;
 
-        await axios.put(`${apiUrl}/api/users/${user.id}`, values, {
+        await axios.put(`${apiUrl}/api/users/${user?.id}`, values, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
-        fetchUser();
+        refreshUser();
 
         setIsEditMode(false);
 
@@ -97,7 +103,7 @@ export default function AccountInfo() {
               src={
                 user
                   ? user.imageUrl
-                  : "https://placehold.co/128x128/6366f1/ffffff?text=Image"
+                  : "https://placehold.co/128x128/6366f1/ffffff?text=Loading..."
               }
               alt="Profile picture"
               className="h-32 w-32 rounded-xl border border-gray-300 object-cover shadow-sm transition-all duration-300 group-hover:brightness-75 md:h-44 md:w-44 bg-gray-200"
@@ -144,7 +150,7 @@ export default function AccountInfo() {
                 </>
               ) : (
                 <div className="w-full px-3 py-2">
-                  <p>{user.name}</p>
+                  <p>{user?.name}</p>
                 </div>
               )}
             </div>
@@ -176,7 +182,7 @@ export default function AccountInfo() {
                 </>
               ) : (
                 <div className="w-full px-3 py-2">
-                  <p>{user.email}</p>
+                  <p>{user?.email}</p>
                 </div>
               )}
             </div>
@@ -224,7 +230,7 @@ export default function AccountInfo() {
       <ProfileImageUploadModal
         isOpen={isImageModalOpen}
         onClose={() => setIsImageModalOpen(false)}
-        onSave={() => fetchUser()}
+        onSave={() => refreshUser()}
         user={user}
       />
       <ChangePasswordModal

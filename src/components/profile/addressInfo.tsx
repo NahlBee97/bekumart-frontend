@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { MapPin, Trash2, Edit3, PlusCircle } from "lucide-react";
 import useAuthStore from "@/stores/useAuthStore";
 import axios from "axios";
@@ -8,26 +8,27 @@ import { apiUrl } from "@/config";
 import { getCookie } from "cookies-next";
 import { IAddresses } from "@/interfaces/addressInterface";
 import AddressModal from "./addressModal";
-import { AddressInfoSkeleton } from "./addressInfoSkeleton";
 
 // --- Main Component ---
-export default function AddressInfo() {
+export default function AddressInfo({
+  initialAddresess,
+}: {
+  initialAddresess: IAddresses[];
+}) {
   const { user } = useAuthStore();
   // --- State Management ---
-  const [addresses, setAddresses] = useState<IAddresses[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [addresses, setAddresses] = useState<IAddresses[]>(initialAddresess);
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [addressToEdit, setAddressToEdit] = useState<IAddresses | null>(null);
 
-  const fetchUserAddresses = useCallback(async () => {
+  const refreshAddresess = useCallback(async () => {
     const token = getCookie("access_token") as string;
     if (!token) {
       throw new Error("No access token found");
     }
     try {
       if (!user?.id) {
-        setIsLoading(false);
         return;
       }
       const { data } = await axios.get(`${apiUrl}/api/addresses/${user.id}`, {
@@ -36,16 +37,11 @@ export default function AddressInfo() {
         },
       });
       setAddresses(data.data);
-      setIsLoading(false);
     } catch (error) {
       console.error("Error fetching addresses:", error);
       throw error; // Re-throw to be caught by the caller
     }
   }, [user?.id]);
-
-  useEffect(() => {
-    fetchUserAddresses();
-  }, [fetchUserAddresses]);
 
   // --- Event Handlers ---
   const handleDeleteAddress = async (id: string) => {
@@ -64,7 +60,7 @@ export default function AddressInfo() {
           Authorization: `Bearer ${token}`,
         },
       });
-      fetchUserAddresses();
+      refreshAddresess();
       alert("success deleting address");
     } catch (error) {
       alert("Error deleting address.");
@@ -85,15 +81,13 @@ export default function AddressInfo() {
           },
         }
       );
-      fetchUserAddresses();
+      refreshAddresess();
       alert("success set default address");
     } catch (error) {
       alert("Error setting default address.");
       console.error(error);
     }
   };
-
-  if (isLoading) return <AddressInfoSkeleton/>
 
   return (
     <div className="bg-white shadow-md sm:rounded-lg overflow-hidden">
@@ -171,7 +165,7 @@ export default function AddressInfo() {
       <AddressModal
         onClose={() => setIsModalOpen(false)}
         isOpen={isModalOpen}
-        onSave={() => fetchUserAddresses()}
+        onSave={() => refreshAddresess()}
         address={addressToEdit}
       />
     </div>

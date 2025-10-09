@@ -27,6 +27,7 @@ const OrderDetailModal: React.FC<{
   }, [order]);
 
   useEffect(() => {
+    setOrderItems([]);
     try {
       const token = getCookie("access_token") as string;
       const fetchOrderItems = async () => {

@@ -51,13 +51,19 @@ export const ProfileMenu: FC = () => {
   }, []);
 
   const handleLogOut = () => {
-    const forbiddenPath = ["/cart", "/checkout", "/profile/:path*"];
+    const forbiddenPrefixes = ["/cart", "/checkout", "/profile"];
+
+    const isForbidden = forbiddenPrefixes.some((prefix) =>
+      pathname.startsWith(prefix)
+    );
+
     logout();
     deleteCookie("access_token");
-    if (!forbiddenPath.includes(pathname)) {
-      router.push(pathname);
-    } else {
+
+    if (isForbidden) {
       router.push("/");
+    } else {
+      router.push(pathname);
     }
   };
 
