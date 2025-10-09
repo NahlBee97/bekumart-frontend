@@ -1,5 +1,3 @@
-// components/CartItem.tsx
-
 "use client";
 
 import { ICartItem } from "@/interfaces/cartInterfaces";
@@ -7,11 +5,11 @@ import useAuthStore from "@/stores/useAuthStore";
 import { useCartStore } from "@/stores/useCartStore";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 
 const CartItemCard: React.FC<{ item: ICartItem }> = ({ item }) => {
   const { user } = useAuthStore();
   const { updateItemQuantity, deleteItem } = useCartStore();
-  // 1. Manage quantity with local state for instant UI feedback
   const [localQuantity, setLocalQuantity] = useState(item.quantity);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -22,7 +20,6 @@ const CartItemCard: React.FC<{ item: ICartItem }> = ({ item }) => {
 
   // Debounced update effect
   useEffect(() => {
-    // Don't run on the initial render or if quantities match
     if (localQuantity === item.quantity) {
       return;
     }
@@ -32,9 +29,11 @@ const CartItemCard: React.FC<{ item: ICartItem }> = ({ item }) => {
         setIsLoading(true);
         await updateItemQuantity(user.id, item.id, localQuantity);
         setIsLoading(false);
+        toast.success("Berhasil merubah jumlah")
       } catch (error) {
         // Revert to item quantity on error
         setLocalQuantity(item.quantity);
+        toast.error("Berhasil merubah jumlah");
         console.error("Failed to update quantity:", error);
       }
     }, 1000);

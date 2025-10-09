@@ -6,18 +6,18 @@ import { useCartStore } from "@/stores/useCartStore";
 import { MessageSquareIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { StickyAddToCartSkeleton } from "./stickyAddToCartSkeleton";
+import toast from "react-hot-toast";
+import { getCookie } from "cookies-next";
+import ConfirmModal from "../confirmModal";
 
-interface StickyAddToCartProps {
-  product: IProduct; // Make product optional
-}
-
-const StickyAddToCart: React.FC<StickyAddToCartProps> = ({
-  product,
-}) => {
+const StickyAddToCart: React.FC<{
+  product: IProduct;
+}> = ({ product }) => {
   const { user } = useAuthStore();
   const { addToCart } = useCartStore();
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isShowConfirmModal, setIsShowConfirmModal] = useState<boolean>(false);
 
   // Show skeleton if isLoading is true or product is not available yet
   if (isLoading) {
@@ -35,10 +35,17 @@ const StickyAddToCart: React.FC<StickyAddToCartProps> = ({
   const handleAddToCart = async () => {
     try {
       setIsLoading(true);
+      const token = getCookie("access_token") as string;
+      if (!token) {
+        setIsShowConfirmModal(true);
+        return;
+      }
       await addToCart(user.id, product.id, quantity);
+      toast.success("Berhasil menambahkan");
     } catch (error) {
-      console.log(error);
-      alert("Gagal menambahkan ke dalam keranjang");
+      toast.error("Gagal menambahkan ke dalam keranjang");
+      console.error("Gagal menambahkan ke dalam keranjang:", error);
+      throw new Error("Gagal menambahkan kedalam keranjang");
     } finally {
       setIsLoading(false);
     }
@@ -89,6 +96,14 @@ const StickyAddToCart: React.FC<StickyAddToCartProps> = ({
           </div>
         </div>
       </div>
+      <ConfirmModal
+        isOpen={isShowConfirmModal}
+        onClose={() => setIsShowConfirmModal(false)}
+        title="Tidak bisa menambahkan kedalam keranjang"
+        message="Login terlebih dahulu"
+        confirmText="Login"
+        cancelText="Tidak"
+      />
     </div>
   );
 };

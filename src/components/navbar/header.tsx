@@ -14,19 +14,17 @@ import { BurgerMenu } from "./burgerMenu";
 import { ProfileMenu } from "./profileMenu";
 import { usePathname } from "next/navigation";
 
-// Consider renaming the file and component to "Header.tsx"
 export default function Header() {
-  const token = getCookie("access_token") as string;
   const { cart, setCart } = useCartStore();
   const { isLoggedIn, login } = useAuthStore();
+  const token = getCookie("access_token") as string;
   const pathname = usePathname();
 
-  // Consolidated useEffect to handle both auth and cart fetching
   useEffect(() => {
     if (token) {
       try {
         const userData = jwtDecode<IUser>(token);
-        login(userData); // Set user auth state
+        login(userData);
 
         const fetchUserCart = async () => {
           const userId = userData.id;
@@ -38,7 +36,6 @@ export default function Header() {
 
         fetchUserCart();
       } catch (error) {
-        // Improved error handling - logs to console without alerting the user
         console.error("Failed to fetch user cart or decode token:", error);
         throw new Error("Failed to fetch user cart or decode token");
       }
@@ -93,7 +90,7 @@ export default function Header() {
           {isLoggedIn && (
             <div className="flex items-center gap-3">
               <div className="relative">
-                <Link href={`/cart`} className="flex items-center mr-1">
+                <Link href={`/cart?callbackUrl=${pathname}`} className="flex items-center mr-1">
                   <ShoppingCart className="w-6 h-6" />
                 </Link>
                 {/* Refined Badge Display: Only shows if items are in the cart */}

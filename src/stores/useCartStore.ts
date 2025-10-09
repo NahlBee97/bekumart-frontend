@@ -1,5 +1,5 @@
-import { create } from "zustand";
 import axios from "axios";
+import { create } from "zustand";
 import { ICart } from "@/interfaces/cartInterfaces";
 import { apiUrl } from "@/config";
 import { getCookie } from "cookies-next";
@@ -22,28 +22,17 @@ interface CartState {
   clearCart: () => void;
 }
 
-
 export const useCartStore = create<CartState>((set) => ({
   // 1. Initial State
   cart: null,
 
   // 2. Actions
   setCart: (cart: ICart) => set({ cart }),
-  
+
   // Corrected async action
-  addToCart: async (userId: string, productId: string, quantity: number) => {    
+  addToCart: async (userId: string, productId: string, quantity: number) => {
     try {
-      const pathname: string = encodeURIComponent(window.location.pathname);
       const token = getCookie("access_token") as string;
-      if (!token) {
-        const isConfirmed = confirm("Log in terlebih dahulu, apakah kamu mau login?");
-        if (isConfirmed) {
-          window.location.href=`/login?callbackUrl=${pathname}`
-          return;
-        } else {
-          return;
-        }
-      }
 
       // Perform the async API call and wait for the response
       await axios.post(
@@ -54,23 +43,27 @@ export const useCartStore = create<CartState>((set) => ({
         }
       );
 
-      const cartResponse = await axios.get(`${apiUrl}/api/carts/${userId}`, {
+      const response = await axios.get(`${apiUrl}/api/carts/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      set({ cart: cartResponse.data.data });
-    } catch (err) {
-      console.log("Failed to add item to cart:", err);
+      set({ cart: response.data.data });
+    } catch (error) {
+      console.log("Failed to add item to cart:", error);
     }
   },
 
-  updateItemQuantity: async (userId: string, itemId: string, quantity: number) => {
+  updateItemQuantity: async (
+    userId: string,
+    itemId: string,
+    quantity: number
+  ) => {
     try {
       const token = getCookie("access_token") as string;
       if (!token) {
         throw new Error("No authorization token found.");
       }
-      
+
       await axios.put(
         `${apiUrl}/api/carts/items/${itemId}`,
         { quantity },
@@ -80,13 +73,13 @@ export const useCartStore = create<CartState>((set) => ({
       );
 
       // Fetch the updated cart after changing the quantity
-      const cartResponse = await axios.get(`${apiUrl}/api/carts/${userId}`, {
+      const response = await axios.get(`${apiUrl}/api/carts/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      set({ cart: cartResponse.data.data });
-    } catch (err) {
-      console.log("Failed to update item quantity:", err);
+      set({ cart: response.data.data });
+    } catch (error) {
+      console.log("Failed to update item quantity:", error);
     }
   },
 
@@ -102,13 +95,13 @@ export const useCartStore = create<CartState>((set) => ({
       });
 
       // Fetch the updated cart after deleting the item
-      const cartResponse = await axios.get(`${apiUrl}/api/carts/${userId}`, {
+      const response = await axios.get(`${apiUrl}/api/carts/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      set({ cart: cartResponse.data.data });
-    } catch (err) {
-      console.log("Failed to delete item from cart:", err);
+      set({ cart: response.data.data });
+    } catch (error) {
+      console.log("Failed to delete item from cart:", error);
     }
   },
 

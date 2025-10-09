@@ -4,13 +4,13 @@ import { getProductById, getProductPhotos } from "@/lib/productData";
 export default async function ProductDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const decodedId = decodeURIComponent(params.id);
+  const { id } = await params;
 
   const [product, photos] = await Promise.all([
-    getProductById(decodedId),
-    getProductPhotos(decodedId),
+    getProductById(id),
+    getProductPhotos(id),
   ]);
 
   return <ProductDetail product={product} photos={photos} />;
