@@ -1,5 +1,4 @@
 import useAuthStore from "@/stores/useAuthStore";
-import { deleteCookie } from "cookies-next";
 import { LogOut } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -58,7 +57,6 @@ export const ProfileMenu: FC = () => {
     );
 
     logout();
-    deleteCookie("access_token");
 
     if (isForbidden) {
       router.push("/");
@@ -79,7 +77,7 @@ export const ProfileMenu: FC = () => {
       >
         {/* eslint-disable-next-line */}
         <img
-          src={user?.imageUrl || "/default-avatar.png"} // Added a fallback image
+          src={user?.imageUrl} // Added a fallback image
           alt="profile-picture"
           className="rounded-full md:w-10 md:h-10 w-8 h-8 mr-2 object-cover border-2 border-gray-400 hover:border-blue-500 transition-all"
         />

@@ -11,8 +11,10 @@ import { LoginSchema } from "@/schemas/authSchemas";
 import { setCookie } from "cookies-next";
 import { jwtDecode } from "jwt-decode";
 import toast from "react-hot-toast";
+import useAuthStore from "@/stores/useAuthStore";
 
 export default function LoginPage() {
+  const { setAccessToken, login } = useAuthStore();
   const [callbackUrl, setCallbackUrl] = useState<string | null>(null);
 
   const [showPassword, setShowPassword] = useState(false);
@@ -40,13 +42,15 @@ export default function LoginPage() {
         const response = await axios.post(`${apiUrl}/api/auth/login`, values);
 
         // set token to cookie
-        const token = response.data.data;
+        const { refreshToken, accessToken } = response.data.tokens;
 
-        setCookie("access_token", token, {
-          expires: new Date(Date.now() + 60 * 60 * 1000),
+        setCookie("token", refreshToken, {
+          expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
         });
+        setAccessToken(accessToken);
 
-        const userData = jwtDecode<IUser>(token);
+        const userData = jwtDecode<IUser>(accessToken);
+        login(userData);
 
         if (userData.role === "ADMIN") {
           router.push("/admin");

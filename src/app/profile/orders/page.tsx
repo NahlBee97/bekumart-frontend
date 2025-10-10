@@ -1,8 +1,9 @@
 import OrderHistoryClient from "@/components/profile/orders/orderHistoryClient";
-import { getUserOrders } from "@/lib/orderData";
+import { getUserId, getUserOrders } from "@/lib/data";
 
 export default async function OrderHistoryPage() {
-  const initialOrders = await getUserOrders();
+  const userId = await getUserId();
+  const initialOrders = await getUserOrders(userId);
 
   return (
     <div className="min-h-screen font-sans">

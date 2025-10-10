@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { IUser } from "./interfaces/authInterfaces";
 import { jwtVerify } from "jose";
-import { jwtSecret } from "./config";
+import { jwtRefreshSecret } from "./config";
 
 export async function middleware(req: NextRequest) {
-  const token = req.cookies.get("access_token")?.value;
+  const token = req.cookies.get("token")?.value;
   const path = req.nextUrl.pathname;
 
   // Protect all routes starting with /admin
@@ -16,11 +16,11 @@ export async function middleware(req: NextRequest) {
   //Protect if the user is not an admin
   if (path.startsWith("/admin") && token) {
     try {
-      const secret = new TextEncoder().encode(jwtSecret);
+      const secret = new TextEncoder().encode(jwtRefreshSecret);
 
       const { payload } = await jwtVerify<IUser>(token, secret);
 
-      const user = payload as IUser;
+      const user = payload as { id: string; role: string };
 
       if (!user || user.role !== "ADMIN") {
         return NextResponse.redirect(new URL("/login", req.url));
@@ -41,7 +41,7 @@ export async function middleware(req: NextRequest) {
   //Protect if the user is not an admin
   if (protectedRoutes.some((route) => path.startsWith(route)) && token) {
     try {
-      const secret = new TextEncoder().encode(jwtSecret);
+      const secret = new TextEncoder().encode(jwtRefreshSecret);
 
       const { payload } = await jwtVerify<IUser>(token, secret);
 
