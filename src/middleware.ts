@@ -1,8 +1,5 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { IUser } from "./interfaces/authInterfaces";
-import { jwtVerify } from "jose";
-import { jwtRefreshSecret } from "./config";
+import { NextRequest, NextResponse } from "next/server";
+import { jwtDecode } from "jwt-decode";
 
 export async function middleware(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
@@ -16,11 +13,7 @@ export async function middleware(req: NextRequest) {
   //Protect if the user is not an admin
   if (path.startsWith("/admin") && token) {
     try {
-      const secret = new TextEncoder().encode(jwtRefreshSecret);
-
-      const { payload } = await jwtVerify<IUser>(token, secret);
-
-      const user = payload as { id: string; role: string };
+      const user = jwtDecode<{ id: string; role: string }>(token);
 
       if (!user || user.role !== "ADMIN") {
         return NextResponse.redirect(new URL("/login", req.url));
@@ -41,12 +34,7 @@ export async function middleware(req: NextRequest) {
   //Protect if the user is not an admin
   if (protectedRoutes.some((route) => path.startsWith(route)) && token) {
     try {
-      const secret = new TextEncoder().encode(jwtRefreshSecret);
-
-      const { payload } = await jwtVerify<IUser>(token, secret);
-
-      const user = payload as IUser;
-
+      const user = jwtDecode<{ id: string; role: string }>(token);
       if (!user || user.role !== "CUSTOMER") {
         return NextResponse.redirect(new URL("/login", req.url));
       }

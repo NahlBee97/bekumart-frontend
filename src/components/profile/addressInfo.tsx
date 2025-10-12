@@ -1,91 +1,78 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { MapPin, Trash2, Edit3, PlusCircle } from "lucide-react";
 import useAuthStore from "@/stores/useAuthStore";
-import axios from "axios";
-import { apiUrl } from "@/config";
 import { getCookie } from "cookies-next";
-import { IAddresses } from "@/interfaces/addressInterface";
+import { IAddress } from "@/interfaces/addressInterface";
 import AddressModal from "./addressModal";
+import { getUserAddresses } from "@/lib/data";
+import api from "@/lib/axios";
+import toast from "react-hot-toast";
+import ConfirmModal from "../confirmModal";
 
 // --- Main Component ---
-export default function AddressInfo({
-  initialAddresess,
-}: {
-  initialAddresess: IAddresses[];
-}) {
+export default function AddressInfo() {
   const { user } = useAuthStore();
   // --- State Management ---
-  const [addresses, setAddresses] = useState<IAddresses[]>(initialAddresess);
+  const [addresses, setAddresses] = useState<IAddress[]>([]);
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [addressToEdit, setAddressToEdit] = useState<IAddresses | null>(null);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false);
+  const [addressToEdit, setAddressToEdit] = useState<IAddress | null>(null);
+  const [addressToDelete, setAddressToDelete] = useState<IAddress | null>(null);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
   const refreshAddresess = useCallback(async () => {
-    const token = getCookie("access_token") as string;
+    const token = getCookie("token") as string;
     if (!token) {
-      throw new Error("No access token found");
+      return;
     }
     try {
       if (!user?.id) {
         return;
       }
-      const { data } = await axios.get(`${apiUrl}/api/addresses/${user.id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setAddresses(data.data);
+      const addresses = await getUserAddresses(user.id);
+      setAddresses(addresses);
     } catch (error) {
       console.error("Error fetching addresses:", error);
       throw error; // Re-throw to be caught by the caller
     }
   }, [user?.id]);
 
+  useEffect(() => {
+    refreshAddresess();
+  }, [refreshAddresess]);
+
   // --- Event Handlers ---
-  const handleDeleteAddress = async (id: string) => {
+  const confirmDeleteAddress = async (address: IAddress) => {
     try {
-      confirm("apakah kamu yakin ingin menghapus alamat ini?");
-      const token = getCookie("access_token") as string;
-      const mainAddress = addresses.find(
-        (address) => address.isDefault === true
-      );
-      if (mainAddress) {
-        alert("Tidak dapat menghapus alamat utama.");
+      if (address.isDefault === true) {
+        toast.error("Tidak dapat menghapus alamat utama.");
         return;
       }
-      await axios.delete(`${apiUrl}/api/addresses/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await api.delete(`/api/addresses/${address?.id}`);
       refreshAddresess();
-      alert("success deleting address");
+      toast.success("Alamat Berhasil Dihapus");
     } catch (error) {
-      alert("Error deleting address.");
+      toast.error("Gagal Menghapus Alamat");
       console.error(error);
+    } finally {
+      setAddressToDelete(null);
+      setIsDeleting(false);
     }
   };
 
-  const handleSetDefault = async (id: string) => {
-    const token = getCookie("access_token") as string;
-    console.log(token);
+  const confirmSetDefault = async (address: IAddress) => {
     try {
-      await axios.patch(
-        `${apiUrl}/api/addresses/${id}`,
-        { isDefault: true },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await api.patch(`/api/addresses/${address?.id}`, { isDefault: true });
       refreshAddresess();
-      alert("success set default address");
+      toast.success("Berhasil Mengatur Alamat Utama");
     } catch (error) {
-      alert("Error setting default address.");
+      toast.error("Gagal Mengatur Alamat Utama");
       console.error(error);
+    } finally {
+      setAddressToDelete(null);
     }
   };
 
@@ -134,7 +121,10 @@ export default function AddressInfo({
                     )}
                     {!address.isDefault && (
                       <button
-                        onClick={() => handleSetDefault(address.id)}
+                        onClick={() => {
+                          setAddressToDelete(address);
+                          setIsConfirmModalOpen(true);
+                        }}
                         className="text-sm font-medium text-blue-600 hover:text-blue-500"
                       >
                         Jadikan Alamat Utama
@@ -150,7 +140,11 @@ export default function AddressInfo({
                       <Edit3 className="h-4 w-4" />
                     </button>
                     <button
-                      onClick={() => handleDeleteAddress(address.id)}
+                      onClick={() => {
+                        setAddressToDelete(address);
+                        setIsDeleting(true);
+                        setIsConfirmModalOpen(true);
+                      }}
                       className="p-1 text-gray-500 hover:text-red-600"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -167,6 +161,17 @@ export default function AddressInfo({
         isOpen={isModalOpen}
         onSave={() => refreshAddresess()}
         address={addressToEdit}
+      />
+      <ConfirmModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
+        onConfirm={() =>
+          isDeleting
+            ? confirmDeleteAddress(addressToDelete as IAddress)
+            : confirmSetDefault(addressToDelete as IAddress)
+        }
+        title={isDeleting ? "Hapus Alamat?" : "Atur Sebagai Alamat Utama"}
+        confirmText={isDeleting ? "Hapus" : "Konfirmasi"}
       />
     </div>
   );

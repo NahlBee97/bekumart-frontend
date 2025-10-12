@@ -1,11 +1,7 @@
 import AccountInfo from "@/components/profile/accountInfo";
 import AddressInfo from "@/components/profile/addressInfo";
-import { getUserAddresses } from "@/lib/addressData";
-import { getUserData } from "@/lib/userData";
 
 export default async function ProfilePage() {
-
-  const [ initialUser, initialAddresess ] = await Promise.all([getUserData(), getUserAddresses()])
   
   return (
     <div className="min-h-screen antialiased">
@@ -17,8 +13,8 @@ export default async function ProfilePage() {
         </div>
 
         <div className="space-y-10">
-          <AccountInfo initialUser={initialUser} />
-          <AddressInfo initialAddresess={initialAddresess}/>
+          <AccountInfo />
+          <AddressInfo />
         </div>
       </main>
     </div>

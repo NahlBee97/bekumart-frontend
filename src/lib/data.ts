@@ -30,6 +30,15 @@ export async function getUserOrders(userId: string) {
     throw new Error("Gagal memuat riwayat pesanan. Coba lagi nanti.");
   }
 }
+export async function getOrderItems(orderId: string) {
+  try {
+    const response = await api.get(`/api/orders/order-items/${orderId}`);
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching user order:", error);
+    throw new Error("Gagal memuat riwayat pesanan. Coba lagi nanti.");
+  }
+}
 
 export async function getProducts() {
   try {
@@ -74,7 +83,6 @@ export async function getProductPhotos(id: string) {
 export async function getUserData(userId: string) {
   try {
     const response = await api.get(`/api/users/${userId}`);
-    console.log(response.data);
     return response.data.user;
   } catch (error) {
     console.error("Error fetching user:", error);

@@ -6,22 +6,17 @@ import useAuthStore from "@/stores/useAuthStore";
 import { useCartStore } from "@/stores/useCartStore";
 import { IAddresses } from "@/interfaces/addressInterface";
 import { getCookie } from "cookies-next";
-import axios from "axios";
 import { apiUrl, midtransClientKey } from "@/config";
 import AddressListModal from "@/components/checkout/addressListModal";
 import { useRouter } from "next/navigation";
 import AddressCheckoutModal from "@/components/checkout/addressCheckoutModal";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { getUserAddresses } from "@/lib/data";
+import api from "@/lib/axios";
 
 // --- MAIN PAGE COMPONENT ---
-export default function CheckoutPageClient({
-  initialAddresses,
-  initialSelectedAddress,
-}: {
-  initialAddresses: IAddresses[];
-  initialSelectedAddress: IAddresses;
-}) {
+export default function CheckoutPageClient() {
   const router = useRouter();
   const { user } = useAuthStore();
   const { cart, clearCart } = useCartStore();
@@ -30,10 +25,8 @@ export default function CheckoutPageClient({
   const [paymentMethod, setPaymentMethod] = useState("ONLINE");
 
   // State Management
-  const [addresses, setAddresses] = useState<IAddresses[]>(initialAddresses);
-  const [selectedAddress, setSelectedAddress] = useState<IAddresses>(
-    initialSelectedAddress
-  );
+  const [addresses, setAddresses] = useState<IAddresses[]>([]);
+  const [selectedAddress, setSelectedAddress] = useState<IAddresses>();
   const [shippingCost, setShippingCost] = useState(0);
   const [isListModalOpen, setListModalOpen] = useState<boolean>(false);
   const [isFormModalOpen, setFormModalOpen] = useState<boolean>(false);
@@ -47,28 +40,33 @@ export default function CheckoutPageClient({
       return;
     }
 
-    const token = getCookie("access_token") as string;
+    const token = getCookie("token") as string;
     if (!token) {
       return;
     }
     try {
-      const { data } = await axios.get(`${apiUrl}/api/addresses/${user.id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setAddresses(data.data);
+      const addresess = await getUserAddresses(user.id);
+      const mainAddress = addresess.find((address: IAddresses) => address.isDefault === true);
+      setSelectedAddress(mainAddress);
+      setAddresses(addresess);
     } catch (error) {
       console.error("Error fetching addresses:", error);
       throw error; // Re-throw to be caught by the caller
     }
   }, [user?.id, cart?.items.length]);
 
+  useEffect(() => {
+    refreshUserAddresses();
+  }, [refreshUserAddresses]);
+
+  console.log(addresses);
+
   // Effect to update shipping cost based on delivery method or address change
   useEffect(() => {
     if (!cart?.items.length) {
       return;
     }
+    if (!addresses) return;
     const calculateShipping = async () => {
       try {
         setIsCalculating(true);
@@ -83,18 +81,8 @@ export default function CheckoutPageClient({
           return;
         }
 
-        const token = getCookie("access_token") as string;
-        if (!token) {
-          throw new Error("No access token found");
-        }
-
-        const { data } = await axios.get(
-          `${apiUrl}/api/shipping-cost/${selectedAddress.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+        const { data } = await api.get(
+          `/api/shipping-cost/${selectedAddress.id}`
         );
 
         if (typeof data.shippingCost === "number") {
@@ -109,7 +97,7 @@ export default function CheckoutPageClient({
     };
 
     calculateShipping();
-  }, [deliveryMethod, selectedAddress?.id, cart]);
+  }, [deliveryMethod, selectedAddress?.id, cart, addresses]);
 
   //midtrans
   useEffect(() => {
@@ -127,7 +115,7 @@ export default function CheckoutPageClient({
   const handleConfirmOrder = async () => {
     try {
       setIsSubmitting(true);
-      const token = getCookie("access_token") as string;
+      const token = getCookie("token") as string;
       if (!token) {
         throw new Error("No access token found");
       }
@@ -138,11 +126,7 @@ export default function CheckoutPageClient({
         addressId: selectedAddress?.id,
         totalCheckoutPrice: total,
       };
-      const response = await axios.post(`${apiUrl}/api/orders`, orderData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await api.post(`${apiUrl}/api/orders`, orderData);
 
       const paymentToken = response.data.order.paymentToken || null;
       const orderId = response.data.order.newOrder.id;
@@ -382,7 +366,7 @@ export default function CheckoutPageClient({
                         </div>
                       ) : (
                         <div className="mt-4 rounded-md border border-gray-200 p-4 text-sm text-gray-600">
-                          <p>Pilih ALamat Pengiriman.</p>
+                          <p>Pilih Alamat Pengiriman.</p>
                         </div>
                       )}
                     </div>
@@ -452,7 +436,11 @@ export default function CheckoutPageClient({
                       {isCalculating ? (
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
                       ) : (
-                        `${shippingCost > 0 ? "Rp " + shippingCost.toLocaleString("id-ID") : "Gratis"}`
+                        `${
+                          shippingCost > 0
+                            ? "Rp " + shippingCost.toLocaleString("id-ID")
+                            : "Gratis"
+                        }`
                       )}
                     </dd>
                   </div>
@@ -478,7 +466,9 @@ export default function CheckoutPageClient({
                   <button
                     type="submit"
                     onClick={handleConfirmOrder}
-                    className={`w-full flex items-center justify-center rounded-md border border-transparent ${isSubmitting ? "bg-gray-300" : "bg-blue-500" }  px-4 py-3 text-base font-semibold text-white shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-50`}
+                    className={`w-full flex items-center justify-center rounded-md border border-transparent ${
+                      isSubmitting ? "bg-gray-300" : "bg-blue-500"
+                    }  px-4 py-3 text-base font-semibold text-white shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-50`}
                   >
                     {isSubmitting ? (
                       <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>

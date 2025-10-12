@@ -1,18 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import OrderCard from "@/components/profile/orders/orderCard";
 import OrderDetailModal from "@/components/profile/orders/orderDetailModal";
 import { IOrder } from "@/interfaces/orderInterface";
+import { getCookie } from "cookies-next";
+import { jwtDecode } from "jwt-decode";
+import { getUserOrders } from "@/lib/data";
 
 // --- MAIN PAGE COMPONENT ---
-export default function OrderHistoryClient({
-  initialOrders,
-}: {
-  initialOrders: IOrder[];
-}) {
-    // eslint-disable-next-line
-  const [orders, setOrders] = useState<IOrder[]>(initialOrders);
+export default function OrderHistoryClient() {
+  const [orders, setOrders] = useState<IOrder[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<IOrder | null>(null);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -25,6 +23,24 @@ export default function OrderHistoryClient({
   const indexOfFirstorder = indexOfLastOrder - ordersPerPage;
   const currentOrders = orders.slice(indexOfFirstorder, indexOfLastOrder);
   const totalPages = Math.ceil(orders.length / ordersPerPage);
+
+  useEffect(() => {
+    try {
+      const token = getCookie("token") as string;
+      if (!token) return;
+      const userId = jwtDecode<{ id: string }>(token).id;
+
+      const fetchOrders = async () => {
+        const orders = await getUserOrders(userId);
+        setOrders(orders);
+      };
+
+      fetchOrders()
+    } catch (error) {
+      console.error("Error fetching addresses:", error);
+      throw error;
+    }
+  }, []);
 
   const handleNextPage = () => {
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
@@ -98,7 +114,7 @@ export default function OrderHistoryClient({
       <div className="mt-6">
         <button
           type="button"
-          onClick={() => window.location.href="/products"}
+          onClick={() => (window.location.href = "/products")}
           className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
         >
           Mulai Belanja

@@ -3,19 +3,32 @@ import { apiUrl } from "@/config";
 import useAuthStore from "@/stores/useAuthStore";
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 
-// This function is no longer needed, as we will interact with the store directly
-// let accessToken: string | null = null;
-// export const setAccessToken = (token: string | null) => { ... }
-
+// Create axios instance with base configuration
 const api = axios.create({
   baseURL: apiUrl,
   withCredentials: true,
+  timeout: 20000, // 10 second timeout
 });
 
-// Request Interceptor: Get the token from the Zustand store
+let isInitialized = false;
+
+// Lazy initialization function
+const ensureInitialized = () => {
+  if (isInitialized || typeof window === 'undefined') return;
+  
+  const token = useAuthStore.getState().accessToken;
+  if (token) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  }
+  isInitialized = true;
+};
+
+// Request Interceptor
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = useAuthStore.getState().accessToken; 
+    ensureInitialized();
+    const token = useAuthStore.getState().accessToken;
+    
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -24,7 +37,27 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response Interceptor: Handle token refresh on 401 errors
+// Token refresh promise to prevent multiple refresh calls
+let isRefreshing = false;
+interface QueueItem {
+  resolve: (token: string) => void;
+  reject: (error: Error | AxiosError) => void;
+}
+
+let failedQueue: Array<QueueItem> = [];
+
+const processQueue = (error: Error | AxiosError | null, token: string | null = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else if (token) {
+      prom.resolve(token);
+    }
+  });
+  failedQueue = [];
+};
+
+// Response Interceptor with improved token refresh handling
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
@@ -32,27 +65,50 @@ api.interceptors.response.use(
       _retry?: boolean;
     };
 
+    // Only attempt refresh if we have a 401 and it's not already a retry
     if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      try {
-        const { data } = await api.post("/api/auth/refresh-token");
-        const accessToken = data.token;
-
-        // Use the login action from the store to update the token everywhere
-        useAuthStore.getState().setAccessToken(accessToken);
-
-        // Update the header of the original request
-        if (originalRequest.headers) {
-          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+      if (isRefreshing) {
+        // If refresh is in progress, queue this request
+        try {
+          const token = await new Promise<string>((resolve, reject) => {
+            failedQueue.push({ resolve, reject });
+          });
+          originalRequest.headers.Authorization = `Bearer ${token}`;
+          return api(originalRequest);
+        } catch (err) {
+          return Promise.reject(err);
         }
+      }
+
+      isRefreshing = true;
+      originalRequest._retry = true;
+
+      try {
+        ensureInitialized();
+        const { data } = await api.get(`/api/auth/refresh-token`);
+        const newToken = data.token;
+
+        // Update store and axios defaults
+        useAuthStore.getState().setAccessToken(newToken);
+        api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+
+        // Process queued requests
+        processQueue(null, newToken);
+
+        // Retry original request
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return api(originalRequest);
-      } catch (refreshError) {
-        // If refresh fails, log out the user
+      } catch (error) {
+        // Handle refresh failure
+        const refreshError = error instanceof Error ? error : new Error('Token refresh failed');
+        processQueue(refreshError, null);
         useAuthStore.getState().logout();
-        console.error("Session expired.");
         return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
       }
     }
+
     return Promise.reject(error);
   }
 );

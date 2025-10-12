@@ -6,9 +6,9 @@ import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { apiUrl } from "@/config";
 import { IRegister } from "@/interfaces/authInterfaces";
 import toast from "react-hot-toast";
+import api from "@/lib/axios";
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -23,7 +23,7 @@ export default function RegisterPage() {
     validationSchema: RegisterSchema,
     onSubmit: async (values: IRegister) => {
       try {
-        await axios.post(`${apiUrl}/api/auth/register`, values);
+        await api.post(`/api/auth/register`, values);
 
         toast.success("Berhasil membuat akun. Silakan login.");
 

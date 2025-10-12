@@ -1,10 +1,9 @@
 "use client";
 
-import { apiUrl } from "@/config";
 import { IPasswordChange, IUser } from "@/interfaces/authInterfaces";
+import api from "@/lib/axios";
 import { ChangePasswordSchema } from "@/schemas/authSchemas";
 import axios from "axios";
-import { getCookie } from "cookies-next";
 import { useFormik } from "formik";
 import { FC, useEffect, useState } from "react";
 
@@ -43,13 +42,7 @@ const ChangePasswordModal: FC<ChangePasswordModalProps> = ({
     validationSchema: ChangePasswordSchema,
     onSubmit: async (values) => {
       try {
-        const token = getCookie("access_token") as string;
-
-        await axios.patch(`${apiUrl}/api/users/password/${user?.id}`, values, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        await api.patch(`/api/users/password/${user?.id}`, values, );
 
         alert("change password success");
         onClose();

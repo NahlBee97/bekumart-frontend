@@ -1,7 +1,7 @@
 "use client";
 
 import { apiUrl } from "@/config";
-import axios from "axios";
+import api from "@/lib/axios";
 import { getCookie } from "cookies-next";
 import { CheckCircleIcon } from "lucide-react";
 import Link from "next/link";
@@ -19,17 +19,9 @@ export default function Success() {
 
       const updateOrderStatus = async () => {
         if (orderId) {
-          await axios.patch(
-            `${apiUrl}/api/orders/${orderId}`,
-            {
-              status: "PROCESSING",
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+          await api.patch(`${apiUrl}/api/orders/${orderId}`, {
+            status: "PROCESSING",
+          });
         }
       };
       updateOrderStatus();

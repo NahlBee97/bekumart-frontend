@@ -12,6 +12,7 @@ import { setCookie } from "cookies-next";
 import { jwtDecode } from "jwt-decode";
 import toast from "react-hot-toast";
 import useAuthStore from "@/stores/useAuthStore";
+import api from "@/lib/axios";
 
 export default function LoginPage() {
   const { setAccessToken, login } = useAuthStore();
@@ -39,7 +40,7 @@ export default function LoginPage() {
     validationSchema: LoginSchema,
     onSubmit: async (values: ILogin) => {
       try {
-        const response = await axios.post(`${apiUrl}/api/auth/login`, values);
+        const response = await api.post(`/api/auth/login`, values);
 
         // set token to cookie
         const { refreshToken, accessToken } = response.data.tokens;

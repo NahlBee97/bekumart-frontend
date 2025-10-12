@@ -1,14 +1,13 @@
 "use client";
 
-import { apiUrl } from "@/config";
-import { IAddresses } from "@/interfaces/addressInterface";
+import { IAddress } from "@/interfaces/addressInterface";
+import api from "@/lib/axios";
 import { AddressSchema } from "@/schemas/addressSchema";
 import useAuthStore from "@/stores/useAuthStore";
-import axios from "axios";
-import { getCookie } from "cookies-next";
 import { useFormik } from "formik";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const AddressModal = ({
   isOpen,
@@ -19,7 +18,7 @@ const AddressModal = ({
   isOpen: boolean;
   onSave: () => void;
   onClose: () => void;
-  address: IAddresses | null;
+  address: IAddress | null;
 }) => {
   const { user } = useAuthStore();
 
@@ -42,7 +41,7 @@ const AddressModal = ({
   const [selectedSubDistrict, setSelectedSubDistrict] = useState<string>("");
   // --- CHANGE 1: Add a state to control the animation ---
   const [show, setShow] = useState(false);
-  
+
   useEffect(() => {
     if (address) {
       setSelectedProvince(address.province);
@@ -66,7 +65,7 @@ const AddressModal = ({
   useEffect(() => {
     const fetchProvinces = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/api/provinces`);
+        const response = await api.get(`/api/provinces`);
         setProvinces(response.data.data);
       } catch (error) {
         console.error("Error fetching provinces:", error);
@@ -80,9 +79,7 @@ const AddressModal = ({
     if (selectedProvince) {
       const fetchCities = async () => {
         try {
-          const response = await axios.get(
-            `${apiUrl}/api/cities/${selectedProvince}`
-          );
+          const response = await api.get(`/api/cities/${selectedProvince}`);
           setCities(response.data.data);
         } catch (error) {
           console.error("Error fetching cities:", error);
@@ -97,8 +94,8 @@ const AddressModal = ({
     if (selectedCity) {
       const fetchDistricts = async () => {
         try {
-          const response = await axios.get(
-            `${apiUrl}/api/districts?province=${selectedProvince}&city=${selectedCity}`
+          const response = await api.get(
+            `/api/districts?province=${selectedProvince}&city=${selectedCity}`
           );
           setDistricts(response.data.data);
         } catch (error) {
@@ -114,8 +111,8 @@ const AddressModal = ({
     if (selectedDistrict) {
       const fetchSubDistricts = async () => {
         try {
-          const response = await axios.get(
-            `${apiUrl}/api/sub-districts?province=${selectedProvince}&city=${selectedCity}&district=${selectedDistrict}`
+          const response = await api.get(
+            `/api/sub-districts?province=${selectedProvince}&city=${selectedCity}&district=${selectedDistrict}`
           );
           setSubDistricts(response.data.data);
         } catch (error) {
@@ -142,31 +139,19 @@ const AddressModal = ({
     },
     onSubmit: async (values) => {
       try {
-        const token = getCookie("access_token") as string;
         if (address) {
-          await axios.put(`${apiUrl}/api/addresses/${address.id}`, values, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          alert("Alamat berhasil diedit!");
+          await api.put(`/api/addresses/${address.id}`, values);
+          toast.success("Alamat berhasil diedit!");
         } else {
-          await axios.post(
-            `${apiUrl}/api/addresses`,
-            { ...values, userId: user.id },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          alert("Alamat baru berhasil ditambahkan!");
+          await api.post(`/api/addresses`, { ...values, userId: user.id });
+          toast.success("Alamat baru berhasil ditambahkan!");
         }
 
         onSave();
         onClose();
-      } catch (err) {
-        alert("Error adding new address: " + err);
+      } catch (error) {
+        console.error("Gagal: " + error);
+        toast("Gagal");
       }
     },
   });

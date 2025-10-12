@@ -1,11 +1,9 @@
 "use client";
 
-import { apiUrl } from "@/config";
 import { IAddresses } from "@/interfaces/addressInterface";
+import api from "@/lib/axios";
 import { AddressSchema } from "@/schemas/addressSchema";
 import useAuthStore from "@/stores/useAuthStore";
-import axios from "axios";
-import { getCookie } from "cookies-next";
 import { useFormik } from "formik";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -67,7 +65,7 @@ const AddressCheckoutModal = ({
   useEffect(() => {
     const fetchProvinces = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/api/provinces`);
+        const response = await api.get(`/api/provinces`);
         setProvinces(response.data.data);
       } catch (error) {
         console.error("Error fetching provinces:", error);
@@ -81,9 +79,7 @@ const AddressCheckoutModal = ({
     if (selectedProvince) {
       const fetchCities = async () => {
         try {
-          const response = await axios.get(
-            `${apiUrl}/api/cities/${selectedProvince}`
-          );
+          const response = await api.get(`/api/cities/${selectedProvince}`);
           setCities(response.data.data);
         } catch (error) {
           console.error("Error fetching cities:", error);
@@ -98,8 +94,8 @@ const AddressCheckoutModal = ({
     if (selectedCity) {
       const fetchDistricts = async () => {
         try {
-          const response = await axios.get(
-            `${apiUrl}/api/districts?province=${selectedProvince}&city=${selectedCity}`
+          const response = await api.get(
+            `/api/districts?province=${selectedProvince}&city=${selectedCity}`
           );
           setDistricts(response.data.data);
         } catch (error) {
@@ -115,8 +111,8 @@ const AddressCheckoutModal = ({
     if (selectedDistrict) {
       const fetchSubDistricts = async () => {
         try {
-          const response = await axios.get(
-            `${apiUrl}/api/sub-districts?province=${selectedProvince}&city=${selectedCity}&district=${selectedDistrict}`
+          const response = await api.get(
+            `/api/sub-districts?province=${selectedProvince}&city=${selectedCity}&district=${selectedDistrict}`
           );
           setSubDistricts(response.data.data);
         } catch (error) {
@@ -143,29 +139,18 @@ const AddressCheckoutModal = ({
     },
     onSubmit: async (values) => {
       try {
-        const token = getCookie("access_token") as string;
         if (address) {
-          const response = await axios.put(
-            `${apiUrl}/api/addresses/${address.id}`,
-            values,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
+          const response = await api.put(
+            `/api/addresses/${address.id}`,
+            values
           );
           onSelect(response.data.data);
           alert("Alamat berhasil diedit!");
         } else {
-          const response = await axios.post(
-            `${apiUrl}/api/addresses`,
-            { ...values, userId: user.id },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+          const response = await api.post(`/api/addresses`, {
+            ...values,
+            userId: user.id,
+          });
           onSelect(response.data.data);
           alert("Alamat baru berhasil ditambahkan!");
         }
@@ -215,12 +200,16 @@ const AddressCheckoutModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className={`fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4 transition-opacity duration-300 ease-in-out ${
+    <div
+      className={`fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4 transition-opacity duration-300 ease-in-out ${
         show ? "opacity-100" : "opacity-0"
-      }`}>
-      <div className={`bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col transform transition-all duration-300 ease-in-out ${
+      }`}
+    >
+      <div
+        className={`bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col transform transition-all duration-300 ease-in-out ${
           show ? "scale-100 opacity-100" : "scale-95 opacity-0"
-        }`}>
+        }`}
+      >
         <div className="p-4 border-b flex justify-between items-center">
           <h2 className="text-xl text-blue-500 font-semibold">
             {address ? "Edit Alamat" : "Tambah Alamat Baru"}

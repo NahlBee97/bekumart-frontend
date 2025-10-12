@@ -3,10 +3,8 @@
 import { IOrder, IOrderItem } from "@/interfaces/orderInterface";
 import { useEffect, useState } from "react";
 import StatusBadge from "../../statusBadge";
-import { getCookie } from "cookies-next";
-import axios from "axios";
-import { apiUrl } from "@/config";
 import { format } from "date-fns";
+import { getOrderItems } from "@/lib/data";
 
 // --- MODAL COMPONENT ---
 const OrderDetailModal: React.FC<{
@@ -27,19 +25,12 @@ const OrderDetailModal: React.FC<{
   }, [order]);
 
   useEffect(() => {
-    setOrderItems([]);
     try {
-      const token = getCookie("access_token") as string;
+      setOrderItems([]);
+      if (!order) return;
       const fetchOrderItems = async () => {
-        const response = await axios.get(
-          `${apiUrl}/api/orders/order-items/${order?.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setOrderItems(response.data.data);
+        const orderItems = await getOrderItems(order.id)
+        setOrderItems(orderItems);
       };
       fetchOrderItems();
     } catch (err) {

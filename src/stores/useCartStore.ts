@@ -1,8 +1,6 @@
-import axios from "axios";
 import { create } from "zustand";
 import { ICart } from "@/interfaces/cartInterfaces";
-import { apiUrl } from "@/config";
-import { getCookie } from "cookies-next";
+import api from "@/lib/axios";
 
 // Define the shape of your store's state and actions
 interface CartState {
@@ -32,20 +30,10 @@ export const useCartStore = create<CartState>((set) => ({
   // Corrected async action
   addToCart: async (userId: string, productId: string, quantity: number) => {
     try {
-      const token = getCookie("access_token") as string;
-
       // Perform the async API call and wait for the response
-      await axios.post(
-        `${apiUrl}/api/carts/items`,
-        { userId, productId, quantity },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      await api.post(`/api/carts/items`, { userId, productId, quantity });
 
-      const response = await axios.get(`${apiUrl}/api/carts/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await api.get(`/api/carts/${userId}`);
 
       set({ cart: response.data.data });
     } catch (error) {
@@ -59,23 +47,10 @@ export const useCartStore = create<CartState>((set) => ({
     quantity: number
   ) => {
     try {
-      const token = getCookie("access_token") as string;
-      if (!token) {
-        throw new Error("No authorization token found.");
-      }
-
-      await axios.put(
-        `${apiUrl}/api/carts/items/${itemId}`,
-        { quantity },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      await api.put(`/api/carts/items/${itemId}`, { quantity });
 
       // Fetch the updated cart after changing the quantity
-      const response = await axios.get(`${apiUrl}/api/carts/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await api.get(`/api/carts/${userId}`);
 
       set({ cart: response.data.data });
     } catch (error) {
@@ -85,19 +60,10 @@ export const useCartStore = create<CartState>((set) => ({
 
   deleteItem: async (userId: string, itemId: string) => {
     try {
-      const token = getCookie("access_token") as string;
-      if (!token) {
-        throw new Error("No authorization token found.");
-      }
-
-      await axios.delete(`${apiUrl}/api/carts/items/${itemId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await api.delete(`/api/carts/items/${itemId}`);
 
       // Fetch the updated cart after deleting the item
-      const response = await axios.get(`${apiUrl}/api/carts/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await api.get(`/api/carts/${userId}`);
 
       set({ cart: response.data.data });
     } catch (error) {

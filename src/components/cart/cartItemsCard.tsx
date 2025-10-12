@@ -41,7 +41,7 @@ const CartItemCard: React.FC<{ item: ICartItem }> = ({ item }) => {
     return () => {
       clearTimeout(handler);
     };
-  }, [localQuantity, item.quantity, user.id, item.id, updateItemQuantity]);
+  }, [localQuantity, item.quantity, user, item.id, updateItemQuantity]);
 
   const handleDecrement = () => {
     setLocalQuantity((prev) => Math.max(1, prev - 1)); // Prevents quantity from going below 1

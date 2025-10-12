@@ -2,10 +2,10 @@
 
 import { use, useState } from "react";
 import axios from "axios";
-import { apiUrl } from "@/config";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import { ChangePasswordSchema } from "@/schemas/authSchemas";
+import api from "@/lib/axios";
 
 export interface Props {
   params: Promise<{
@@ -35,7 +35,7 @@ export default function ResetPassword({ params }: Props) {
 
         if (!token) throw new Error("Token not provided");
 
-        await axios.patch(`${apiUrl}/api/auth/set-password`, {
+        await api.patch(`/api/auth/set-password`, {
           password,
           token,
         });

@@ -2,29 +2,20 @@
 
 import { ArrowLeft, ShoppingCart } from "lucide-react";
 import { useCartStore } from "@/stores/useCartStore";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ICart } from "@/interfaces/cartInterfaces";
 import CartItemCard from "./cartItemsCard";
 import Link from "next/link";
 
 // Accept the server-fetched cart data as a prop
 export default function CartPageClient({
-  initialCart,
   callbackUrl,
 }: {
-  initialCart: ICart | null;
   callbackUrl: string;
 }) {
   const router = useRouter();
-  const { cart, setCart } = useCartStore();
+  const { cart } = useCartStore();
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    if (initialCart) {
-      setCart(initialCart);
-    }
-  }, [initialCart, setCart]);
 
   const handleArrowClicked = () => {
     const forbiddenRoutes = ["/login", "/register", "/checkout"];

@@ -35,11 +35,12 @@ const StickyAddToCart: React.FC<{
   const handleAddToCart = async () => {
     try {
       setIsLoading(true);
-      const token = getCookie("access_token") as string;
+      const token = getCookie("token") as string;
       if (!token) {
         setIsShowConfirmModal(true);
         return;
       }
+      if (!user) return;
       await addToCart(user.id, product.id, quantity);
       toast.success("Berhasil menambahkan");
     } catch (error) {

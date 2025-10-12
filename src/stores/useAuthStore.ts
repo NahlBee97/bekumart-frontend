@@ -7,7 +7,7 @@ import { deleteCookie } from "cookies-next";
 
 interface AuthState {
   accessToken: string | null;
-  user: IUser | null;
+  user: IUser;
   isLoggedIn: boolean;
   checkAuth: () => Promise<void>;
   setAccessToken: (token: string) => void;
@@ -17,7 +17,7 @@ interface AuthState {
 
 const useAuthStore = create<AuthState>((set) => ({
   accessToken: null,
-  user: null,
+  user: {} as IUser,
   isLoggedIn: false,
   checkAuth: async () => {
     try {
@@ -34,7 +34,7 @@ const useAuthStore = create<AuthState>((set) => ({
       });
     } catch (error) {
       // If refresh fails, it means no valid session, so we clear the state
-      set({ user: null, isLoggedIn: false, accessToken: null });
+      set({ user: {} as IUser, isLoggedIn: false, accessToken: null });
       console.log("No active session found:", error);
     }
   },
@@ -42,7 +42,7 @@ const useAuthStore = create<AuthState>((set) => ({
   login: (user: IUser) => set({ user, isLoggedIn: true }),
   logout: () => {
     deleteCookie("token");
-    set({ user: null, isLoggedIn: false, accessToken: null })},
+    set({ user: {} as IUser, isLoggedIn: false, accessToken: null });},
 }));
 
 export default useAuthStore;

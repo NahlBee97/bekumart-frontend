@@ -1,57 +1,39 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { useFormik } from "formik";
 import { Camera } from "lucide-react";
-import { apiUrl } from "@/config";
-import { deleteCookie, getCookie, setCookie } from "cookies-next";
-import { IUser } from "@/interfaces/authInterfaces";
 import { jwtDecode } from "jwt-decode";
 import { UpdateProfileSchema } from "@/schemas/profileSchemas";
 import ProfileImageUploadModal from "@/components/profile/profileImageModal";
 import axios from "axios";
 import ChangePasswordModal from "./changePasswordModal";
 import useAuthStore from "@/stores/useAuthStore";
+import { getUserData } from "@/lib/data";
+import { getCookie } from "cookies-next";
+import api from "@/lib/axios";
+import toast from "react-hot-toast";
 
-export default function AccountInfo({ initialUser }: { initialUser: IUser }) {
-  const { login } = useAuthStore();
-  const [user, setUser] = useState<IUser | null>(null);
+export default function AccountInfo() {
+  const { user, login } = useAuthStore();
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
 
-  useEffect(() => {
-    if (initialUser) {
-      setUser(initialUser);
-    }
-  }, [initialUser, setUser]);
-
   const refreshUser = useCallback(async () => {
     try {
-      const token = getCookie("access_token") as string;
-      const response = await axios.get(`${apiUrl}/api/users/${user?.id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const token = getCookie("token") as string;
+      if (!token) return;
+      const userId = jwtDecode<{ id: string }>(token).id;
 
-      const newToken = response.data.data;
-
-      const userData = jwtDecode<IUser>(newToken);
+      const userData = await getUserData(userId);
 
       login(userData);
-      setUser(userData);
-
-      deleteCookie("access_token");
-
-      setCookie("access_token", newToken, {
-        expires: new Date(Date.now() + 60 * 60 * 1000),
-      });
     } catch (error) {
       console.error("Error fetching addresses:", error);
       throw error;
     }
-  }, [user, login]);
+  }, [login]);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -62,25 +44,19 @@ export default function AccountInfo({ initialUser }: { initialUser: IUser }) {
     validationSchema: UpdateProfileSchema,
     onSubmit: async (values) => {
       try {
-        const token = getCookie("access_token") as string;
-
-        await axios.put(`${apiUrl}/api/users/${user?.id}`, values, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        await api.put(`/api/users/${user?.id}`, values);
 
         refreshUser();
 
         setIsEditMode(false);
 
-        alert("edit profile success");
+        toast.success("edit profile berhasil");
       } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
           const errorMessage = err.response.data.message;
-          alert(`${errorMessage}`);
+          toast.error(`${errorMessage}`);
         } else {
-          alert("An unexpected error occurred");
+          toast.error("An unexpected error occurred");
         }
       }
     },
