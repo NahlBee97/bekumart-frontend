@@ -12,7 +12,7 @@ interface AuthState {
   checkAuth: () => Promise<void>;
   setAccessToken: (token: string) => void;
   login: (userData: IUser) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 const useAuthStore = create<AuthState>((set) => ({
@@ -40,9 +40,11 @@ const useAuthStore = create<AuthState>((set) => ({
   },
   setAccessToken: (token: string) => set({ accessToken: token }),
   login: (user: IUser) => set({ user, isLoggedIn: true }),
-  logout: () => {
+  logout: async () => {
+    await api.post("api/auth/logout", {});
     deleteCookie("token");
-    set({ user: {} as IUser, isLoggedIn: false, accessToken: null });},
+    set({ user: {} as IUser, isLoggedIn: false, accessToken: null });
+  },
 }));
 
 export default useAuthStore;
