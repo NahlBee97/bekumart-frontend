@@ -1,18 +1,13 @@
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
-import type { FC } from "react";
 
 // You can move this component to its own file and import it
-export const BurgerMenu: FC = () => {
+export const BurgerMenu = ({links}: {links: {name: string; link: string}[]}) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const [activeLink, setActiveLink] = useState("");
-  const links = [
-    { name: "Toko", link: "/" },
-    { name: "Tentang Kami", link: "/about" },
-    { name: "Hubungi Kami", link: "/contact" },
-  ];
+ 
 
   useEffect(() => {
     if (!activeLink) setActiveLink(window.location.pathname);

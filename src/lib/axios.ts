@@ -7,18 +7,17 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 const api = axios.create({
   baseURL: apiUrl,
   withCredentials: true,
-  timeout: 20000, // 10 second timeout
 });
 
 let isInitialized = false;
 
 // Lazy initialization function
 const ensureInitialized = () => {
-  if (isInitialized || typeof window === 'undefined') return;
-  
+  if (isInitialized || typeof window === "undefined") return;
+
   const token = useAuthStore.getState().accessToken;
   if (token) {
-    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   }
   isInitialized = true;
 };
@@ -28,7 +27,7 @@ api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     ensureInitialized();
     const token = useAuthStore.getState().accessToken;
-    
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -46,7 +45,10 @@ interface QueueItem {
 
 let failedQueue: Array<QueueItem> = [];
 
-const processQueue = (error: Error | AxiosError | null, token: string | null = null) => {
+const processQueue = (
+  error: Error | AxiosError | null,
+  token: string | null = null
+) => {
   failedQueue.forEach((prom) => {
     if (error) {
       prom.reject(error);
@@ -90,7 +92,7 @@ api.interceptors.response.use(
 
         // Update store and axios defaults
         useAuthStore.getState().setAccessToken(newToken);
-        api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+        api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
 
         // Process queued requests
         processQueue(null, newToken);
@@ -100,7 +102,8 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (error) {
         // Handle refresh failure
-        const refreshError = error instanceof Error ? error : new Error('Token refresh failed');
+        const refreshError =
+          error instanceof Error ? error : new Error("Token refresh failed");
         processQueue(refreshError, null);
         useAuthStore.getState().logout();
         return Promise.reject(refreshError);

@@ -3,9 +3,8 @@
 import { IOrder, IOrderItem } from "@/interfaces/orderInterface";
 import { useEffect, useState } from "react";
 import StatusBadge from "../../statusBadge";
-import { getCookie } from "cookies-next";
-import axios from "axios";
-import { apiUrl } from "@/config";
+import { getOrderItems } from "@/lib/data";
+import { format } from "date-fns";
 
 // --- MODAL COMPONENT ---
 const OrderDetailAdminModal: React.FC<{
@@ -16,24 +15,19 @@ const OrderDetailAdminModal: React.FC<{
   const [orderItems, setOrderItems] = useState<IOrderItem[]>([]);
 
   useEffect(() => {
-    try {
-      const token = getCookie("access_token") as string;
-      const fetchOrderItems = async () => {
-        const response = await axios.get(
-          `${apiUrl}/api/orders/order-items/${order?.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setOrderItems(response.data.data);
-      };
-      fetchOrderItems();
-    } catch (err) {
-      console.log("fail fetching order items" + err);
-    }
-  }, [order]);
+      try {
+        setOrderItems([]);
+        if (!order) return;
+        const fetchOrderItems = async () => {
+          const orderItems = await getOrderItems(order.id)
+          setOrderItems(orderItems);
+        };
+        fetchOrderItems();
+      } catch (err) {
+        console.log("fail fetching order items" + err);
+      }
+    }, [order]);
+  
 
   // Effect to handle Escape key press for closing the modal
   useEffect(() => {
@@ -97,7 +91,7 @@ const OrderDetailAdminModal: React.FC<{
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div>
               <p className="text-sm font-medium text-gray-500">Order Date</p>
-              <p className="text-base text-gray-800">{order.createdAt}</p>
+              <p className="text-base text-gray-800">{format(order.createdAt, "dd MMMM yyy")}</p>
             </div>
             <div>
               <p className="text-sm font-medium text-gray-500">Status</p>
@@ -106,7 +100,7 @@ const OrderDetailAdminModal: React.FC<{
             <div>
               <p className="text-sm font-medium text-gray-500">Total</p>
               <p className="text-base font-semibold text-gray-800">
-                ${order.totalAmount.toFixed(2)}
+                Rp {order.totalAmount.toLocaleString()}
               </p>
             </div>
           </div>

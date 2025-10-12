@@ -1,8 +1,7 @@
 "use client";
 
-import { apiUrl } from "@/config";
 import { IUser } from "@/interfaces/authInterfaces";
-import axios from "axios";
+import api from "@/lib/axios";
 import { getCookie } from "cookies-next";
 import { FC, useEffect, useState } from "react";
 
@@ -62,18 +61,14 @@ const ProfileImageUploadModal: FC<ImageUploadModalProps> = ({
 
   const handleSave = async () => {
     setLoading(true);
-    const token = getCookie("access_token") as string;
-    if (!token) throw new Error("restricted");
+    const token = getCookie("token") as string;
+    if (!token) return;
     try {
       if (!file) throw new Error("No file selected");
 
       const formData = new FormData();
       formData.append("file", file);
-      await axios.patch(`${apiUrl}/api/users/${user.id}`, formData, {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      });
+      await api.patch(`/api/users/${user.id}`, formData);
       alert("Image uploaded successfully!");
       setLoading(false);
       onSave();

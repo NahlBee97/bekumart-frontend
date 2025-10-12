@@ -15,6 +15,12 @@ export default function Header() {
   const { user, isLoggedIn, accessToken } = useAuthStore();
   const pathname = usePathname();
 
+  const links = [
+    { name: "Toko", link: "/" },
+    { name: "Tentang Kami", link: "/about" },
+    { name: "Hubungi Kami", link: "/contact" },
+  ];
+
   useEffect(() => {
     if (user && accessToken) {
       try {
@@ -112,7 +118,7 @@ export default function Header() {
             </div>
           )}
           <div className="md:hidden">
-            <BurgerMenu />
+            <BurgerMenu links={links} />
           </div>
         </div>
       </div>

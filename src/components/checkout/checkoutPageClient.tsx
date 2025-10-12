@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { ArrowLeft, StoreIcon, TruckIcon } from "lucide-react";
 import useAuthStore from "@/stores/useAuthStore";
 import { useCartStore } from "@/stores/useCartStore";
-import { IAddresses } from "@/interfaces/addressInterface";
+import { IAddress } from "@/interfaces/addressInterface";
 import { getCookie } from "cookies-next";
 import { apiUrl, midtransClientKey } from "@/config";
 import AddressListModal from "@/components/checkout/addressListModal";
@@ -25,14 +25,14 @@ export default function CheckoutPageClient() {
   const [paymentMethod, setPaymentMethod] = useState("ONLINE");
 
   // State Management
-  const [addresses, setAddresses] = useState<IAddresses[]>([]);
-  const [selectedAddress, setSelectedAddress] = useState<IAddresses>();
+  const [addresses, setAddresses] = useState<IAddress[]>([]);
+  const [selectedAddress, setSelectedAddress] = useState<IAddress>();
   const [shippingCost, setShippingCost] = useState(0);
   const [isListModalOpen, setListModalOpen] = useState<boolean>(false);
   const [isFormModalOpen, setFormModalOpen] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isCalculating, setIsCalculating] = useState<boolean>(false);
-  const [editingAddress, setEditingAddress] = useState<IAddresses | null>(null);
+  const [editingAddress, setEditingAddress] = useState<IAddress | null>(null);
 
   const refreshUserAddresses = useCallback(async () => {
     // Don't fetch if cart is empty
@@ -46,7 +46,7 @@ export default function CheckoutPageClient() {
     }
     try {
       const addresess = await getUserAddresses(user.id);
-      const mainAddress = addresess.find((address: IAddresses) => address.isDefault === true);
+      const mainAddress = addresess.find((address: IAddress) => address.isDefault === true);
       setSelectedAddress(mainAddress);
       setAddresses(addresess);
     } catch (error) {
@@ -155,7 +155,7 @@ export default function CheckoutPageClient() {
     setFormModalOpen(true);
   };
 
-  const openEditForm = (address: IAddresses) => {
+  const openEditForm = (address: IAddress) => {
     setEditingAddress(address);
     setListModalOpen(false);
     setFormModalOpen(true);

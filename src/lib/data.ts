@@ -21,6 +21,17 @@ export async function getCartData(userId: string) {
   }
 }
 
+export async function getOrders() {
+  try {
+    const response = await api.get(`/api/orders`);
+
+    return response.data.data;
+  } catch (error) {
+    console.error("Failed to fetch orders data:", error);
+    throw new Error("Gagal memuat pesanan");
+  }
+}
+
 export async function getUserOrders(userId: string) {
   try {
     const response = await api.get(`/api/orders/${userId}`);

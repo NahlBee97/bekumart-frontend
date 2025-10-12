@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { apiUrl } from "@/config";
 import { ICategory, IProduct } from "@/interfaces/productInterfaces";
+import api from "@/lib/axios";
+import { getCategories } from "@/lib/data";
 import { ProductSchema } from "@/schemas/productSchemas";
-import axios from "axios";
-import { getCookie } from "cookies-next";
 import { useFormik } from "formik";
 import { FC, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 // --- PRODUCT FORM MODAL COMPONENT ---
 interface ProductFormModalProps {
@@ -22,22 +22,22 @@ const ProductFormModal: FC<ProductFormModalProps> = ({
   onSave,
   productToEdit,
 }) => {
-
   const [categories, setCategories] = useState<ICategory[]>([]);
-  
+
   useEffect(() => {
     try {
-    const fetchCategories = async () => {
-      const response = await axios.get(`${apiUrl}/api/categories`);
-      setCategories(response.data.data);
-    };
-    fetchCategories();
-  } catch (error) {
-    console.error("Error fetching categories:", error);
-  }
-},[]);
+      const fetchCategories = async () => {
+        const categories = await getCategories();
+        setCategories(categories);
+      };
+      fetchCategories();
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  }, []);
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: productToEdit || {
       name: "",
       category: { id: "", name: "" },
@@ -49,8 +49,6 @@ const ProductFormModal: FC<ProductFormModalProps> = ({
     validationSchema: ProductSchema,
     onSubmit: async (values) => {
       try {
-        const token = getCookie("access_token") as string;
-
         // Create a new payload object for the API
         const payload = {
           ...values,
@@ -59,26 +57,17 @@ const ProductFormModal: FC<ProductFormModalProps> = ({
 
         if (productToEdit?.id) {
           // Update existing product
-          await axios.put(
-            `${apiUrl}/api/products/${productToEdit.id}`,
-            payload,
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          );
+          await api.put(`/api/products/${productToEdit.id}`, payload);
         } else {
-          await axios.post(`${apiUrl}/api/products`, payload, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          await api.post(`/api/products`, payload);
         }
         onSave();
-        alert("Product saved successfully.");
+        toast.success("Berhasil Menyimpan Product");
       } catch (error) {
-        console.error("Error saving product:", error);
-        alert("Failed to save product. Please try again.");
+        console.error("Gagal Menyimpan Product:", error);
+        toast.error("Gagal Menyimpan Product");
       }
     },
-    enableReinitialize: true,
   });
 
   if (!isOpen) return null;
@@ -92,7 +81,7 @@ const ProductFormModal: FC<ProductFormModalProps> = ({
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <form onSubmit={formik.handleSubmit}>
           <div className="p-6 border-b">
-            <h2 className="text-2xl font-bold text-gray-800">{modalTitle}</h2>
+            <h2 className="text-xl font-bold text-blue-500">{modalTitle}</h2>
           </div>
           <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Name */}
@@ -229,13 +218,13 @@ const ProductFormModal: FC<ProductFormModalProps> = ({
               onClick={onClose}
               className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none"
             >
-              Cancel
+              Batal
             </button>
             <button
               type="submit"
               className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:outline-none"
             >
-              {formik.isSubmitting ? "Saving..." : "Save Product"}
+              {formik.isSubmitting ? "Menyimpan..." : "Simpan"}
             </button>
           </div>
         </form>

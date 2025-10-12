@@ -1,13 +1,13 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import Navbar from "./navbar";
-import Footer from "./footer";
 import useAuthStore from "@/stores/useAuthStore";
 import { useEffect } from "react";
 import { getCookie } from "cookies-next";
+import ClientNavbar from "./navbar/clientNavbar";
+import AdminNavbar from "./navbar/adminNavbar";
 
-export default function ClientWrapper({
+export default function AuthWrapper({
   children,
 }: {
   children: React.ReactNode;
@@ -27,17 +27,10 @@ export default function ClientWrapper({
   return (
     <>
       {/* ✅ Tampilkan Navbar jika BUKAN halaman admin */}
-      {!isAdminRoute && <Navbar />}
+      {!isAdminRoute ? <ClientNavbar /> : <AdminNavbar/>}
 
       {/* ✅ Tampilkan konten utama */}
       {children}
-
-      {/* ✅ Tampilkan Footer jika BUKAN halaman admin */}
-      {!isAdminRoute && (
-        <div className="2xl:px-[300px] xl:px-[150px] bg-[#1A1A1A]">
-          <Footer />
-        </div>
-      )}
     </>
   );
 }

@@ -2,35 +2,42 @@
 
 import { IProduct } from "@/interfaces/productInterfaces";
 import { useEffect, useState, useCallback } from "react";
-import axios from "axios";
-import { apiUrl } from "@/config";
-import { getCookie } from "cookies-next";
-import { CameraIcon, DeleteIcon, EditIcon, PlusIcon } from "@/components/admin/products/icons";
+import {
+  CameraIcon,
+  DeleteIcon,
+  EditIcon,
+  PlusIcon,
+} from "@/components/admin/products/icons";
 import ProductFormModal from "@/components/admin/products/productFormModal";
 import { FileText } from "lucide-react";
 import ProductPhotoModal from "@/components/admin/products/productPhotoModal";
+import { getProducts } from "@/lib/data";
+import api from "@/lib/axios";
+import ConfirmModal from "@/components/confirmModal";
+import toast from "react-hot-toast";
 
 // --- MAIN COMPONENT ---
 // Renders the entire product table page.
 export default function ProductsTable() {
   const [products, setProducts] = useState<IProduct[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 10;
-  const token = getCookie("access_token") as string;
 
   // State for the modals
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [productToEdit, setProductToEdit] = useState<IProduct | null>(null);
-  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [isImageModalOpen, setIsImageModalOpen] = useState<boolean>(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false);
   const [productForImage, setProductForImage] = useState<IProduct | null>(null);
+  const [productToDelete, setProductToDelete] = useState<IProduct | null>(null);
 
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get(`${apiUrl}/api/products`);
-      const sortedProducts = data.data.sort(
+      const products = await getProducts();
+      const sortedProducts = products.sort(
         (a: IProduct, b: IProduct) =>
           new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
       );
@@ -47,23 +54,17 @@ export default function ProductsTable() {
   }, [fetchProducts]);
 
   // --- HANDLERS ---
-  const handleDelete = async (productId: string) => {
+  const confirmDeleteProduct = async (product: IProduct) => {
     try {
-      if (!window.confirm("Are you sure you want to delete this product?")) {
-        return;
-      }
-
-      await axios.delete(`${apiUrl}/api/products/${productId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await api.delete(`/api/products/${product.id}`);
 
       // Refetch products to ensure data is consistent
       fetchProducts();
 
-      alert("Product deleted successfully.");
+      toast.success("Berhasil Menghapus Product");
     } catch (error) {
       console.error("Error deleting product:", error);
-      alert("Failed to delete product. Please try again.");
+      toast.error("Gagal Menghapus Product");
     }
   };
 
@@ -209,7 +210,9 @@ export default function ProductsTable() {
                           {/* eslint-disable-next-line */}
                           <img
                             src={
-                              product.productPhotos.find((photo => photo.isDefault === true))?.imageUrl ||
+                              product.productPhotos.find(
+                                (photo) => photo.isDefault === true
+                              )?.imageUrl ||
                               "https://placehold.co/40x40/e2e8f0/64748b?text=N/A"
                             }
                             alt={product.name}
@@ -264,7 +267,10 @@ export default function ProductsTable() {
                           <EditIcon />
                         </button>
                         <button
-                          onClick={() => handleDelete(product.id)}
+                          onClick={() => {
+                            setProductToDelete(product);
+                            setIsConfirmModalOpen(true);
+                          }}
                           className="group p-1 rounded-full hover:bg-red-100 transition-colors"
                           aria-label="Delete product"
                         >
@@ -336,6 +342,13 @@ export default function ProductsTable() {
         onClose={() => setIsImageModalOpen(false)}
         onSave={handleImageSave}
         product={productForImage}
+      />
+      <ConfirmModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
+        onConfirm={() => confirmDeleteProduct(productToDelete as IProduct)}
+        title="Hapus Product?"
+        confirmText="Hapus"
       />
     </div>
   );
