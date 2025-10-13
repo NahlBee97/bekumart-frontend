@@ -12,7 +12,7 @@ import { getCartData } from "@/lib/data";
 
 export default function Header() {
   const { cart, setCart } = useCartStore();
-  const { user, isLoggedIn, accessToken } = useAuthStore();
+  const { user, isLoggedIn, isLoading } = useAuthStore();
   const pathname = usePathname();
 
   const links = [
@@ -22,7 +22,7 @@ export default function Header() {
   ];
 
   useEffect(() => {
-    if (user && accessToken) {
+    if (!isLoading) {
       try {
         const fetchUserCart = async () => {
           const cart = await getCartData(user.id);
@@ -36,7 +36,7 @@ export default function Header() {
         throw new Error("Failed to fetch user cart or decode token");
       }
     }
-  }, [user, setCart, accessToken]);
+  }, [user, setCart, isLoading]);
 
   return (
     <div className="w-full">

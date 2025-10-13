@@ -3,37 +3,34 @@
 import { useState, useCallback } from "react";
 import { useFormik } from "formik";
 import { Camera } from "lucide-react";
-import { jwtDecode } from "jwt-decode";
 import { UpdateProfileSchema } from "@/schemas/profileSchemas";
 import ProfileImageUploadModal from "@/components/profile/profileImageModal";
 import axios from "axios";
 import ChangePasswordModal from "./changePasswordModal";
 import useAuthStore from "@/stores/useAuthStore";
 import { getUserData } from "@/lib/data";
-import { getCookie } from "cookies-next";
 import api from "@/lib/axios";
 import toast from "react-hot-toast";
+import AccountInfoSkeleton from "./accountInfoSkeleton";
 
 export default function AccountInfo() {
-  const { user, login } = useAuthStore();
+  const { user, login, isLoading } = useAuthStore();
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
 
   const refreshUser = useCallback(async () => {
     try {
-      const token = getCookie("token") as string;
-      if (!token) return;
-      const userId = jwtDecode<{ id: string }>(token).id;
+      if (isLoading) return;
 
-      const userData = await getUserData(userId);
+      const userData = await getUserData(user?.id);
 
       login(userData);
     } catch (error) {
       console.error("Error fetching addresses:", error);
       throw error;
     }
-  }, [login]);
+  }, [user, login, isLoading]);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -61,6 +58,8 @@ export default function AccountInfo() {
       }
     },
   });
+
+  if (isLoading) return <AccountInfoSkeleton/>;
 
   return (
     <div className="bg-white shadow-md sm:rounded-lg overflow-hidden">

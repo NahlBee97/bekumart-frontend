@@ -127,8 +127,8 @@ export default function ProductsTable() {
         <div className="mb-6 md:flex md:items-center md:justify-between">
           <header className="mb-8">
             <div className="flex items-center space-x-3">
-              <FileText className="h-8 w-8 text-gray-800 dark:text-gray-200" />
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              <FileText className="h-6 w-6 text-gray-800 dark:text-gray-200" />
+              <h1 className="text-2xl font-bold text-blue-500 dark:text-white">
                 Product Management
               </h1>
             </div>

@@ -3,17 +3,17 @@
 import { useState, useCallback, useEffect } from "react";
 import { MapPin, Trash2, Edit3, PlusCircle } from "lucide-react";
 import useAuthStore from "@/stores/useAuthStore";
-import { getCookie } from "cookies-next";
 import { IAddress } from "@/interfaces/addressInterface";
 import AddressModal from "./addressModal";
 import { getUserAddresses } from "@/lib/data";
 import api from "@/lib/axios";
 import toast from "react-hot-toast";
 import ConfirmModal from "../confirmModal";
+import AddressInfoSkeleton from "./addressInfoSkeleton";
 
 // --- Main Component ---
 export default function AddressInfo() {
-  const { user } = useAuthStore();
+  const { user, isLoading } = useAuthStore();
   // --- State Management ---
   const [addresses, setAddresses] = useState<IAddress[]>([]);
 
@@ -24,21 +24,16 @@ export default function AddressInfo() {
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
   const refreshAddresess = useCallback(async () => {
-    const token = getCookie("token") as string;
-    if (!token) {
-      return;
-    }
+    if (isLoading) return;
+
     try {
-      if (!user?.id) {
-        return;
-      }
       const addresses = await getUserAddresses(user.id);
       setAddresses(addresses);
     } catch (error) {
       console.error("Error fetching addresses:", error);
       throw error; // Re-throw to be caught by the caller
     }
-  }, [user?.id]);
+  }, [user?.id, isLoading]);
 
   useEffect(() => {
     refreshAddresess();
@@ -75,6 +70,8 @@ export default function AddressInfo() {
       setAddressToDelete(null);
     }
   };
+
+  if (isLoading) return <AddressInfoSkeleton/>;
 
   return (
     <div className="bg-white shadow-md sm:rounded-lg overflow-hidden">

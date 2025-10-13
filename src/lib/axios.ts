@@ -9,23 +9,9 @@ const api = axios.create({
   withCredentials: true,
 });
 
-let isInitialized = false;
-
-// Lazy initialization function
-const ensureInitialized = () => {
-  if (isInitialized || typeof window === "undefined") return;
-
-  const token = useAuthStore.getState().accessToken;
-  if (token) {
-    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  }
-  isInitialized = true;
-};
-
 // Request Interceptor
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    ensureInitialized();
     const token = useAuthStore.getState().accessToken;
 
     if (token) {
@@ -86,7 +72,6 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        ensureInitialized();
         const { data } = await api.get(`/api/auth/refresh-token`);
         const newToken = data.token;
 

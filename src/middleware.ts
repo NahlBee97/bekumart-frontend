@@ -1,53 +1,65 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtDecode } from "jwt-decode";
+import { deleteCookie } from "cookies-next";
+
+interface UserPayload {
+  id: string;
+  role: "ADMIN" | "CUSTOMER";
+}
 
 export async function middleware(req: NextRequest) {
-  const token = req.cookies.get("token")?.value;
-  const path = req.nextUrl.pathname;
+  const token = req.cookies.get("token")?.value as string;
+  const { pathname } = req.nextUrl;
 
-  // Protect all routes starting with /admin
-  if (path.startsWith("/admin") && !token) {
+  const publicPaths = ["/", "/product"];
+
+  const isPublicPath = publicPaths.some(
+    (path) =>
+      pathname === path || (path !== "/" && pathname.startsWith(path + "/"))
+  );
+
+  if (isPublicPath && !token) {
+    return NextResponse.next();
+  }
+
+  if (!token) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  //Protect if the user is not an admin
-  if (path.startsWith("/admin") && token) {
-    try {
-      const user = jwtDecode<{ id: string; role: string }>(token);
+  let user: UserPayload;
 
-      if (!user || user.role !== "ADMIN") {
-        return NextResponse.redirect(new URL("/login", req.url));
-      }
-    } catch (err) {
-      console.error("JWT verification failed:", err);
-      return NextResponse.redirect(new URL("/login", req.url));
-    }
+  try {
+    user = jwtDecode<UserPayload>(token);
+  } catch (err) {
+    console.error("Invalid token:", err);
+    deleteCookie("token");
+    return;
   }
 
-  // Protect user routes
-  const protectedRoutes = ["/cart", "/checkout", "/profile"];
+  const isAdmin = user.role === "ADMIN";
+  const isCustomer = user.role === "CUSTOMER";
 
-  if (protectedRoutes.some((route) => path.startsWith(route)) && !token) {
+  const protectedRoutes = ["/cart", "/checkout", "/profile", "/admin"];
+  if (!token && protectedRoutes.some((route) => pathname.startsWith(route))) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  //Protect if the user is not an admin
-  if (protectedRoutes.some((route) => path.startsWith(route)) && token) {
-    try {
-      const user = jwtDecode<{ id: string; role: string }>(token);
-      if (!user || user.role !== "CUSTOMER") {
-        return NextResponse.redirect(new URL("/login", req.url));
-      }
-    } catch (err) {
-      console.error("JWT verification failed:", err);
-      return NextResponse.redirect(new URL("/login", req.url));
-    }
+  const customerRoutes = ["/cart", "/checkout", "/profile"];
+  if (isAdmin && customerRoutes.some((route) => pathname.startsWith(route))) {
+    return NextResponse.redirect(new URL("/admin", req.url));
   }
 
-  // If the check passes, or it's not an admin route, continue
+  if (isCustomer && pathname.startsWith("/admin")) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+
+  if (isAdmin && pathname === "/") {
+    return NextResponse.redirect(new URL("/admin", req.url));
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/cart", "/checkout", "/profile/:path*"],
+  matcher: ["/", "/admin/:path*", "/cart", "/checkout", "/profile/:path*"],
 };

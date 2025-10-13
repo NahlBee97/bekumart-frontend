@@ -14,11 +14,12 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import { getUserAddresses } from "@/lib/data";
 import api from "@/lib/axios";
+import Loading from "../loading";
 
 // --- MAIN PAGE COMPONENT ---
 export default function CheckoutPageClient() {
   const router = useRouter();
-  const { user } = useAuthStore();
+  const { user, isLoading } = useAuthStore();
   const { cart, clearCart } = useCartStore();
 
   const [deliveryMethod, setDeliveryMethod] = useState("DELIVERY");
@@ -40,26 +41,24 @@ export default function CheckoutPageClient() {
       return;
     }
 
-    const token = getCookie("token") as string;
-    if (!token) {
-      return;
+    if (!isLoading) {
+      try {
+        const addresess = await getUserAddresses(user.id);
+        const mainAddress = addresess.find(
+          (address: IAddress) => address.isDefault === true
+        );
+        setSelectedAddress(mainAddress);
+        setAddresses(addresess);
+      } catch (error) {
+        console.error("Error fetching addresses:", error);
+        throw error; // Re-throw to be caught by the caller
+      }
     }
-    try {
-      const addresess = await getUserAddresses(user.id);
-      const mainAddress = addresess.find((address: IAddress) => address.isDefault === true);
-      setSelectedAddress(mainAddress);
-      setAddresses(addresess);
-    } catch (error) {
-      console.error("Error fetching addresses:", error);
-      throw error; // Re-throw to be caught by the caller
-    }
-  }, [user?.id, cart?.items.length]);
+  }, [user?.id, cart?.items.length, isLoading]);
 
   useEffect(() => {
     refreshUserAddresses();
   }, [refreshUserAddresses]);
-
-  console.log(addresses);
 
   // Effect to update shipping cost based on delivery method or address change
   useEffect(() => {
@@ -167,6 +166,8 @@ export default function CheckoutPageClient() {
   );
   const tax = subtotal ? subtotal * 0.11 : 0;
   const total = subtotal ? subtotal + shippingCost + tax : 0;
+
+  if (isLoading) return <Loading />;
 
   if (cart?.items.length === 0) {
     return (

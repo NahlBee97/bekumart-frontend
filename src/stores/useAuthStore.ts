@@ -9,6 +9,7 @@ interface AuthState {
   accessToken: string | null;
   user: IUser;
   isLoggedIn: boolean;
+  isLoading: boolean;
   checkAuth: () => Promise<void>;
   setAccessToken: (token: string) => void;
   login: (userData: IUser) => void;
@@ -19,6 +20,7 @@ const useAuthStore = create<AuthState>((set) => ({
   accessToken: null,
   user: {} as IUser,
   isLoggedIn: false,
+  isLoading: true,
   checkAuth: async () => {
     try {
       const response = await api.get("/api/auth/refresh-token");
@@ -36,6 +38,8 @@ const useAuthStore = create<AuthState>((set) => ({
       // If refresh fails, it means no valid session, so we clear the state
       set({ user: {} as IUser, isLoggedIn: false, accessToken: null });
       console.log("No active session found:", error);
+    } finally {
+      set({ isLoading: false})
     }
   },
   setAccessToken: (token: string) => set({ accessToken: token }),
