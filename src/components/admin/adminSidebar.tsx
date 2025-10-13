@@ -1,12 +1,6 @@
 "use client"
 
-import {
-  FileText,
-  LogOut,
-  Package,
-  User,
-} from "lucide-react";
-import { deleteCookie } from "cookies-next";
+import { FileText, LogOut, Package, User, LayoutDashboard } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import useAuthStore from "@/stores/useAuthStore";
@@ -17,10 +11,27 @@ export default function AdminSidebar() {
   const pathname = usePathname();
 
   const navItems = [
-    { icon: User, label: "Profile", link: "/admin" },
-    { icon: Package, label: "Order Management", link: "/admin/orders" },
+    { icon: LayoutDashboard, label: "Dashboard", link: "/admin" },
     { icon: FileText, label: "Product Management", link: "/admin/products" },
+    { icon: Package, label: "Order Management", link: "/admin/orders" },
+    { icon: User, label: "Profile", link: "/admin/profile" },
   ];
+
+  const handleLogOut = () => {
+    const forbiddenPrefixes = ["/cart", "/checkout", "/profile"];
+
+    const isForbidden = forbiddenPrefixes.some((prefix) =>
+      pathname.startsWith(prefix)
+    );
+
+    logout();
+
+    if (isForbidden) {
+      router.push("/");
+    } else {
+      router.push(pathname);
+    }
+  };
 
   return (
     <aside className="w-full lg:w-64 bg-white p-4 rounded-lg shadow-sm">
@@ -52,12 +63,7 @@ export default function AdminSidebar() {
         </ul>
         <button
           className="flex w-full gap-2 items-center p-3 my-1 rounded-lg transition-colors hover:bg-gray-400 hover:text-red-500 hover:font-semibold focus:bg-blue-500"
-          onClick={() => {
-            deleteCookie("access_token");
-            localStorage.removeItem("activeMenuItem");
-            logout();
-            router.push("/");
-          }}
+          onClick={handleLogOut}
         >
           <LogOut />
           <span>Log-out</span>

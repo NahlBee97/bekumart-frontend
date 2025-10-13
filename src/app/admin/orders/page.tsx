@@ -72,7 +72,7 @@ const Orders: React.FC = () => {
   };
 
   return (
-    <div className=" dark:bg-gray-900 min-h-screen p-4 sm:p-6 lg:p-8 font-sans">
+    <div className="  min-h-screen py-4 sm:py-6 lg:py-8 font-sans">
       <div className="max-w-7xl mx-auto">
         <header className="mb-8">
           <div className="flex items-center space-x-3">

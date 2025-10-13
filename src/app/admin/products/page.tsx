@@ -122,12 +122,12 @@ export default function ProductsTable() {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen text-gray-800 font-sans">
-      <div className="container mx-auto p-4 sm:p-6 lg:p-8">
-        <div className="mb-6 md:flex md:items-center md:justify-between">
+    <div className="min-h-screen text-blue-500 font-sans">
+      <div className="container mx-auto py-4 sm:py-6 lg:py-8">
+        <div className="mb-6 md:mb-2 md:flex md:items-center md:justify-between">
           <header className="mb-8">
             <div className="flex items-center space-x-3">
-              <FileText className="h-6 w-6 text-gray-800 dark:text-gray-200" />
+              <FileText className="h-6 w-6 text-blue-500 dark:text-gray-200" />
               <h1 className="text-2xl font-bold text-blue-500 dark:text-white">
                 Product Management
               </h1>
@@ -176,24 +176,24 @@ export default function ProductsTable() {
           {/* Table Container */}
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left">
-              <thead className="bg-gray-50 border-b border-gray-200 text-xs text-gray-600 uppercase tracking-wider">
+              <thead className="bg-gray-50 border-b border-gray-200 text-xs text-blue-500 font-semibold uppercase ">
                 <tr>
-                  <th scope="col" className="px-6 py-3 font-medium">
+                  <th scope="col" className="px-6 py-3">
                     Produk
                   </th>
-                  <th scope="col" className="px-6 py-3 font-medium">
+                  <th scope="col" className="px-6 py-3">
                     Kategori
                   </th>
-                  <th scope="col" className="px-6 py-3 font-medium text-right">
+                  <th scope="col" className="px-6 py-3 text-right">
                     Harga
                   </th>
-                  <th scope="col" className="px-6 py-3 font-medium text-center">
+                  <th scope="col" className="px-6 py-3 text-center">
                     Stok
                   </th>
-                  <th scope="col" className="px-6 py-3 font-medium text-center">
+                  <th scope="col" className="px-6 py-3 text-center">
                     Berat/pcs (Kg)
                   </th>
-                  <th scope="col" className="px-6 py-3 font-medium text-center">
+                  <th scope="col" className="px-6 py-3 text-center">
                     Tindakan
                   </th>
                 </tr>
