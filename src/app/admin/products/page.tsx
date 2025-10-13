@@ -15,6 +15,7 @@ import { getProducts } from "@/lib/data";
 import api from "@/lib/axios";
 import ConfirmModal from "@/components/confirmModal";
 import toast from "react-hot-toast";
+import ProductSection from "@/components/admin/dashboard/productSection";
 
 // --- MAIN COMPONENT ---
 // Renders the entire product table page.
@@ -124,7 +125,8 @@ export default function ProductsTable() {
   return (
     <div className="min-h-screen text-blue-500 font-sans">
       <div className="container mx-auto py-4 sm:py-6 lg:py-8">
-        <div className="mb-6 md:mb-2 md:flex md:items-center md:justify-between">
+        <ProductSection />
+        <div className="my-6 md:mb-2 md:flex md:items-center md:justify-between">
           <header className="mb-8">
             <div className="flex items-center space-x-3">
               <FileText className="h-6 w-6 text-blue-500 dark:text-gray-200" />

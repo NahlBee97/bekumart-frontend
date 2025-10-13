@@ -8,6 +8,7 @@ import { getOrders } from "@/lib/data";
 import api from "@/lib/axios";
 import { format } from "date-fns";
 import useAuthStore from "@/stores/useAuthStore";
+import OperationalSection from "@/components/admin/dashboard/operationalSection";
 
 // --- MAIN PAGE COMPONENT ---
 const Orders: React.FC = () => {
@@ -86,7 +87,9 @@ const Orders: React.FC = () => {
           </p>
         </header>
 
-        <main>
+        <main className="flex flex-col gap-4">
+          <OperationalSection />
+          <h2 className="text-2xl text-blue-500 font-bold mt-4">Order List</h2>
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -137,7 +140,7 @@ const Orders: React.FC = () => {
                         <div className="relative inline-block">
                           <select
                             value={order.status}
-                             onClick={(e) => e.stopPropagation()}
+                            onClick={(e) => e.stopPropagation()}
                             onChange={(e) =>
                               handleStatusChange(
                                 order.id,
