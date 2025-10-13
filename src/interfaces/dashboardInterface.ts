@@ -7,3 +7,8 @@ export interface ISalesSummary {
     Revenue: number;
   }[];
 }
+
+export interface IProductInsights {
+  bestSellers: { name: string; quantitySold: number }[];
+  lowStockProducts: { name: string; stock: number }[];
+}

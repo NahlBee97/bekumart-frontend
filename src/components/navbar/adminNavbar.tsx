@@ -5,10 +5,9 @@ import { BurgerMenu } from "./burgerMenu";
 import { usePathname, useRouter } from "next/navigation";
 
 export default function AdminNavbar() {
-  const { logout } = useAuthStore();
+  const { user, logout } = useAuthStore();
   const pathname = usePathname();
   const router = useRouter();
-  const { user } = useAuthStore();
 
   const links = [
     { name: "Dashboard", link: "/admin" },
