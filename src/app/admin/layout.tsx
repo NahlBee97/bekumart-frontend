@@ -7,8 +7,8 @@ export default function AdminLayout({
 }) {
   return (
     <div className="min-h-screen font-sans">
-      <main className="container mx-auto py-4 lg:py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
+      <main className="mx-auto p-4 lg:p-8">
+        <div className=" flex flex-col lg:flex-row gap-8">
           {/* Sidebar */}
           <div className="hidden md:block w-full lg:w-auto">
             <AdminSidebar />

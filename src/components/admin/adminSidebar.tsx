@@ -1,11 +1,6 @@
 "use client"
 
-import {
-  FileText,
-  LogOut,
-  Package,
-  User,
-} from "lucide-react";
+import { FileText, LogOut, Package, User, LayoutDashboard } from "lucide-react";
 import { deleteCookie } from "cookies-next";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
@@ -17,9 +12,10 @@ export default function AdminSidebar() {
   const pathname = usePathname();
 
   const navItems = [
-    { icon: User, label: "Profile", link: "/admin" },
-    { icon: Package, label: "Order Management", link: "/admin/orders" },
+    { icon: LayoutDashboard, label: "Dashboard", link: "/admin" },
     { icon: FileText, label: "Product Management", link: "/admin/products" },
+    { icon: Package, label: "Order Management", link: "/admin/orders" },
+    { icon: User, label: "Profile", link: "/admin/profile" },
   ];
 
   return (

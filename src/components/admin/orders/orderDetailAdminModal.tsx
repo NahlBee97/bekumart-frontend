@@ -91,7 +91,9 @@ const OrderDetailAdminModal: React.FC<{
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div>
               <p className="text-sm font-medium text-gray-500">Order Date</p>
-              <p className="text-base text-gray-800">{format(order.createdAt, "dd MMMM yyy")}</p>
+              <p className="text-base text-gray-800">
+                {format(order.createdAt, "dd MMMM yyy")}
+              </p>
             </div>
             <div>
               <p className="text-sm font-medium text-gray-500">Status</p>
@@ -133,7 +135,7 @@ const OrderDetailAdminModal: React.FC<{
                       </p>
                     </div>
                     <p className="font-medium text-gray-900">
-                      ${(item.product.price * item.quantity).toFixed(2)}
+                      Rp {order.totalAmount.toLocaleString()}
                     </p>
                   </li>
                 ))}

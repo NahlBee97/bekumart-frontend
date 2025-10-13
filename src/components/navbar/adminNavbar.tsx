@@ -11,9 +11,10 @@ export default function AdminNavbar() {
   const { user } = useAuthStore();
 
   const links = [
-    { name: "Profile", link: "/admin" },
+    { name: "Dashboard", link: "/admin" },
     { name: "Order Management", link: "/admin/orders" },
     { name: "Product Management", link: "/admin/products" },
+    { name: "Profile", link: "/admin/profile" },
   ];
 
   const handleLogOut = () => {
@@ -33,7 +34,7 @@ export default function AdminNavbar() {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full shadow-md">
       <div
         className="
         w-full
@@ -41,7 +42,7 @@ export default function AdminNavbar() {
         items-center
         justify-between
         gap-1 sm:gap-6
-        px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[150px] 2xl:px-[300px]
+        px-4 sm:px-6 md:px-8 lg:px-12
         py-4 sm:py-5 md:py-6
         border-b border-neutral-100
       "
@@ -69,7 +70,7 @@ export default function AdminNavbar() {
           </div>
           <button
             onClick={handleLogOut}
-            className="font-medium transition-colors duration-200 hover:text-red-500"
+            className="md:hidden font-medium transition-colors duration-200 hover:text-red-500"
           >
             <LogOut className="w-5 h-5" />
           </button>
