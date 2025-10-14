@@ -18,7 +18,7 @@ export default function AdminSidebar() {
   ];
 
   const handleLogOut = () => {
-    const forbiddenPrefixes = ["/cart", "/checkout", "/profile"];
+    const forbiddenPrefixes = ["/cart", "/checkout", "/profile", "/admin"];
 
     const isForbidden = forbiddenPrefixes.some((prefix) =>
       pathname.startsWith(prefix)
