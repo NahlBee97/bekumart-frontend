@@ -13,4 +13,5 @@ export interface ICart {
   items: ICartItem[];
   totalQuantity: number;
   totalPrice: number;
+  totalWeight: number;
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { IAddresses } from "@/interfaces/addressInterface";
+import { IAddress } from "@/interfaces/addressInterface";
 import api from "@/lib/axios";
 import { AddressSchema } from "@/schemas/addressSchema";
 import useAuthStore from "@/stores/useAuthStore";
@@ -17,9 +17,9 @@ const AddressCheckoutModal = ({
 }: {
   isOpen: boolean;
   onSave: () => void;
-  onSelect: (address: IAddresses) => void;
+  onSelect: (address: IAddress) => void;
   onClose: () => void;
-  address: IAddresses | null;
+  address: IAddress | null;
 }) => {
   const { user } = useAuthStore();
 
