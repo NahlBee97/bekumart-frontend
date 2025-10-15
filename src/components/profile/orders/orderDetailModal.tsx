@@ -5,16 +5,20 @@ import { useEffect, useState } from "react";
 import StatusBadge from "../../statusBadge";
 import { format } from "date-fns";
 import { getOrderItems } from "@/lib/data";
+import api from "@/lib/axios";
+import toast from "react-hot-toast";
+import { midtransClientKey } from "@/config";
 
 // --- MODAL COMPONENT ---
 const OrderDetailModal: React.FC<{
-  order: IOrder | null;
+  order: IOrder;
   onClose: () => void;
 }> = ({ order, onClose }) => {
   const [orderItems, setOrderItems] = useState<IOrderItem[]>([]);
 
   // --- CHANGE 1: Add state and useEffect for the animation ---
   const [show, setShow] = useState(false);
+  const [isPaymentLoading, setIsPaymentLoading] = useState(false);
 
   useEffect(() => {
     if (order) {
@@ -29,7 +33,7 @@ const OrderDetailModal: React.FC<{
       setOrderItems([]);
       if (!order) return;
       const fetchOrderItems = async () => {
-        const orderItems = await getOrderItems(order.id)
+        const orderItems = await getOrderItems(order.id);
         setOrderItems(orderItems);
       };
       fetchOrderItems();
@@ -51,6 +55,19 @@ const OrderDetailModal: React.FC<{
     };
   }, [onClose]);
 
+  // Midtrans script loading
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://app.sandbox.midtrans.com/snap/snap.js";
+    script.setAttribute("data-client-key", String(midtransClientKey));
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
   // --- FIX 2: Create a function to handle the exit animation ---
   const handleClose = () => {
     // 1. Start the exit animation
@@ -59,6 +76,22 @@ const OrderDetailModal: React.FC<{
     setTimeout(() => {
       onClose();
     }, 300); // This duration MUST match your CSS transition duration
+  };
+
+  const handleProceedPayment = async () => {
+    try {
+      setIsPaymentLoading(true);
+
+      const response = await api.post(`/api/orders/payment-token`, order);
+      const { paymentToken } = response.data;
+
+      window.snap?.pay(paymentToken);
+    } catch (error) {
+      toast.error("Gagal melanjutkan pembayaran");
+      console.error(error);
+    } finally {
+      setIsPaymentLoading(false);
+    }
   };
 
   // Return null if no order is selected to render nothing
@@ -169,6 +202,24 @@ const OrderDetailModal: React.FC<{
               </ul>
             </div>
           </div>
+          {order.status === "PENDING" && order.paymentMethod === "ONLINE" && (
+            <button
+              disabled={isPaymentLoading}
+              className={`w-65 flex items-center justify-center font-semibold ${
+                isPaymentLoading ? "bg-gray-300" : "bg-blue-500"
+              } border border-transparent rounded-md shadow-sm py-2 px-1 text-sm text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-blue-500 transition-transform transform hover:scale-105`}
+              onClick={handleProceedPayment}
+            >
+              {isPaymentLoading ? (
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+              ) : (
+                "Lanjutkan Pembayaran"
+              )}
+            </button>
+          )}
+          {order.status === "PENDING" && order.paymentMethod === "INSTORE" && (
+            <p className="text-sm text-red-500">Silahkan lanjutkan pembayaran di toko</p>
+          )}
         </div>
       </div>
     </div>

@@ -19,6 +19,7 @@ export interface IOrder {
   fulfillmentType: "DELIVERY" | "PICKUP";
   paymentMethod: "ONLINE" | "INSTORE";
   addressId: string | null;
+  courier: string | null;
   createdAt: string;
   updateAt: string;
 }

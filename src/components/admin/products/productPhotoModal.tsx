@@ -5,9 +5,10 @@ import { X } from "lucide-react";
 import { IProduct, IProductPhoto } from "@/interfaces/productInterfaces";
 import PhotoThumbnail from "./photoThumbnail";
 import AddPhotoButton from "./addPhotoButton";
-import axios from "axios";
-import { apiUrl } from "@/config";
-import { getCookie } from "cookies-next";
+import api from "@/lib/axios";
+import useAuthStore from "@/stores/useAuthStore";
+import toast from "react-hot-toast";
+import ConfirmModal from "@/components/confirmModal";
 
 const ProductPhotoModal = ({
   isOpen,
@@ -20,38 +21,43 @@ const ProductPhotoModal = ({
   onClose: () => void;
   product: IProduct | null;
 }) => {
+  const { isLoading: isAuthLoading } = useAuthStore();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [mainImage, setMainImage] = useState<IProductPhoto | null>(null);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const [photoToDelete, setPhotoTodelete] = useState<IProductPhoto | null>(
+    null
+  );
   const [photos, setPhotos] = useState<IProductPhoto[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   // State to track which photo we are currently updating
   const [photoToUpdateId, setPhotoToUpdateId] = useState<string | null>(null);
 
   const fetchProductPhotos = useCallback(async () => {
+    if (isAuthLoading) return;
     setIsLoading(true);
     try {
-      const { data } = await axios.get(
-        `${apiUrl}/api/product-photos/${product?.id}`
+      const { data } = await api.get(`/api/product-photos/${product?.id}`);
+      const mainPhoto = data.data.find(
+        (photo: IProductPhoto) => photo.isDefault === true
       );
       setPhotos(data.data);
+      setMainImage(mainPhoto);
     } catch (error) {
       console.error("Error fetching product photos:", error);
     } finally {
       setIsLoading(false);
     }
-  }, [product]);
+  }, [product, isAuthLoading]);
 
   useEffect(() => {
     if (product) {
       fetchProductPhotos();
     }
   }, [product, fetchProductPhotos]);
-
-  useEffect(() => {
-    const mainPhoto = photos.find((photo) => photo.isDefault === true);
-    if (mainPhoto) setMainImage(mainPhoto);
-  }, [photos]);
 
   if (!isOpen) return null;
 
@@ -64,7 +70,6 @@ const ProductPhotoModal = ({
   // Handles the actual file selection and update
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     try {
-      const token = getCookie("access_token") as string;
       const file = event.target.files?.[0];
 
       if (!file) throw new Error("No file");
@@ -76,75 +81,60 @@ const ProductPhotoModal = ({
       setIsLoading(true);
 
       if (photoToUpdateId) {
-        await axios.patch(
-          `${apiUrl}/api/product-photos/${photoToUpdateId}`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        alert("berhasil mengganti photo");
+        await api.patch(`/api/product-photos/${photoToUpdateId}`, formData);
+        toast.success("berhasil mengganti photo");
       } else {
-        await axios.post(
-          `${apiUrl}/api/product-photos/${product?.id}`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        alert("berhasil menambahkan photo");
+        await api.post(`/api/product-photos/${product?.id}`, formData);
+        toast.success("berhasil menambahkan photo");
       }
       onSave();
       fetchProductPhotos();
       setIsLoading(false);
       setPhotoToUpdateId(null);
     } catch (error) {
-      console.log(error);
+      toast.error("Gagal memproses photo");
+      console.error(error);
     }
   };
 
   // Sets a photo as the main product image
-  const handleSetMain = async (photoId: string) => {
-    setIsLoading(true);
-    const token = getCookie("access_token") as string;
-    await axios.put(
-      `${apiUrl}/api/product-photos/${photoId}`,
-      {
-        isDefault: true,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    fetchProductPhotos();
-    setIsLoading(false);
-    alert("Berhasil menjadikan photo utama");
-  };
-
-  const handleDelete = async (photoId: string) => {
-    const token = getCookie("access_token") as string;
-    if (confirm("Apakah Anda yakin ingin menghapus foto ini?")) {
+  const confirmSetMain = async (photo: IProductPhoto) => {
+    try {
       setIsLoading(true);
-      const photoToDelete = photos.find((photo) => photo.id === photoId);
-      if (photoToDelete === mainImage) {
-        alert("Tidak dapat menghapus foto yang sedang dijadikan foto utama.");
-        return;
-      }
-      await axios.delete(`${apiUrl}/api/product-photos/${photoId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      await api.put(`/api/product-photos/${photo.id}`, {
+        isDefault: true,
       });
       fetchProductPhotos();
-      alert("berhasil menghapus photo");
+      toast.success("Berhasil menjadikan photo utama");
+    } catch (error) {
+      toast.error("Gagal menjadikan photo utama");
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+      setIsConfirmModalOpen(false);
     }
-    setIsLoading(false);
+  };
+
+  const confirmDelete = async (photo: IProductPhoto) => {
+    try {
+      setIsLoading(true);
+      if (photo.isDefault === true ) {
+        toast.error(
+          "Tidak dapat menghapus foto yang sedang dijadikan foto utama."
+        );
+        return;
+      }
+      await api.delete(`/api/product-photos/${photo.id}`);
+      fetchProductPhotos();
+      toast.success("berhasil menghapus photo");
+    } catch (error) {
+      toast.error("Gagal menghapus photo");
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+      setIsDeleting(false);
+      setIsConfirmModalOpen(false);
+    }
   };
 
   return (
@@ -199,9 +189,16 @@ const ProductPhotoModal = ({
                   key={photo.id}
                   photo={photo}
                   isMain={photo.imageUrl === mainImage?.imageUrl}
-                  onSetMain={() => handleSetMain(photo.id)}
+                  onSetMain={() => {
+                    setPhotoTodelete(photo);
+                    setIsConfirmModalOpen(true);
+                  }}
                   onUpdate={() => triggerFileInput(photo.id)}
-                  onDelete={() => handleDelete(photo.id)}
+                  onDelete={() => {
+                    setIsDeleting(true);
+                    setPhotoTodelete(photo);
+                    setIsConfirmModalOpen(true);
+                  }}
                 />
               ))}
               {photos.length < 8 && (
@@ -233,6 +230,17 @@ const ProductPhotoModal = ({
             {isLoading ? "Memproses..." : "Selesai"}
           </button>
         </div>
+        <ConfirmModal
+          isOpen={isConfirmModalOpen}
+          onClose={() => setIsConfirmModalOpen(false)}
+          onConfirm={() =>
+            isDeleting
+              ? confirmDelete(photoToDelete as IProductPhoto)
+              : confirmSetMain(photoToDelete as IProductPhoto)
+          }
+          title={isDeleting ? "Hapus Photo?" : "Atur Sebagai Photo Utama"}
+          confirmText={isDeleting ? "Hapus" : "Konfirmasi"}
+        />
       </div>
       {/* The <style jsx> tag was causing a React warning because the environment might not be
         processing styled-jsx correctly. Replaced with a standard <style> tag to define

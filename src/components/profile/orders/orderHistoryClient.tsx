@@ -4,12 +4,12 @@ import { useEffect, useState } from "react";
 import OrderCard from "@/components/profile/orders/orderCard";
 import OrderDetailModal from "@/components/profile/orders/orderDetailModal";
 import { IOrder } from "@/interfaces/orderInterface";
-import { getCookie } from "cookies-next";
-import { jwtDecode } from "jwt-decode";
 import { getUserOrders } from "@/lib/data";
+import useAuthStore from "@/stores/useAuthStore";
 
 // --- MAIN PAGE COMPONENT ---
 export default function OrderHistoryClient() {
+  const { user, isLoading } = useAuthStore()
   const [orders, setOrders] = useState<IOrder[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<IOrder | null>(null);
 
@@ -25,13 +25,10 @@ export default function OrderHistoryClient() {
   const totalPages = Math.ceil(orders.length / ordersPerPage);
 
   useEffect(() => {
+    if (isLoading) return;
     try {
-      const token = getCookie("token") as string;
-      if (!token) return;
-      const userId = jwtDecode<{ id: string }>(token).id;
-
       const fetchOrders = async () => {
-        const orders = await getUserOrders(userId);
+        const orders = await getUserOrders(user.id);
         setOrders(orders);
       };
 
@@ -40,7 +37,7 @@ export default function OrderHistoryClient() {
       console.error("Error fetching addresses:", error);
       throw error;
     }
-  }, []);
+  }, [user, isLoading]);
 
   const handleNextPage = () => {
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));

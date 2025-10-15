@@ -22,21 +22,21 @@ export default function Header() {
   ];
 
   useEffect(() => {
-    if (!isLoading) {
-      try {
-        const fetchUserCart = async () => {
-          const cart = await getCartData(user.id);
+    if (isLoading) return;
+    if (!isLoggedIn) return;
+    try {
+      const fetchUserCart = async () => {
+        const cart = await getCartData(user.id);
 
-          setCart(cart);
-        };
+        setCart(cart);
+      };
 
-        fetchUserCart();
-      } catch (error) {
-        console.error("Failed to fetch user cart or decode token:", error);
-        throw new Error("Failed to fetch user cart or decode token");
-      }
+      fetchUserCart();
+    } catch (error) {
+      console.error("Failed to fetch user cart or decode token:", error);
+      throw new Error("Failed to fetch user cart or decode token");
     }
-  }, [user, setCart, isLoading]);
+  }, [user, setCart, isLoading, isLoggedIn]);
 
   return (
     <div className="w-full">

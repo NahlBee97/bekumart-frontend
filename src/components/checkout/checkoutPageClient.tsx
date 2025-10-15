@@ -6,7 +6,7 @@ import useAuthStore from "@/stores/useAuthStore";
 import { useCartStore } from "@/stores/useCartStore";
 import { IAddress } from "@/interfaces/addressInterface";
 import { getCookie } from "cookies-next";
-import { apiUrl, midtransClientKey } from "@/config";
+import { midtransClientKey } from "@/config";
 import AddressListModal from "@/components/checkout/addressListModal";
 import { useRouter } from "next/navigation";
 import AddressCheckoutModal from "@/components/checkout/addressCheckoutModal";
@@ -21,7 +21,7 @@ import { AddressSection } from "./addressSection";
 import { OrderSummary } from "./orderSummarySection";
 
 // Types for better type safety
-interface OrderData {
+export interface OrderData {
   userId: string;
   fullfillmentType: string;
   paymentMethod: string;
@@ -38,7 +38,7 @@ interface ShippingCostData {
 // --- MAIN PAGE COMPONENT ---
 export default function CheckoutPageClient() {
   const router = useRouter();
-  const { user, isLoading: isAuthLoading } = useAuthStore();
+  const { user, isLoading } = useAuthStore();
   const { cart, clearCart } = useCartStore();
 
   // State Management
@@ -52,7 +52,7 @@ export default function CheckoutPageClient() {
   const [selectedAddress, setSelectedAddress] = useState<IAddress>();
   const [shippingCost, setShippingCost] = useState(0);
   const [couriers, setCouriers] = useState([]);
-  const [selectedCourier, setSelectedCourier] = useState<any>();
+  const [selectedCourier, setSelectedCourier] = useState<any | null>(null);
   const [isListModalOpen, setListModalOpen] = useState(false);
   const [isFormModalOpen, setFormModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -77,7 +77,7 @@ export default function CheckoutPageClient() {
 
   // Fetch user addresses
   const refreshUserAddresses = useCallback(async () => {
-    if (!cart?.items.length || !user?.id || isAuthLoading) return;
+    if (!cart?.items.length || !user?.id || isLoading) return;
 
     try {
       const userAddresses = await getUserAddresses(user.id);
@@ -90,7 +90,7 @@ export default function CheckoutPageClient() {
       console.error("Error fetching addresses:", error);
       toast.error("Gagal memuat alamat");
     }
-  }, [user?.id, cart?.items.length, isAuthLoading]);
+  }, [user?.id, cart?.items.length, isLoading]);
 
   // Calculate shipping cost
   const getCouriers = useCallback(async () => {
@@ -115,9 +115,13 @@ export default function CheckoutPageClient() {
       const response = await api.post("/api/shipping-cost", data);
 
       setCouriers(response.data.couriers);
+      setSelectedCourier(response.data.couriers[0]);
+      setShippingCost(response.data.couriers[0].cost);
     } catch (err) {
       console.error("Error calculating shipping cost:", err);
       toast.error("Gagal menghitung biaya pengiriman");
+    } finally {
+      setIsCalculating(false);
     }
   }, [deliveryMethod, selectedAddress?.id, cart]);
 
@@ -187,7 +191,7 @@ export default function CheckoutPageClient() {
         courier: selectedCourier.name
       };
 
-      const response = await api.post(`${apiUrl}/api/orders`, orderData);
+      const response = await api.post(`/api/orders`, orderData);
       const { paymentToken, newOrder } = response.data.order;
       const orderId = newOrder.id;
 
@@ -209,7 +213,7 @@ export default function CheckoutPageClient() {
   };
 
   // Loading and empty states
-  if (isAuthLoading) return <Loading />;
+  if (isLoading) return <Loading />;
 
   if (!cart?.items.length) {
     return <EmptyCartState />;
@@ -250,7 +254,7 @@ export default function CheckoutPageClient() {
                       onCourierChange={(courier) => {
                         setSelectedCourier(courier);
                         setShippingCost(courier.cost);
-                        setIsCalculating(false);
+                        
                       }}
                       couriers={couriers}
                     />

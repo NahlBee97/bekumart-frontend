@@ -1,6 +1,6 @@
 "use client"
 
-import { IAddresses } from "@/interfaces/addressInterface";
+import { IAddress } from "@/interfaces/addressInterface";
 import { PlusCircle, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -14,10 +14,10 @@ const AddressListModal = ({
 }: {
   isOpen: boolean;
   onClose: () => void;
-  addresses: IAddresses[];
-  onSelect: (address: IAddresses) => void;
+  addresses: IAddress[];
+  onSelect: (address: IAddress) => void;
   onAddNew: () => void;
-  onEdit: (address: IAddresses) => void;
+  onEdit: (address: IAddress) => void;
 }) => {
  // --- CHANGE 1: Add state and useEffect for the animation ---
   const [show, setShow] = useState(false);
