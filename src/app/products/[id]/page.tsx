@@ -1,4 +1,4 @@
-import ProductDetail from "@/components/products/dinamic";
+import ProductDetail from "@/components/products/productDetail";
 import { getProductById, getProductPhotos } from "@/lib/data";
 
 export default async function ProductDetailPage({

@@ -9,10 +9,12 @@ import { StickyAddToCartSkeleton } from "./stickyAddToCartSkeleton";
 import toast from "react-hot-toast";
 import { getCookie } from "cookies-next";
 import ConfirmModal from "../confirmModal";
+import { useRouter } from "next/navigation";
 
 const StickyAddToCart: React.FC<{
   product: IProduct;
 }> = ({ product }) => {
+  const router = useRouter();
   const { user } = useAuthStore();
   const { addToCart } = useCartStore();
   const [quantity, setQuantity] = useState(1);
@@ -101,9 +103,8 @@ const StickyAddToCart: React.FC<{
         isOpen={isShowConfirmModal}
         onClose={() => setIsShowConfirmModal(false)}
         title="Tidak bisa menambahkan kedalam keranjang"
-        message="Login terlebih dahulu"
         confirmText="Login"
-        cancelText="Tidak"
+        onConfirm={() => router.push("/login") }
       />
     </div>
   );

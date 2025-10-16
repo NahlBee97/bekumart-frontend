@@ -15,6 +15,7 @@ export interface IProduct {
 export interface ICategory {
   id: string;
   name: string;
+  imageUrl: string;
 }
 
 export interface IProductPhoto {

@@ -21,8 +21,11 @@ export const ProfileMenu: FC = () => {
   ];
 
   useEffect(() => {
-    if (!activeLink) setActiveLink(window.location.pathname);
-  }, [activeLink]);
+    // This effect is fine, but using `usePathname` from Next.js is often more reliable
+    // for setting the initial active link, as `window.location.pathname` can be stale
+    // during client-side navigation.
+    setActiveLink(pathname);
+  }, [pathname]);
 
   // Function to toggle menu visibility
   const toggleMenu = () => {
@@ -40,10 +43,7 @@ export const ProfileMenu: FC = () => {
       }
     };
 
-    // Add event listener when component mounts
     document.addEventListener("mousedown", handleClickOutside);
-
-    // Clean up the event listener when the component unmounts
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -51,23 +51,20 @@ export const ProfileMenu: FC = () => {
 
   const handleLogOut = () => {
     const forbiddenPrefixes = ["/cart", "/checkout", "/profile"];
-
     const isForbidden = forbiddenPrefixes.some((prefix) =>
       pathname.startsWith(prefix)
     );
-
     logout();
-
     if (isForbidden) {
       router.push("/");
     } else {
-      router.push(pathname);
+      router.push(pathname); // Or simply router.refresh() if you stay on the same page
     }
   };
 
   return (
     <div ref={dropdownRef} className="relative inline-block text-left">
-      {/* Burger Button */}
+      {/* Profile Image Button */}
       <button
         className="flex items-center justify-center"
         type="button"
@@ -77,54 +74,54 @@ export const ProfileMenu: FC = () => {
       >
         {/* eslint-disable-next-line */}
         <img
-          src={user?.imageUrl} // Added a fallback image
+          src={user?.imageUrl}
           alt="profile-picture"
-          className="rounded-full md:w-10 md:h-10 w-8 h-8 mr-2 object-cover border-2 border-gray-400 hover:border-blue-500 transition-all"
+          className="rounded-full w-8 h-8 md:w-10 md:h-10 object-cover border border-slate-400 dark:border-slate-500 hover:border-blue-500 dark:hover:border-blue-500 transition-all"
         />
       </button>
 
       {/* Dropdown Menu */}
       <div
-        className={`origin-top-right absolute right-0 mt-2 w-36 h-32 py-3 z-50 rounded-md shadow-lg bg-white ring-1 ring-blue-500 ring-opacity-5 focus:outline-none transition ease-out duration-100 ${
+        className={`origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-slate-800 ring-1 ring-black ring-opacity-5 dark:ring-white/10 focus:outline-none transition ease-out duration-100 ${
           isOpen
             ? "transform opacity-100 scale-100"
             : "transform opacity-0 scale-95 pointer-events-none"
         }`}
         role="menu"
         aria-orientation="vertical"
-        aria-labelledby="burger-button"
+        aria-labelledby="menu-button"
       >
-        <ul className="flex flex-col items-center gap-3">
-          {links.map((link) => {
-            return (
-              <li key={link.name}>
-                <Link
-                  href={link.link}
-                  onClick={() => {
-                    setActiveLink(link.link);
-                    setIsOpen(false);
-                  }}
-                  className={`px-3 py-2 rounded-md text-xs font-medium transition-colors duration-200 ${
-                    activeLink === link.link
-                      ? "bg-blue-600 text-white"
-                      : "hover:bg-neutral-700 hover:text-white"
-                  }`}
-                  aria-current={activeLink === link.link ? "page" : undefined}
-                >
-                  {link.name}
-                </Link>
-              </li>
-            );
-          })}
-          <li>
-            <button
-              onClick={handleLogOut}
-              className="flex justify-center items-center gap-2 px-3 py-2 rounded-md text-xs font-medium transition-colors duration-200 hover:bg-red-500 hover:text-white"
+        <div className="py-2" role="none">
+          {links.map((link) => (
+            <Link
+              key={link.name}
+              href={link.link}
+              onClick={() => {
+                setActiveLink(link.link);
+                setIsOpen(false);
+              }}
+              className={`block w-full text-left px-4 py-2 text-sm font-medium transition-colors duration-200 ${
+                activeLink === link.link
+                  ? "bg-blue-600 text-white"
+                  : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
+              }`}
+              aria-current={activeLink === link.link ? "page" : undefined}
             >
-              <p>Keluar</p> <LogOut className="w-4 h-4" />
-            </button>
-          </li>
-        </ul>
+              {link.name}
+            </Link>
+          ))}
+
+          {/* Separator */}
+          <div className="border-t border-slate-200 dark:border-slate-700 my-1" />
+
+          <button
+            onClick={handleLogOut}
+            className="flex items-center gap-2 w-full text-left px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-red-500 hover:text-white dark:hover:bg-red-600 dark:hover:text-white transition-colors duration-200"
+          >
+            <LogOut className="w-4 h-4" />
+            <span>Keluar</span>
+          </button>
+        </div>
       </div>
     </div>
   );

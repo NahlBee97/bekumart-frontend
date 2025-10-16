@@ -1,13 +1,13 @@
-import HomeClient from "@/components/home/homeClient";
+import Shop from "@/components/shop/shop";
 import { getCategories, getProducts } from "@/lib/data";
 
-export default async function Home() {
+export default async function ShopPage() {
   const [products, categories] = await Promise.all([
       getProducts(),
       getCategories(),
     ]);
   return (
-    <HomeClient
+    <Shop
       products={products}
       categories={categories}
     />

@@ -7,7 +7,7 @@ import { StarRating } from "./starRating";
 const ProductCard: React.FC<{ product: IProduct }> = ({ product }) => {
   return (
     <div
-      className="h-[250px] group relative border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300 ease-in-out bg-white flex flex-col"
+      className="min-h-[250px] relative border border-gray-200 rounded-md overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300 ease-in-out bg-white flex flex-col"
       onClick={() => {
         // Navigate to product detail page on card click
         window.location.href = `/products/${product.id}`;
@@ -19,7 +19,7 @@ const ProductCard: React.FC<{ product: IProduct }> = ({ product }) => {
         <img
           src={product.productPhotos.find((photo) => photo.isDefault === true)?.imageUrl}
           alt="product-image"
-          className="h-50 w-full object-cover object-center group-hover:opacity-75 transition-opacity duration-300"
+          className="h-50 w-full  object-cover object-center group-hover:opacity-75 transition-opacity duration-300"
           onError={(e) => {
             // Fallback placeholder image on error
             const target = e.target as HTMLImageElement;

@@ -4,8 +4,8 @@ import { usePathname } from "next/navigation";
 import useAuthStore from "@/stores/useAuthStore";
 import { useEffect } from "react";
 import { getCookie } from "cookies-next";
-import ClientNavbar from "./navbar/clientNavbar";
 import AdminNavbar from "./navbar/adminNavbar";
+import ClientNavbar from "./navbar/clientNavbar";
 
 export default function AuthWrapper({
   children,

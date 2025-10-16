@@ -1,17 +1,22 @@
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 
 // You can move this component to its own file and import it
-export const BurgerMenu = ({links}: {links: {name: string; link: string}[]}) => {
+export const BurgerMenu = ({
+  links,
+}: {
+  links: { name: string; link: string }[];
+}) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
   const [activeLink, setActiveLink] = useState("");
- 
+  const pathname = usePathname();
 
   useEffect(() => {
-    if (!activeLink) setActiveLink(window.location.pathname);
-  }, [activeLink]);
+    // Using Next.js's usePathname is more reliable for client-side navigation
+    setActiveLink(pathname);
+  }, [pathname]);
 
   // Function to toggle menu visibility
   const toggleMenu = () => {
@@ -45,7 +50,7 @@ export const BurgerMenu = ({links}: {links: {name: string; link: string}[]}) => 
         <button
           type="button"
           onClick={toggleMenu}
-          className="inline-flex justify-center items-center w-full rounded-lg px-2 py-1 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+          className="inline-flex justify-center items-center rounded-lg p-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
           aria-haspopup="true"
           aria-expanded={isOpen}
         >
@@ -60,7 +65,7 @@ export const BurgerMenu = ({links}: {links: {name: string; link: string}[]}) => 
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth={2}
-              d="M4 6h16M4 12h16m-7 6h7"
+              d="M4 6h16M4 12h16M4 18h16"
             />
           </svg>
         </button>
@@ -68,7 +73,7 @@ export const BurgerMenu = ({links}: {links: {name: string; link: string}[]}) => 
 
       {/* Dropdown Menu */}
       <div
-        className={`origin-top-right absolute right-0 mt-2 w-36 h-32 py-3 z-50 rounded-md shadow-lg bg-white ring-1 ring-blue-500 ring-opacity-5 focus:outline-none transition ease-out duration-100 ${
+        className={`origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white dark:bg-slate-800 ring-1 ring-black ring-opacity-5 dark:ring-white/10 focus:outline-none transition ease-out duration-100 ${
           isOpen
             ? "transform opacity-100 scale-100"
             : "transform opacity-0 scale-95 pointer-events-none"
@@ -77,29 +82,28 @@ export const BurgerMenu = ({links}: {links: {name: string; link: string}[]}) => 
         aria-orientation="vertical"
         aria-labelledby="burger-button"
       >
-        <ul className="flex flex-col items-center gap-3">
+        <div className="py-1" role="none">
           {links.map((link) => {
             return (
-              <li key={link.name}>
-                <Link
-                  href={link.link}
-                  onClick={() => {
-                    setActiveLink(link.link);
-                    setIsOpen(false);
+              <Link
+                key={link.name}
+                href={link.link}
+                onClick={() => {
+                  setActiveLink(link.link);
+                  setIsOpen(false);
                 }}
-                  className={`px-3 py-2 rounded-md text-xs font-medium transition-colors duration-200 ${
-                    activeLink === link.link
-                      ? "bg-blue-600 text-white"
-                      : "hover:bg-neutral-700 hover:text-white"
-                  }`}
-                  aria-current={activeLink === link.link ? "page" : undefined}
-                >
-                  {link.name}
-                </Link>
-              </li>
+                className={`block w-full text-left px-4 py-2 text-sm font-medium transition-colors duration-200 ${
+                  activeLink === link.link
+                    ? "bg-blue-600 text-white"
+                    : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
+                }`}
+                aria-current={activeLink === link.link ? "page" : undefined}
+              >
+                {link.name}
+              </Link>
             );
           })}
-        </ul>
+        </div>
       </div>
     </div>
   );
