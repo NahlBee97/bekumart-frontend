@@ -4,11 +4,7 @@ import { useState } from "react";
 import { IProduct } from "@/interfaces/productInterfaces";
 import { ProductSection } from "../home/productSection";
 
-interface ProductPageClientProps {
-  products: IProduct[];
-}
-
-export default function Shop({ products }: ProductPageClientProps) {
+export default function Shop({ products }: { products: IProduct[] }) {
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 10;
 
