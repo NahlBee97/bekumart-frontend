@@ -12,33 +12,39 @@ const OrderCard: React.FC<{
   return (
     <div
       onClick={() => onViewOrder(order)}
-      className="mb-2 overflow-hidden rounded-lg border border-gray-200 shadow-sm transition-shadow duration-300 hover:shadow-lg"
+      className="mb-2 cursor-pointer overflow-hidden rounded-lg border border-gray-200 shadow-sm transition-shadow duration-300 hover:shadow-lg"
     >
-      {/* Order Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 p-4 sm:p-6">
-        <div className="w-full grid md:grid-cols-2 gap-x-6 gap-y-2 text-sm text-gray-600 sm:flex sm:gap-x-8">
-          <div className="flex flex-col gap-2 justify-between">
-            <div className="flex items-center gap-1 text-white bg-blue-300 px-2 rounded-sm">
-              <p className="font-medium text-sm">Nomor Pesanan:</p>
-              <p className="text-xs text-gray-800">{order.id}</p>
-            </div>
-            <div className="flex gap-1">
-              <p className="font-medium text-sm text-gray-900">Tanggal:</p>
-              <p>{format(order.createdAt, "dd MMMM yyyy")}</p>
-            </div>
-          </div>
-          <div className="w-full flex justify-between gap-8">
-            <div>
-              <p className="font-medium text-sm text-gray-900">Status</p>
-              <StatusBadge status={order.status} />
-            </div>
-            <div>
-              <p className="font-medium text-sm text-gray-900">Total Harga</p>
-              <p className="font-semibold text-blue-500">
-                Rp {order.totalAmount.toLocaleString()}
-              </p>
-            </div>
-          </div>
+      {/* This container now handles padding and the responsive layout.
+        - Mobile: A 2x2 grid for a compact view.
+        - Medium screens and up: A flex row to space items out horizontally.
+      */}
+      <div className="grid grid-cols-2 items-start gap-x-4 gap-y-5 bg-white p-4 text-sm text-gray-600 md:flex md:items-center md:justify-between">
+        {/* Order Number */}
+        {/* On mobile, this spans the full width to act as a clear header. */}
+        <div className="col-span-2 flex items-center gap-2 md:col-auto">
+          <p className="font-medium text-gray-500">Nomor Pesanan:</p>
+          <p className="font-semibold text-gray-800">{order.id}</p>
+        </div>
+
+        {/* Date */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
+          <p className="font-medium text-gray-900">Tanggal:</p>
+          <p>{format(order.createdAt, "dd MMMM yyyy")}</p>
+        </div>
+
+        {/* Status */}
+        {/* The w-full class was removed to allow it to fit in the layout on all screen sizes. */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
+          <p className="font-medium text-gray-900">Status</p>
+          <StatusBadge status={order.status} />
+        </div>
+
+        {/* Total Price */}
+        <div className="text-right md:text-left">
+          <p className="font-medium text-gray-900">Total Harga</p>
+          <p className="font-semibold text-blue-500">
+            Rp {order.totalAmount.toLocaleString()}
+          </p>
         </div>
       </div>
     </div>

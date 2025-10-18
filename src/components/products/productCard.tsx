@@ -1,13 +1,20 @@
 // --- Reusable Product Card Component ---
 
 import { IProduct } from "@/interfaces/productInterfaces";
-import { StarRating } from "./starRating";
+import { StarIcon } from "./starRating";
 
 // This component displays a single product's information in a styled card.
 const ProductCard: React.FC<{ product: IProduct }> = ({ product }) => {
+  const formatNumberCompact = (num: number) => {
+    return new Intl.NumberFormat("en-US", {
+      notation: "compact",
+      maximumFractionDigits: 1,
+    }).format(num);
+  };
+
   return (
     <div
-      className="min-h-[250px] relative border border-gray-200 rounded-md overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300 ease-in-out bg-white flex flex-col"
+      className="min-h-[250px] relative border border-gray-200 rounded-md overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300 ease-in-out bg-white flex flex-col cursor-pointer"
       onClick={() => {
         // Navigate to product detail page on card click
         window.location.href = `/products/${product.id}`;
@@ -17,7 +24,10 @@ const ProductCard: React.FC<{ product: IProduct }> = ({ product }) => {
         {/* Product Image */}
         {/* eslint-disable-next-line */}
         <img
-          src={product.productPhotos.find((photo) => photo.isDefault === true)?.imageUrl}
+          src={
+            product.productPhotos.find((photo) => photo.isDefault === true)
+              ?.imageUrl
+          }
           alt="product-image"
           className="h-50 w-full  object-cover object-center group-hover:opacity-75 transition-opacity duration-300"
           onError={(e) => {
@@ -38,8 +48,12 @@ const ProductCard: React.FC<{ product: IProduct }> = ({ product }) => {
             Rp {product.price.toLocaleString()}
           </p>
           <div className="flex gap-2">
-            <StarRating rating={product.rating} />
-            <p className="text-xs text-gray-800">{product.sale} terjual</p>
+            <p className="flex gap-1 items-center text-gray-800 text-xs font-semibold">
+              {product.rating}/5 <StarIcon filled />
+            </p>
+            <p className="text-xs text-gray-800">
+              {formatNumberCompact(product.sale)} terjual
+            </p>
           </div>
         </div>
       </div>

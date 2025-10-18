@@ -6,8 +6,8 @@ export default function ProfileLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen font-sans">
-      <main className="container mx-auto py-4 lg:py-8">
+    <div className="min-h-screen">
+      <main className="bg-slate-50 mx-auto p-4 lg:px-10">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar */}
           <div className="hidden md:block w-full lg:w-auto">

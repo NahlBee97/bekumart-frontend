@@ -3,7 +3,7 @@ import { Mail, Phone, MapPin } from "lucide-react";
 
 export default function ContactPage() {
   return (
-    <>
+    <main className="bg-slate-50">
       <Head>
         <title>Hubungi Kami - FrozenFood Delights</title>
         <meta
@@ -12,10 +12,10 @@ export default function ContactPage() {
         />
       </Head>
 
-      <div className="bg-white min-h-screen">
+      <div className="min-h-screen">
         <div className="container mx-auto px-6 py-16">
           <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800">
+            <h1 className="text-4xl md:text-5xl font-extrabold text-blue-500">
               Hubungi Kami
             </h1>
             <p className="text-lg text-gray-500 mt-4 max-w-2xl mx-auto">
@@ -25,7 +25,7 @@ export default function ContactPage() {
 
           <div className="grid md:grid-cols-2 gap-12">
             {/* Contact Form */}
-            <div className="bg-gray-50 p-8 rounded-lg shadow-lg">
+            <div className="bg-white p-8 rounded-lg shadow-lg">
               <h2 className="text-2xl font-bold text-gray-800 mb-6">
                 Kirim Pesan
               </h2>
@@ -94,7 +94,7 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold text-gray-800">Alamat</h3>
                   <p className="text-gray-600">
-                    Jl. Kuliner No. 123, Kota Lezat, 14045, Indonesia
+                    Jl. Kuliner No. 123, Desa Rato, Sila, 84161, NTB.
                   </p>
                 </div>
               </div>
@@ -103,7 +103,7 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold text-gray-800">Email</h3>
                   <p className="text-gray-600">
-                    support@frozenfooddelights.com
+                    support@bekumart.com
                   </p>
                 </div>
               </div>
@@ -111,13 +111,13 @@ export default function ContactPage() {
                 <Phone className="h-6 w-6 text-yellow-500 mt-1 flex-shrink-0" />
                 <div>
                   <h3 className="font-semibold text-gray-800">Telepon</h3>
-                  <p className="text-gray-600">(021) 123-4567</p>
+                  <p className="text-gray-600">0821 4478 5677</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </main>
   );
 };

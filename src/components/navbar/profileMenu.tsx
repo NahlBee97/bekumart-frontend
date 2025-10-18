@@ -1,14 +1,13 @@
 import useAuthStore from "@/stores/useAuthStore";
 import { LogOut } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import React, { useState, useEffect, useRef } from "react";
 import type { FC } from "react";
 
 // You can move this component to its own file and import it
 export const ProfileMenu: FC = () => {
   const pathname = usePathname();
-  const router = useRouter();
 
   const { user, logout } = useAuthStore();
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -49,16 +48,15 @@ export const ProfileMenu: FC = () => {
     };
   }, []);
 
-  const handleLogOut = () => {
-    const forbiddenPrefixes = ["/cart", "/checkout", "/profile"];
-    const isForbidden = forbiddenPrefixes.some((prefix) =>
-      pathname.startsWith(prefix)
-    );
-    logout();
-    if (isForbidden) {
-      router.push("/");
-    } else {
-      router.push(pathname); // Or simply router.refresh() if you stay on the same page
+  const handleLogOut = async () => {
+    try {
+      await logout();
+      // Clear any potential navigation history
+      window.history.replaceState(null, "", "/");
+      // Force a hard navigation to /
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Logout failed:", error);
     }
   };
 

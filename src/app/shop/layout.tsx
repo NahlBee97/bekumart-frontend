@@ -6,7 +6,7 @@ export default function shopLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen font-sans">
+    <div className="min-h-screen">
       <main className="bg-slate-50 mx-auto p-4 lg:px-10">
         <div className=" flex flex-col lg:flex-row gap-4">
           {/* Sidebar */}

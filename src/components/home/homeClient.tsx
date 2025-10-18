@@ -15,8 +15,8 @@ export default function HomeClient({
   categories,
 }: ProductPageClientProps) {
   return (
-    <div className="bg-slate-50 dark:bg-slate-900 min-h-screen">
-      <div className="flex flex-col gap-10 mx-auto max-w-2xl p-4 sm:p-6 lg:max-w-7xl lg:px-8">
+    <div className="bg-slate-50 min-h-screen">
+      <div className="flex flex-col gap-10 mx-auto max-w-2xl py-4 sm:py-6 lg:max-w-7xl">
         <Hero />
         <CategorySection categories={categories} />
         <ProductSection title="Produk Terlaris" products={products} />

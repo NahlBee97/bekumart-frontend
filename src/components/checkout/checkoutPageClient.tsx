@@ -221,9 +221,9 @@ export default function CheckoutPageClient() {
 
   return (
     <>
-      <div className="min-h-screen font-sans text-gray-800">
+      <div className="min-h-screen bg-slate-50 font-sans text-gray-800">
         <ArrowLeft
-          className="h-6 w-6 mt-2 ml-2 text-blue-500 cursor-pointer"
+          className="md:hidden h-6 w-6 mt-2 ml-2 text-blue-500 cursor-pointer"
           onClick={() => router.push("/cart")}
         />
         <main className="mx-auto max-w-7xl pb-4 pt-2">
@@ -233,8 +233,11 @@ export default function CheckoutPageClient() {
             </h1>
             <div className="mt-6 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
               {/* Left Column - Delivery & Address */}
-              <section aria-labelledby="cart-heading" className="lg:col-span-7">
-                <div className="space-y-8 border border-gray-200 bg-white p-6 shadow-sm">
+              <section
+                aria-labelledby="cart-heading"
+                className="lg:col-span-7 "
+              >
+                <div className="space-y-8 border border-gray-200 rounded-lg bg-white p-6 shadow-sm">
                   <DeliveryMethodSection
                     deliveryMethod={deliveryMethod}
                     onDeliveryMethodChange={handleDeliveryMethodChange}
@@ -254,7 +257,6 @@ export default function CheckoutPageClient() {
                       onCourierChange={(courier) => {
                         setSelectedCourier(courier);
                         setShippingCost(courier.cost);
-                        
                       }}
                       couriers={couriers}
                     />

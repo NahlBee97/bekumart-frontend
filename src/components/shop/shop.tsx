@@ -4,7 +4,11 @@ import { useState } from "react";
 import { IProduct } from "@/interfaces/productInterfaces";
 import { ProductSection } from "../home/productSection";
 
-export default function Shop({ products }: { products: IProduct[] }) {
+export default function Shop({
+  products,
+}: {
+  products: IProduct[];
+}) {
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 10;
 
@@ -21,7 +25,6 @@ export default function Shop({ products }: { products: IProduct[] }) {
     <div className="min-h-screen">
       <div className="mx-auto max-w-2xl lg:max-w-7xl">
         <ProductSection
-          title="Produk Frozen Terbaik"
           products={currentProducts}
         />
 
@@ -31,7 +34,7 @@ export default function Shop({ products }: { products: IProduct[] }) {
             <button
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
-              className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               Sebelumnya
             </button>
@@ -43,7 +46,7 @@ export default function Shop({ products }: { products: IProduct[] }) {
                 setCurrentPage((prev) => Math.min(prev + 1, totalPages))
               }
               disabled={currentPage === totalPages}
-              className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               Berikutnya
             </button>

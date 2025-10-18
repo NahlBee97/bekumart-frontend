@@ -33,6 +33,7 @@ const useAuthStore = create<AuthState>((set) => ({
         user: payload,
         isLoggedIn: true,
         accessToken: accessToken,
+        isLoading: false
       });
     } catch (error) {
       // If refresh fails, it means no valid session, so we clear the state

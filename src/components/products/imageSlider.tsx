@@ -1,88 +1,42 @@
 "use client";
 
-import { useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { IProductPhoto } from "@/interfaces/productInterfaces";
+import { useState } from "react";
 
-const ImageSlider = ({ photos }: {photos: IProductPhoto[]}) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const goToPrevious = () => {
-    const isFirstSlide = currentIndex === 0;
-    const newIndex = isFirstSlide ? photos.length - 1 : currentIndex - 1;
-    setCurrentIndex(newIndex);
-  };
-
-  const goToNext = () => {
-    const isLastSlide = currentIndex === photos.length - 1;
-    const newIndex = isLastSlide ? 0 : currentIndex + 1;
-    setCurrentIndex(newIndex);
-  };
-
-  if (!photos || photos.length === 0) {
-    return <div>No photos available.</div>;
-  }
-
+export const ImageSlider: React.FC<{ photos: IProductPhoto[] }> = ({
+  photos,
+}) => {
+  const [activeImage, setActiveImage] = useState(photos[0].imageUrl);
   return (
-    <div className="relative w-full h-96">
-      {" "}
-      {/* Set a fixed height or use aspect-ratio */}
-      {/* Main container for sliding images */}
-      <div className="w-full h-full rounded-lg overflow-hidden">
-        <div
-          className="flex transition-transform ease-in-out duration-500 h-full"
-          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-        >
-          {/* Map through photos to create slides */}
-          {photos.map((photo) => (
-            <div
-              key={photo.id}
-              className="relative w-full h-full flex-shrink-0"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={photo.imageUrl}
-                alt="Product Photo"
-                className="w-full h-full object-contain" // Use object-contain or object-cover
-              />
-            </div>
-          ))}
-        </div>
+    <div>
+      <div className="border border-gray-200">
+        {/* eslint-disable-next-line */}
+        <img
+          src={activeImage}
+          alt="Product Image"
+          className="w-full object-cover"
+        />
       </div>
-      {/* Left Arrow */}
-      <div className="absolute top-1/2 left-2 -translate-y-1/2">
-        <button
-          onClick={goToPrevious}
-          className="bg-black/40 text-white p-2 rounded-full hover:bg-black/60 transition"
-          aria-label="Previous image"
-        >
-          <ChevronLeft size={24} />
-        </button>
-      </div>
-      {/* Right Arrow */}
-      <div className="absolute top-1/2 right-2 -translate-y-1/2">
-        <button
-          onClick={goToNext}
-          className="bg-black/40 text-white p-2 rounded-full hover:bg-black/60 transition"
-          aria-label="Next image"
-        >
-          <ChevronRight size={24} />
-        </button>
-      </div>
-      {/* Optional: Dots for navigation */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-        {photos.map((_, slideIndex) => (
+      <div className="flex space-x-2 mt-2">
+        {photos.map((photo) => (
           <div
-            key={slideIndex}
-            onClick={() => setCurrentIndex(slideIndex)}
-            className={`h-2 w-2 rounded-full cursor-pointer transition-all duration-300 ${
-              currentIndex === slideIndex ? "bg-white scale-125" : "bg-white/50"
+            key={photo.id}
+            className={`w-14 border-2 rounded-md cursor-pointer ${
+              activeImage === photo.imageUrl
+                ? "border-blue-500"
+                : "border-gray-200"
             }`}
-          />
+            onClick={() => setActiveImage(photo.imageUrl)}
+          >
+            {/* eslint-disable-next-line */}
+            <img
+              src={photo.imageUrl}
+              alt={`Thumbnail ${photo.id}`}
+              className="w-full h-full object-cover"
+            />
+          </div>
         ))}
       </div>
     </div>
   );
 };
-
-export default ImageSlider;

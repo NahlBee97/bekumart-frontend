@@ -1,44 +1,34 @@
-import { Star } from "lucide-react";
-
 // This component displays a star icon and the numerical rating.
-const StarRating: React.FC<{ rating: number }> = ({ rating }) => {
-  return (
-    <div className="flex items-center justify-center text-gray-800 text-xs font-semibold rounded-full">
-      <svg className="h-4 w-4 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-      </svg>
-      <span>{rating ? rating.toFixed(1) : "5.0"}</span>
-    </div>
-  );
-};
+export const StarIcon = ({ filled }: { filled: boolean }) => (
+  <svg
+    className={`w-4 h-4 ${filled ? "text-yellow-400" : "text-gray-300"}`}
+    fill="currentColor"
+    viewBox="0 0 20 20"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.956a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.368 2.446a1 1 0 00-.364 1.118l1.287 3.956c.3.921-.755 1.688-1.54 1.118l-3.368-2.446a1 1 0 00-1.176 0l-3.368 2.446c-.784.57-1.838-.197-1.54-1.118l1.287-3.956a1 1 0 00-.364-1.118L2.05 9.383c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69L9.049 2.927z" />
+  </svg>
+);
 
 // --- HELPER COMPONENT ---
 // A simple component to render star ratings.
 const StarRatingDetail = ({ rating }: { rating: number }) => {
-  const fullStars = Math.floor(rating);
-  const halfStar = rating % 1 !== 0;
-  const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+  const renderStars = (rating: number) => {
+    const stars = [];
+    for (let i = 0; i < 5; i++) {
+      stars.push(<StarIcon key={i} filled={i < rating} />);
+    }
+    return stars;
+  };
 
   return (
-    <div className="flex items-center">
-      {[...Array(fullStars)].map((_, i) => (
-        <Star
-          key={`full-${i}`}
-          className="w-5 h-5 text-yellow-400 fill-current"
-        />
-      ))}
-      {halfStar && (
-        <Star
-          key="half"
-          className="w-5 h-5 text-yellow-400 fill-current"
-          style={{ clipPath: "polygon(0 0, 50% 0, 50% 100%, 0 100%)" }}
-        />
-      )}
-      {[...Array(emptyStars)].map((_, i) => (
-        <Star key={`empty-${i}`} className="w-5 h-5 text-gray-300" />
-      ))}
+    <div
+      className="flex items-center cursor-pointer"
+    >
+      <span className="text-sm mr-1 font-semibold">{rating}</span>
+      {renderStars(rating)}
     </div>
   );
 };
 
-export {StarRatingDetail, StarRating};
+export { StarRatingDetail };

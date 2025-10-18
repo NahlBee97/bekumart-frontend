@@ -1,13 +1,12 @@
-"use client"
+"use client";
 
 import { FileText, LogOut, Package, User, LayoutDashboard } from "lucide-react";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import useAuthStore from "@/stores/useAuthStore";
 
 export default function AdminSidebar() {
   const { logout } = useAuthStore();
-  const router = useRouter();
   const pathname = usePathname();
 
   const navItems = [
@@ -17,19 +16,15 @@ export default function AdminSidebar() {
     { icon: User, label: "Profile", link: "/admin/profile" },
   ];
 
-  const handleLogOut = () => {
-    const forbiddenPrefixes = ["/cart", "/checkout", "/profile", "/admin"];
-
-    const isForbidden = forbiddenPrefixes.some((prefix) =>
-      pathname.startsWith(prefix)
-    );
-
-    logout();
-
-    if (isForbidden) {
-      router.push("/");
-    } else {
-      router.push(pathname);
+  const handleLogOut = async () => {
+    try {
+      await logout();
+      // Clear any potential navigation history
+      window.history.replaceState(null, '', '/');
+      // Force a hard navigation to /
+      window.location.href = '/';
+    } catch (error) {
+      console.error("Logout failed:", error);
     }
   };
 
@@ -62,7 +57,7 @@ export default function AdminSidebar() {
           })}
         </ul>
         <button
-          className="flex w-full gap-2 items-center p-3 my-1 rounded-lg transition-colors hover:bg-gray-400 hover:text-red-500 hover:font-semibold focus:bg-blue-500"
+          className="flex w-full gap-2 items-center p-3 my-1 rounded-lg transition-colors hover:bg-red-500 hover:text-white hover:font-semibold"
           onClick={handleLogOut}
         >
           <LogOut />

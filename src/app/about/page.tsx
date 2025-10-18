@@ -1,23 +1,24 @@
 import Head from "next/head";
-import { Users, Target, Eye } from "lucide-react";
+import { Users, Target, Eye, Snowflake } from "lucide-react";
 
 export default function AboutPage() {
   return (
-    <>
+    <main className="bg-slate-50">
       <Head>
-        <title>Tentang Kami - FrozenFood Delights</title>
+        <title>BekuMart</title>
         <meta
           name="description"
-          content="Kenali lebih jauh tentang FrozenFood Delights, misi kami, dan tim di baliknya."
+          content="Kenali lebih jauh tentang BekuMart, misi kami, dan tim di baliknya."
         />
       </Head>
 
-      <div className="bg-gray-50 min-h-screen">
+      <div className=" min-h-screen">
         {/* Hero Section */}
-        <section className="bg-blue-600 text-white text-center py-20">
-          <div className="container mx-auto px-6">
+        <section className="bg-blue-500 text-white text-center py-20">
+          <div className="container flex flex-col items-center mx-auto px-6">
+            <Snowflake className="w-14 h-14" />
             <h1 className="text-4xl md:text-5xl font-extrabold leading-tight mb-4">
-              Tentang FrozenFood Delights
+              BekuMart
             </h1>
             <p className="text-lg md:text-xl max-w-3xl mx-auto">
               Menyediakan kemudahan dan kelezatan makanan beku berkualitas
@@ -27,7 +28,7 @@ export default function AboutPage() {
         </section>
 
         {/* Mission and Vision Section */}
-        <section className="py-16 sm:py-24">
+        <section className=" py-16 sm:py-24">
           <div className="container mx-auto px-6">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div className="space-y-8">
@@ -61,7 +62,7 @@ export default function AboutPage() {
               <div className="text-center">
                 {/* eslint-disable-next-line */}
                 <img
-                  src="https://images.unsplash.com/photo-1585442795893-b15d29f809d3?q=80&w=1887&auto=format&fit=crop"
+                  src="./frozen-food.jpg"
                   alt="Produk Frozen Food"
                   className="rounded-lg shadow-xl mx-auto"
                 />
@@ -71,7 +72,7 @@ export default function AboutPage() {
         </section>
 
         {/* Team Section */}
-        <section className="bg-white py-16 sm:py-24">
+        <section className="py-16 sm:py-24">
           <div className="container mx-auto px-6 text-center">
             <Users className="h-12 w-12 mx-auto text-blue-500 mb-4" />
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
@@ -83,7 +84,7 @@ export default function AboutPage() {
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
               {/* Team Member 1 */}
-              <div className="bg-gray-50 p-6 rounded-lg shadow-md">
+              <div className="bg-white p-6 rounded-lg shadow-md">
                 {/* eslint-disable-next-line */}
                 <img
                   src="https://placehold.co/150x150/6366f1/ffffff?text=CEO"
@@ -91,12 +92,12 @@ export default function AboutPage() {
                   className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-white"
                 />
                 <h3 className="text-xl font-semibold text-gray-900">
-                  Ahmad Pratama
+                  Nahalil
                 </h3>
                 <p className="text-blue-500">Founder & CEO</p>
               </div>
               {/* Team Member 2 */}
-              <div className="bg-gray-50 p-6 rounded-lg shadow-md">
+              <div className="bg-white p-6 rounded-lg shadow-md">
                 {/* eslint-disable-next-line */}
                 <img
                   src="https://placehold.co/150x150/ec4899/ffffff?text=COO"
@@ -104,12 +105,12 @@ export default function AboutPage() {
                   className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-white"
                 />
                 <h3 className="text-xl font-semibold text-gray-900">
-                  Siti Lestari
+                  Nindhi Meyna S.
                 </h3>
                 <p className="text-blue-500">Head of Operations</p>
               </div>
               {/* Team Member 3 */}
-              <div className="bg-gray-50 p-6 rounded-lg shadow-md">
+              <div className="bg-white p-6 rounded-lg shadow-md">
                 {/* eslint-disable-next-line */}
                 <img
                   src="https://placehold.co/150x150/f59e0b/ffffff?text=CMO"
@@ -117,7 +118,7 @@ export default function AboutPage() {
                   className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-white"
                 />
                 <h3 className="text-xl font-semibold text-gray-900">
-                  Budi Santoso
+                  Nadienatul Syahirah
                 </h3>
                 <p className="text-blue-500">Marketing Manager</p>
               </div>
@@ -125,6 +126,6 @@ export default function AboutPage() {
           </div>
         </section>
       </div>
-    </>
+    </main>
   );
-};
+}

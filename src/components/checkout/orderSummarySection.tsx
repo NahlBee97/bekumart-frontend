@@ -29,7 +29,7 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({
     isSubmitting || (deliveryMethod === "DELIVERY" && !selectedAddress);
 
   return (
-    <section className="mt-8 border border-gray-300 shadow-sm px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8">
+    <section className="mt-8 border bg-white rounded-lg border-gray-300 shadow-sm px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8">
       <h2 className="text-xl font-semibold text-blue-500">Ringkasan Belanja</h2>
       <ul role="list" className="mt-6 divide-y divide-gray-200">
         {cart.items.map((item: any) => (

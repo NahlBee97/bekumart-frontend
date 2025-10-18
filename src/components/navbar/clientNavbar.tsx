@@ -38,7 +38,7 @@ export default function ClientNavbar() {
   }, [user, setCart, isLoading, isLoggedIn]);
 
   return (
-    <header className="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm border-b border-slate-200 dark:border-slate-800">
+    <header className="sticky top-0 z-50 bg-background-light/80 backdrop-blur-sm border-b border-slate-200 dark:border-slate-800">
       <div className="container mx-auto">
         <div className="flex items-center justify-between h-16">
           {/* Left Section: Logo & Desktop Nav */}
@@ -55,21 +55,26 @@ export default function ClientNavbar() {
             </div>
             {/* Desktop Navigation - Hidden on mobile */}
             <nav className="hidden md:flex md:gap-6">
-              {links.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.link}
-                  className="text-sm font-medium text-neutral-600 dark:text-neutral-300 hover:text-blue-500 transition-colors"
-                >
-                  {link.name}
-                </Link>
-              ))}
+              {links.map((link) => {
+                const isActive = pathname === link.link;
+                return (
+                  <Link
+                    key={link.name}
+                    href={link.link}
+                    className={`text-sm dark:text-neutral-300 hover:text-blue-500 transition-colors ${
+                      isActive ? "text-blue-500 font-semibold " : "font-medium text-neutral-600"
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+                );
+              })}
             </nav>
           </div>
 
           {/* search bar */}
           <SearchBar />
-          
+
           {/* Right Section: Auth, Cart, and Burger Menu */}
           <div className="flex items-center gap-3 md:gap-4">
             {/* Auth Buttons or Profile Menu */}
