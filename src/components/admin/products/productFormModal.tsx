@@ -1,6 +1,6 @@
 "use client";
 
-import { ICategory, IProduct } from "@/interfaces/productInterfaces";
+import { ICategory, IProduct } from "@/interfaces/dataInterfaces";
 import api from "@/lib/axios";
 import { getCategories } from "@/lib/data";
 import { ProductSchema } from "@/schemas/productSchemas";

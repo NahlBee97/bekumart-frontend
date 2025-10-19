@@ -13,12 +13,11 @@ import {
 import StatCard from "./statCard";
 import api from "@/lib/axios";
 import useAuthStore from "@/stores/useAuthStore";
-import { ISalesSummary } from "@/interfaces/dashboardInterface";
 
 const SalesSection = () => {
   // State for data, loading, and errors
   const { isLoading } = useAuthStore();
-  const [data, setData] = useState<ISalesSummary | null>(null);
+  const [data, setData] = useState<any | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   // Fetch data on component mount

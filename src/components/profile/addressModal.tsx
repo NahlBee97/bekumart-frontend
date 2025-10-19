@@ -1,6 +1,6 @@
 "use client";
 
-import { IAddress } from "@/interfaces/addressInterface";
+import { IAddress } from "@/interfaces/dataInterfaces";
 import api from "@/lib/axios";
 import { AddressSchema } from "@/schemas/addressSchema";
 import useAuthStore from "@/stores/useAuthStore";

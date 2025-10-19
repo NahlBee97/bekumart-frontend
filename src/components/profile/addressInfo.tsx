@@ -3,13 +3,13 @@
 import { useState, useCallback, useEffect } from "react";
 import { MapPin, Trash2, Edit3, PlusCircle } from "lucide-react";
 import useAuthStore from "@/stores/useAuthStore";
-import { IAddress } from "@/interfaces/addressInterface";
 import AddressModal from "./addressModal";
 import { getUserAddresses } from "@/lib/data";
 import api from "@/lib/axios";
 import toast from "react-hot-toast";
 import ConfirmModal from "../confirmModal";
 import AddressInfoSkeleton from "./addressInfoSkeleton";
+import { IAddress } from "@/interfaces/dataInterfaces";
 
 // --- Main Component ---
 export default function AddressInfo() {

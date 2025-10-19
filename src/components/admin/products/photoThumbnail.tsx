@@ -1,4 +1,4 @@
-import { IProductPhoto } from "@/interfaces/productInterfaces";
+import { IProductPhoto } from "@/interfaces/dataInterfaces";
 import { Star, Trash2, UploadCloud } from "lucide-react";
 
 const PhotoThumbnail = ({

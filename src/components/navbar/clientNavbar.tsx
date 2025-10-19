@@ -62,7 +62,9 @@ export default function ClientNavbar() {
                     key={link.name}
                     href={link.link}
                     className={`text-sm dark:text-neutral-300 hover:text-blue-500 transition-colors ${
-                      isActive ? "text-blue-500 font-semibold " : "font-medium text-neutral-600"
+                      isActive
+                        ? "text-blue-500 font-semibold "
+                        : "font-medium text-neutral-600"
                     }`}
                   >
                     {link.name}
@@ -72,53 +74,49 @@ export default function ClientNavbar() {
             </nav>
           </div>
 
-          {/* search bar */}
+          {/* center */}
           <SearchBar />
 
-          {/* Right Section: Auth, Cart, and Burger Menu */}
-          <div className="flex items-center gap-3 md:gap-4">
-            {/* Auth Buttons or Profile Menu */}
-            <div className="hidden sm:flex items-center gap-2">
-              {!isLoggedIn ? (
-                <>
-                  <Link
-                    href={`/login?callbackUrl=${pathname}`}
-                    className="px-4 py-2 text-sm text-center text-blue-500 font-semibold rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors"
-                  >
-                    Masuk
-                  </Link>
-                  <Link
-                    href="/register"
-                    className="px-4 py-2 text-sm text-center text-white font-semibold bg-blue-500 rounded-lg hover:bg-blue-600 transition-colors"
-                  >
-                    Daftar
-                  </Link>
-                </>
-              ) : (
-                // Cart Icon and Info - Shown only when logged in
-                <div className="flex items-center gap-5">
-                  <div className="relative">
-                    <Link
-                      href={`/cart?callbackUrl=${pathname}`}
-                      className="flex items-center"
-                    >
-                      <ShoppingCart className="w-6 h-6 text-neutral-700 dark:text-neutral-300" />
-                    </Link>
-                    {cart && cart.totalQuantity > 0 && (
-                      <div className="absolute -top-2 -right-2 bg-red-600 rounded-full w-5 h-5 text-white text-xs flex items-center justify-center">
-                        {cart.totalQuantity}
-                      </div>
-                    )}
+          {/* right side */}
+          <div className="flex items-center gap-6 md:gap-8">
+            {isLoggedIn && (
+              <div className="relative">
+                <Link
+                  href={`/cart?callbackUrl=${pathname}`}
+                  className="flex items-center"
+                >
+                  <ShoppingCart className="w-6 h-6 text-neutral-700 dark:text-neutral-300" />
+                </Link>
+                {cart && cart.totalQuantity > 0 && (
+                  <div className="absolute -top-2 -right-2 bg-red-600 rounded-full w-5 h-5 text-white text-xs flex items-center justify-center">
+                    {cart.totalQuantity}
                   </div>
-                  <ProfileMenu />
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            )}
 
-            {/* Burger Menu - Shown only on mobile */}
-            <div className="md:hidden">
-              <BurgerMenu links={links} />
-            </div>
+            {isLoggedIn && <ProfileMenu />}
+
+            {!isLoggedIn && (
+              <div className="hidden sm:flex items-center gap-2">
+                <Link
+                  href={`/login?callbackUrl=${pathname}`}
+                  className="px-4 py-2 text-sm text-center text-blue-500 font-semibold rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors"
+                >
+                  Masuk
+                </Link>
+                <Link
+                  href="/register"
+                  className="px-4 py-2 text-sm text-center text-white font-semibold bg-blue-500 rounded-lg hover:bg-blue-600 transition-colors"
+                >
+                  Daftar
+                </Link>
+              </div>
+            )}
+          </div>
+
+          <div className="md:hidden">
+            <BurgerMenu links={links} />
           </div>
         </div>
       </div>

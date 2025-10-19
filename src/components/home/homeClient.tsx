@@ -1,9 +1,9 @@
 "use client";
 
-import { IProduct, ICategory } from "@/interfaces/productInterfaces";
 import Hero from "./hero";
 import CategorySection from "./categorySection";
 import { ProductSection } from "./productSection";
+import { ICategory, IProduct } from "@/interfaces/dataInterfaces";
 
 interface ProductPageClientProps {
   products: IProduct[];

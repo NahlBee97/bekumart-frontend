@@ -1,8 +1,10 @@
 "use client"
 
-import { IProduct } from "@/interfaces/productInterfaces";
+import { IProduct, IReview } from "@/interfaces/dataInterfaces";
 import { ReviewCard } from "./reviewCard";
 import { StarRatingDetail } from "./starRating";
+import { useEffect, useState } from "react";
+import { getProductReviews } from "@/lib/data";
 
 const FilterButton: React.FC<{
   children: React.ReactNode;
@@ -24,40 +26,42 @@ const FilterButton: React.FC<{
 };
 
 export function ReviewSection({product} : {product: IProduct}) {
-    // get review data for specific product
-  const sampleReview = {
-    author: {
-      name: "baskarazakki",
-      avatarUrl: "https://placehold.co/40x40/EFEFEF/333333?text=A", // Placeholder avatar
-    },
-    rating: 5,
-    date: "2023-04-15 11:59",
-    terbaik: "Harga / Performa",
-    sepadan: "Benar",
-    comment:
-      "Lumayan bgt sih, ngumpulin duit buat beli VGA seken, tapi malah dapet yang 'Baru' lumayan kan ya. Performa OK, langsung jajal Skyrim SE + Shader jalan diatas 30 FPS 1080P mantab sih.",
-    images: [
-      "https://placehold.co/200x200/cccccc/666666?text=Image+1",
-      "https://placehold.co/200x200/cccccc/666666?text=Image+2",
-      "https://placehold.co/200x200/cccccc/666666?text=Image+3",
-      "https://placehold.co/200x200/cccccc/666666?text=Image+4",
-      "https://placehold.co/200x200/cccccc/666666?text=Image+5",
-      "https://placehold.co/200x200/cccccc/666666?text=Image+6",
-    ],
-    likes: 187,
-  };
+  const [reviews, setReviews] = useState<IReview[]>([]);
+  const [averageRating, setAverageRating] = useState<number>(0);
+
+  useEffect(() => {
+    if (!product) return;
+    const fetchReviews = async () => {
+      const reviews = await getProductReviews(product.id);
+      setReviews(reviews);
+      const reviewCount = reviews.length;
+      const sumOfRatings = reviews.reduce((acc: number, review: IReview) => {
+        return acc + review.rating;
+      }, 0);
+    
+      setAverageRating(sumOfRatings/reviewCount);
+    };
+    fetchReviews();
+  }, [product]);
 
   return (
     <section className="w-full bg-white border-slate-200 rounded-lg p-4 sm:p-6 shadow-sm">
       <h2 className="text-lg font-semibold mb-4">Penilaian Produk</h2>
 
-      <div className="flex flex-col sm:flex-row items-start sm:items-center p-6 border border-gray-200 rounded-lg bg-gray-50 mb-6">
+      <div
+        className={` ${
+          reviews.length === 0 && "hidden"
+        } flex flex-col sm:flex-row items-start sm:items-center p-6 border border-gray-200 rounded-lg bg-gray-50 mb-6`}
+      >
         <div className="flex-shrink-0 text-center mr-6 mb-4 sm:mb-0">
           <p className="text-4xl font-bold text-blue-500">
-            4.8 <span className="text-2xl text-gray-600">dari 5</span>
+            {Number.isNaN(averageRating) ? 0 : averageRating}{" "}
+            <span className="text-2xl text-gray-600">dari 5</span>
           </p>
           <div className="mt-1 flex justify-center">
-            <StarRatingDetail rating={4.8} />
+            <StarRatingDetail
+              rating={Number.isNaN(averageRating) ? 0 : averageRating}
+            />
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -72,7 +76,7 @@ export function ReviewSection({product} : {product: IProduct}) {
         </div>
       </div>
 
-      <ReviewCard {...sampleReview} />
+      <ReviewCard reviews={reviews} />
       {/* You would map over an array of reviews here */}
     </section>
   );

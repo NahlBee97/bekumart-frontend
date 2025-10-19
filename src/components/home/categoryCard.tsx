@@ -1,6 +1,6 @@
 "use client"
 
-import { ICategory } from "@/interfaces/productInterfaces";
+import { ICategory } from "@/interfaces/dataInterfaces";
 import { useRouter } from "next/navigation";
 
 export const CategoryCard = ({category}: {category: ICategory}) => {

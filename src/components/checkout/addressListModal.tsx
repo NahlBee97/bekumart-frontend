@@ -1,6 +1,6 @@
 "use client"
 
-import { IAddress } from "@/interfaces/addressInterface";
+import { IAddress } from "@/interfaces/dataInterfaces";
 import { PlusCircle, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 

@@ -1,10 +1,10 @@
 "use client";
 
-import { IOrder, IOrderItem } from "@/interfaces/orderInterface";
 import { useEffect, useState } from "react";
 import StatusBadge from "../../statusBadge";
 import { getOrderItems } from "@/lib/data";
 import { format } from "date-fns";
+import { IOrder, IOrderItem } from "@/interfaces/dataInterfaces";
 
 // --- MODAL COMPONENT ---
 const OrderDetailAdminModal: React.FC<{
@@ -119,16 +119,16 @@ const OrderDetailAdminModal: React.FC<{
                     {/* eslint-disable-next-line */}
                     <img
                       src={
-                        item.product.productPhotos.find(
+                        item.product?.productPhotos?.find(
                           (photo) => photo.isDefault === true
                         )?.imageUrl
                       }
-                      alt={item.product.name}
+                      alt={item.product?.name}
                       className="h-16 w-16 flex-shrink-0 rounded-md object-cover"
                     />
                     <div className="flex-1">
                       <p className="font-medium text-gray-900">
-                        {item.product.name}
+                        {item.product?.name}
                       </p>
                       <p className="text-sm text-gray-500">
                         Qty: {item.quantity}

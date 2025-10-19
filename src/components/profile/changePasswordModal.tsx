@@ -1,6 +1,6 @@
 "use client";
 
-import { IPasswordChange, IUser } from "@/interfaces/authInterfaces";
+import { IUser } from "@/interfaces/dataInterfaces";
 import api from "@/lib/axios";
 import { ChangePasswordSchema } from "@/schemas/authSchemas";
 import axios from "axios";
@@ -34,7 +34,7 @@ const ChangePasswordModal: FC<ChangePasswordModalProps> = ({
     }
   }, [isOpen]);
 
-  const formik = useFormik<IPasswordChange>({
+  const formik = useFormik({
     initialValues: {
       newPassword: "",
       confirmPassword: "",

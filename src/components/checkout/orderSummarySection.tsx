@@ -1,7 +1,7 @@
-import { IAddress } from "@/interfaces/addressInterface";
+import { IAddress, ICart, ICartItem, IProductPhoto } from "@/interfaces/dataInterfaces";
 
 interface OrderSummaryProps {
-  cart: any;
+  cart: ICart;
   subtotal: number;
   shippingCost: number;
   tax: number;
@@ -32,7 +32,7 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({
     <section className="mt-8 border bg-white rounded-lg border-gray-300 shadow-sm px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8">
       <h2 className="text-xl font-semibold text-blue-500">Ringkasan Belanja</h2>
       <ul role="list" className="mt-6 divide-y divide-gray-200">
-        {cart.items.map((item: any) => (
+        {cart.items.map((item: ICartItem) => (
           <CartItem key={item.id} item={item} />
         ))}
       </ul>
@@ -65,9 +65,9 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({
   );
 };
 
-const CartItem = ({ item }: { item: any }) => {
+const CartItem = ({ item }: { item: ICartItem }) => {
   const defaultImage = item.product.productPhotos.find(
-    (photo: any) => photo.isDefault
+    (photo: IProductPhoto) => photo.isDefault
   )?.imageUrl;
 
   return (

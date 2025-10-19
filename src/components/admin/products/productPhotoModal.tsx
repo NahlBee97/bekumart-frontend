@@ -2,13 +2,13 @@
 
 import { useState, useRef, ChangeEvent, useEffect, useCallback } from "react";
 import { X } from "lucide-react";
-import { IProduct, IProductPhoto } from "@/interfaces/productInterfaces";
 import PhotoThumbnail from "./photoThumbnail";
 import AddPhotoButton from "./addPhotoButton";
 import api from "@/lib/axios";
 import useAuthStore from "@/stores/useAuthStore";
 import toast from "react-hot-toast";
 import ConfirmModal from "@/components/confirmModal";
+import { IProduct, IProductPhoto } from "@/interfaces/dataInterfaces";
 
 const ProductPhotoModal = ({
   isOpen,

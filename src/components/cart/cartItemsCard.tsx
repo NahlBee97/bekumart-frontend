@@ -1,6 +1,6 @@
 "use client";
 
-import { ICartItem } from "@/interfaces/cartInterfaces";
+import { ICartItem } from "@/interfaces/dataInterfaces";
 import useAuthStore from "@/stores/useAuthStore";
 import { useCartStore } from "@/stores/useCartStore";
 import { Minus, Plus, Trash2 } from "lucide-react";
@@ -57,7 +57,7 @@ const CartItemCard: React.FC<{ item: ICartItem }> = ({ item }) => {
         {/* eslint-disable-next-line */}
         <img
           src={
-            item.product.productPhotos.find((photo) => photo.isDefault === true)
+            item.product?.productPhotos?.find((photo) => photo.isDefault === true)
               ?.imageUrl
           }
           alt="product image"
@@ -68,13 +68,13 @@ const CartItemCard: React.FC<{ item: ICartItem }> = ({ item }) => {
       <div className="flex-1 flex flex-col justify-between sm:ml-6">
         <div className="relative flex justify-between sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
           <h3 className="text-base font-medium line-clamp-2 text-gray-800">
-            <a href={`/products/${item.product.id}`}>{item.product.name}</a>
+            <a href={`/products/${item.product?.id}`}>{item.product?.name}</a>
           </h3>
         </div>
 
         <div className="mt-4 flex items-end justify-between text-sm">
           <p className="font-medium text-blue-500">
-            Rp {item.product.price.toLocaleString("id-ID")}
+            Rp {item.product?.price.toLocaleString("id-ID")}
           </p>
           <div className="mt-4 sm:mt-0 sm:pr-9">
             {isLoading ? (

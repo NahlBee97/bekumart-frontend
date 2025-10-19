@@ -2,7 +2,6 @@
 
 import { ShoppingCartIcon } from "lucide-react";
 import { ImageSlider } from "./imageSlider";
-import { IProduct, IProductPhoto } from "@/interfaces/productInterfaces";
 import ConfirmModal from "../confirmModal";
 import { useRouter } from "next/navigation";
 import useAuthStore from "@/stores/useAuthStore";
@@ -11,6 +10,7 @@ import { useState } from "react";
 import { getCookie } from "cookies-next";
 import toast from "react-hot-toast";
 import { StarRatingDetail } from "./starRating";
+import { IProduct, IProductPhoto } from "@/interfaces/dataInterfaces";
 
 export interface props {
   product: IProduct;

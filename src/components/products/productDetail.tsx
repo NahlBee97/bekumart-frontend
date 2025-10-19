@@ -1,9 +1,9 @@
 "use client";
 
-import { IProduct, IProductPhoto } from "@/interfaces/productInterfaces";
 import { notFound } from "next/navigation";
 import { MainSection } from "./mainSection";
 import { ReviewSection } from "./reviewSection";
+import { IProduct, IProductPhoto } from "@/interfaces/dataInterfaces";
 
 // The props interface remains the same.
 export interface props {

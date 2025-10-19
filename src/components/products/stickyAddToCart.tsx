@@ -1,6 +1,5 @@
 "use client";
 
-import { IProduct } from "@/interfaces/productInterfaces";
 import useAuthStore from "@/stores/useAuthStore";
 import { useCartStore } from "@/stores/useCartStore";
 import { MessageSquareIcon, PlusIcon } from "lucide-react";
@@ -10,6 +9,7 @@ import toast from "react-hot-toast";
 import { getCookie } from "cookies-next";
 import ConfirmModal from "../confirmModal";
 import { useRouter } from "next/navigation";
+import { IProduct } from "@/interfaces/dataInterfaces";
 
 const StickyAddToCart: React.FC<{
   product: IProduct;

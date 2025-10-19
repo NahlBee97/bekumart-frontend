@@ -1,8 +1,8 @@
 "use client";
 
 import StatusBadge from "@/components/statusBadge";
+import { IOrder } from "@/interfaces/dataInterfaces";
 import { format } from "date-fns";
-import { IOrder } from "@/interfaces/orderInterface";
 
 // The main component for an individual order
 const OrderCard: React.FC<{

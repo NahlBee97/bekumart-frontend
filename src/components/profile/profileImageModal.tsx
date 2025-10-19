@@ -1,6 +1,6 @@
 "use client";
 
-import { IUser } from "@/interfaces/authInterfaces";
+import { IUser } from "@/interfaces/dataInterfaces";
 import api from "@/lib/axios";
 import { getCookie } from "cookies-next";
 import { FC, useEffect, useState } from "react";

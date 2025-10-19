@@ -1,6 +1,6 @@
 // --- Reusable Product Card Component ---
 
-import { IProduct } from "@/interfaces/productInterfaces";
+import { IProduct } from "@/interfaces/dataInterfaces";
 import { StarIcon } from "./starRating";
 
 // This component displays a single product's information in a styled card.

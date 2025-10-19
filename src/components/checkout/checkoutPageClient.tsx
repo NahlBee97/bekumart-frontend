@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { ArrowLeft } from "lucide-react";
 import useAuthStore from "@/stores/useAuthStore";
 import { useCartStore } from "@/stores/useCartStore";
-import { IAddress } from "@/interfaces/addressInterface";
 import { getCookie } from "cookies-next";
 import { midtransClientKey } from "@/config";
 import AddressListModal from "@/components/checkout/addressListModal";
@@ -19,6 +18,7 @@ import { DeliveryMethodSection } from "./deliveryMethodSection";
 import { PaymentMethodSection } from "./paymentMethodSection";
 import { AddressSection } from "./addressSection";
 import { OrderSummary } from "./orderSummarySection";
+import { IAddress } from "@/interfaces/dataInterfaces";
 
 // Types for better type safety
 export interface OrderData {
@@ -62,7 +62,7 @@ export default function CheckoutPageClient() {
   // Memoized calculations
   const subtotal = useMemo(
     () =>
-      cart?.items.reduce(
+      cart?.items?.reduce(
         (acc, item) => acc + item.product.price * item.quantity,
         0
       ) || 0,

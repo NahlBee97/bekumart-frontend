@@ -27,7 +27,7 @@ export default function CartPageClient({
   };
 
   // If the cart from the store is empty or null
-  if (cart?.items.length === 0) {
+  if (cart?.items?.length === 0) {
     return (
       <div className="bg-white min-h-[80vh] flex flex-col items-center justify-center text-center p-4">
         <ShoppingCart
@@ -68,7 +68,7 @@ export default function CartPageClient({
               className="w-full bg-white border-slate-200 rounded-lg p-4 sm:p-6 shadow-sm"
             >
               <ul role="list">
-                {cart?.items.map((item) => (
+                {cart?.items?.map((item) => (
                   <li key={item.id} className="flex mb-4">
                     <CartItemCard item={item} />
                   </li>
@@ -93,7 +93,7 @@ export default function CartPageClient({
                     Subtotal
                   </dt>
                   <dd className="text-xl font-semibold text-blue-500">
-                    Rp {cart?.totalPrice.toLocaleString("id-ID")}
+                    Rp {cart?.totalPrice?.toLocaleString("id-ID")}
                   </dd>
                 </div>
                 {/* Add more lines here for Shipping, Taxes, etc. */}

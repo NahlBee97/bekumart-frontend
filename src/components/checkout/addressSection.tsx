@@ -1,4 +1,4 @@
-import { IAddress } from "@/interfaces/addressInterface";
+import { IAddress } from "@/interfaces/dataInterfaces";
 
 interface AddressSectionProps {
   selectedAddress?: IAddress;

@@ -1,6 +1,6 @@
 "use client";
 
-import { IProductPhoto } from "@/interfaces/productInterfaces";
+import { IProductPhoto } from "@/interfaces/dataInterfaces";
 import { useState } from "react";
 
 export const ImageSlider: React.FC<{ photos: IProductPhoto[] }> = ({

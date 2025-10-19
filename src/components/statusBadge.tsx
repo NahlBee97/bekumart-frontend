@@ -1,4 +1,4 @@
-import { IOrder } from "@/interfaces/orderInterface";
+import { IOrder } from "@/interfaces/dataInterfaces";
 
 // A component to render the status badge with appropriate colors
 const StatusBadge: React.FC<{ status: IOrder["status"] }> = ({ status }) => {

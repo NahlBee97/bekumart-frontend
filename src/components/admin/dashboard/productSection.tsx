@@ -3,11 +3,10 @@
 import useAuthStore from "@/stores/useAuthStore";
 import { useState, useEffect } from "react";
 import api from "@/lib/axios";
-import { IProductInsights } from "@/interfaces/dashboardInterface";
 
 const ProductSection = () => {
   const { isLoading } = useAuthStore();
-  const [data, setData] = useState<IProductInsights | null>(null);
+  const [data, setData] = useState<any | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {

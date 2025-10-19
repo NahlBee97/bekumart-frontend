@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { IProduct } from "@/interfaces/productInterfaces";
 import { ProductSection } from "../home/productSection";
+import { IProduct } from "@/interfaces/dataInterfaces";
 
 export default function Shop({
   products,
@@ -25,6 +25,7 @@ export default function Shop({
     <div className="min-h-screen">
       <div className="mx-auto max-w-2xl lg:max-w-7xl">
         <ProductSection
+        title="Produk Frozen Terbaik"
           products={currentProducts}
         />
 

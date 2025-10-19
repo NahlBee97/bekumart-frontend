@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import OrderCard from "@/components/profile/orders/orderCard";
 import OrderDetailModal from "@/components/profile/orders/orderDetailModal";
-import { IOrder } from "@/interfaces/orderInterface";
 import { getUserOrders } from "@/lib/data";
 import useAuthStore from "@/stores/useAuthStore";
+import { IOrder } from "@/interfaces/dataInterfaces";
 
 // --- MAIN PAGE COMPONENT ---
 export default function OrderHistoryClient() {
@@ -81,7 +81,7 @@ export default function OrderHistoryClient() {
             </button>
           </div>
         )}
-        <OrderDetailModal order={selectedOrder} onClose={handleCloseModal} />
+        <OrderDetailModal order={selectedOrder as IOrder} onClose={handleCloseModal} />
       </>
     );
   }

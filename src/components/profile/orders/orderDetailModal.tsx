@@ -1,13 +1,14 @@
 "use client";
 
-import { IOrder, IOrderItem } from "@/interfaces/orderInterface";
 import { useEffect, useState } from "react";
-import StatusBadge from "../../statusBadge";
-import { format } from "date-fns";
 import { getOrderItems } from "@/lib/data";
 import api from "@/lib/axios";
 import toast from "react-hot-toast";
 import { midtransClientKey } from "@/config";
+import { IOrder, IOrderItem } from "@/interfaces/dataInterfaces";
+import { OrderSummary } from "./orderSummary";
+import OrderItemList from "./orderItemList";
+import ModalActions from "./modalActions";
 
 // --- MODAL COMPONENT ---
 const OrderDetailModal: React.FC<{
@@ -18,7 +19,7 @@ const OrderDetailModal: React.FC<{
 
   // --- CHANGE 1: Add state and useEffect for the animation ---
   const [show, setShow] = useState(false);
-  const [isPaymentLoading, setIsPaymentLoading] = useState(false);
+  const [isPaymentLoading, setIsPaymentLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (order) {
@@ -144,82 +145,17 @@ const OrderDetailModal: React.FC<{
           </button>
         </div>
 
-        {/* Modal Body */}
         <div className="max-h-[60vh] space-y-6 overflow-y-auto p-6">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div>
-              <p className="text-sm font-medium text-gray-500">Order Date</p>
-              <p className="text-base text-gray-800">
-                {format(order.createdAt, "dd MMMM yyy")}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-500">Status</p>
-              <StatusBadge status={order.status} />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-500">Total</p>
-              <p className="text-base font-semibold text-blue-500">
-                Rp {order.totalAmount.toLocaleString()}
-              </p>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <h4 className="font-semibold text-sm md:text-base text-gray-800">
-              Daftar Pesanan:
-            </h4>
-            <div className="flow-root">
-              <ul className="-my-4 divide-y divide-gray-200">
-                {orderItems.map((item) => (
-                  <li
-                    key={item.id}
-                    className="flex items-center space-x-4 py-4"
-                  >
-                    {/* eslint-disable-next-line */}
-                    <img
-                      src={
-                        item.product.productPhotos.find(
-                          (photo) => photo.isDefault === true
-                        )?.imageUrl
-                      }
-                      alt={item.product.name}
-                      className="h-16 w-16 border border-gray-200 flex-shrink-0 rounded-md object-cover"
-                    />
-                    <div className="flex-1">
-                      <p className="font-medium text-gray-900">
-                        {item.product.name}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        Jumlah: {item.quantity}
-                      </p>
-                    </div>
-                    <p className="font-semibold text-blue-500">
-                      Rp {(item.product.price * item.quantity).toLocaleString()}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-          {order.status === "PENDING" && order.paymentMethod === "ONLINE" && (
-            <button
-              disabled={isPaymentLoading}
-              className={`w-65 flex items-center justify-center font-semibold ${
-                isPaymentLoading ? "bg-gray-300" : "bg-blue-500"
-              } border border-transparent rounded-md shadow-sm py-2 px-1 text-sm text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-blue-500 transition-transform transform hover:scale-105`}
-              onClick={handleProceedPayment}
-            >
-              {isPaymentLoading ? (
-                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-              ) : (
-                "Lanjutkan Pembayaran"
-              )}
-            </button>
-          )}
-          {order.status === "PENDING" && order.paymentMethod === "INSTORE" && (
-            <p className="text-sm text-red-500">Silahkan lanjutkan pembayaran di toko</p>
-          )}
+          <OrderSummary order={order} />
+          <OrderItemList
+            items={orderItems}
+            orderStatus={order.status}
+          />
+          <ModalActions
+            order={order}
+            isPaymentLoading={isPaymentLoading}
+            onProceedPayment={handleProceedPayment}
+          />
         </div>
       </div>
     </div>

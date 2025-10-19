@@ -2,8 +2,8 @@
 
 import { useState, useRef, useEffect, FC } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { ICategory } from "@/interfaces/productInterfaces";
 import { CategoryCard } from "./categoryCard";
+import { ICategory } from "@/interfaces/dataInterfaces";
 
 // Define the props for our component
 interface CategoryShowcaseProps {

@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { ICart } from "@/interfaces/cartInterfaces";
 import api from "@/lib/axios";
+import { ICart } from "@/interfaces/dataInterfaces";
 
 // Define the shape of your store's state and actions
 interface CartState {

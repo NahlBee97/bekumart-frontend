@@ -1,9 +1,9 @@
 import api from "@/lib/axios";
 import { jwtAccessSecret } from "@/config";
-import { IUser } from "@/interfaces/authInterfaces";
 import { jwtVerify } from "jose";
 import { create } from "zustand";
 import { deleteCookie } from "cookies-next";
+import { IUser } from "@/interfaces/dataInterfaces";
 
 interface AuthState {
   accessToken: string | null;

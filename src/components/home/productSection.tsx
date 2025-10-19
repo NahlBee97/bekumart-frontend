@@ -1,11 +1,11 @@
-import { IProduct } from "@/interfaces/productInterfaces";
+import { IProduct } from "@/interfaces/dataInterfaces";
 import ProductCard from "../products/productCard";
 
-export const ProductSection = ({ products }: { products: IProduct[]}) => {
+export const ProductSection = ({ products, title }: { products: IProduct[]; title:string}) => {
 if (products.length === 0) return (
   <section className="w-full min-h-screen flex flex-col justify-center text-center bg-white  border border-slate-200  rounded-lg p-4 sm:p-6 shadow-sm">
     <h2 className="text-base font-semibold text-blue-500 mb-4 uppercase tracking-wider">
-      Product Tidak Tersedia
+      {title}
     </h2>
     <h2 className="text-base font-semibold text-slate-600 mb-4 tracking-wider">
       Silahkan cari produk lainnya
