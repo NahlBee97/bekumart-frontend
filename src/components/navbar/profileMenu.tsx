@@ -20,9 +20,6 @@ export const ProfileMenu: FC = () => {
   ];
 
   useEffect(() => {
-    // This effect is fine, but using `usePathname` from Next.js is often more reliable
-    // for setting the initial active link, as `window.location.pathname` can be stale
-    // during client-side navigation.
     setActiveLink(pathname);
   }, [pathname]);
 
@@ -54,7 +51,7 @@ export const ProfileMenu: FC = () => {
       // Clear any potential navigation history
       window.history.replaceState(null, "", "/");
       // Force a hard navigation to /
-      window.location.href = "/";
+      window.location.href = pathname;
     } catch (error) {
       console.error("Logout failed:", error);
     }

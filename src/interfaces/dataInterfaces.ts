@@ -103,9 +103,9 @@ export interface IReview {
   userId: string;
   user: IUser;
   productId: string;
-  review: string;
+  desc: string;
   rating: number;
-  likes: number;
+  likeCount: number;
   reviewPhotos: IReviewPhoto[];
   createdAt: Date;
 }
