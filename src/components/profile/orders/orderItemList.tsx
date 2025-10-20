@@ -20,6 +20,19 @@ const OrderItemList: React.FC<OrderItemListProps> = ({
   const [userReviews, setUserReviews] = useState<IReview[]>([]);
   const [itemToRate, setItemToRate] = useState<IOrderItem | null>(null);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemPerPage = 5;
+
+  // Pagination logic
+  const indexOfLastItems = currentPage * itemPerPage;
+  const indexOfFirstReviews = indexOfLastItems - itemPerPage;
+  const currentItems = items.slice(indexOfFirstReviews, indexOfLastItems);
+
+  const totalPages = Math.ceil(
+    items.length /
+      itemPerPage
+  );
+
   const refreshUserReviews = useCallback(async () => {
     if (isLoading) return;
     const reviews = await getProductReviewsByUserId(user.id);
@@ -37,7 +50,7 @@ const OrderItemList: React.FC<OrderItemListProps> = ({
       </h4>
       <div className="flow-root">
         <ul className="-my-4 divide-y divide-gray-200">
-          {items.map((item) => (
+          {currentItems.map((item) => (
             <li key={item.id} className="flex items-center space-x-4 py-4">
               {/* eslint-disable-next-line */}
               <img
@@ -79,6 +92,31 @@ const OrderItemList: React.FC<OrderItemListProps> = ({
           ))}
         </ul>
       </div>
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="mt-4 flex items-center justify-between">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+          >
+            Sebelumnya
+          </button>
+          <span className="text-sm text-slate-700 dark:text-slate-400">
+            Halaman {currentPage} dari {totalPages}
+          </span>
+          <button
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+          >
+            Berikutnya
+          </button>
+        </div>
+      )}
+
       <RatingModal
         productId={itemToRate?.productId as string}
         isOpen={isRatingModalOpen}
