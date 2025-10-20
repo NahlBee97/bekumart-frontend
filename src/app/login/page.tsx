@@ -6,13 +6,13 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { apiUrl } from "@/config";
-import { ILogin, IUser } from "@/interfaces/authInterfaces";
 import { LoginSchema } from "@/schemas/authSchemas";
 import { setCookie } from "cookies-next";
 import { jwtDecode } from "jwt-decode";
 import toast from "react-hot-toast";
 import useAuthStore from "@/stores/useAuthStore";
 import api from "@/lib/axios";
+import { IUser } from "@/interfaces/dataInterfaces";
 
 export default function LoginPage() {
   const { setAccessToken, login } = useAuthStore();
@@ -38,7 +38,7 @@ export default function LoginPage() {
       password: "",
     },
     validationSchema: LoginSchema,
-    onSubmit: async (values: ILogin) => {
+    onSubmit: async (values) => {
       try {
         const response = await api.post(`/api/auth/login`, values);
 
