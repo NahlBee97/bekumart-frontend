@@ -1,6 +1,20 @@
 import { StarRatingDetail } from "./starRating";
+import { useState } from "react";
 
-export const ReviewFilter = ({ averageRating }: { averageRating: number }) => {
+export const ReviewFilter = ({
+  averageRating,
+  onFilter,
+}: {
+  averageRating: number;
+  onFilter: (rating: number) => void;
+}) => {
+  const [activeRating, setActiveRating] = useState<number>(0);
+
+  const handleFilterClick = (rating: number) => {
+    setActiveRating(rating);
+    onFilter(rating);
+  };
+
   return (
     <>
       <div className="flex-shrink-0 text-center mr-6 mb-4 sm:mb-0">
@@ -14,15 +28,23 @@ export const ReviewFilter = ({ averageRating }: { averageRating: number }) => {
           />
         </div>
       </div>
-      <div className="flex flex-wrap gap-2">
-        <FilterButton active>Semua</FilterButton>
-        <FilterButton>5 Bintang (3,2RB)</FilterButton>
-        <FilterButton>4 Bintang (249)</FilterButton>
-        <FilterButton>3 Bintang (38)</FilterButton>
-        <FilterButton>2 Bintang (17)</FilterButton>
-        <FilterButton>1 Bintang (61)</FilterButton>
-        <FilterButton>Dengan Komentar (1,3RB)</FilterButton>
-        <FilterButton>Dengan Media (978)</FilterButton>
+      <div className="flex flex-wrap items-center gap-2">
+        <h2 className="text-lg font-semibold">Filter Komentar:</h2>
+        <FilterButton
+          active={activeRating === 0}
+          onClick={() => handleFilterClick(0)}
+        >
+          Semua
+        </FilterButton>
+        {[5, 4, 3, 2, 1].map((rating) => (
+          <FilterButton
+            key={rating}
+            active={activeRating === rating}
+            onClick={() => handleFilterClick(rating)}
+          >
+            {rating} Bintang
+          </FilterButton>
+        ))}
       </div>
     </>
   );
@@ -31,7 +53,8 @@ export const ReviewFilter = ({ averageRating }: { averageRating: number }) => {
 const FilterButton: React.FC<{
   children: React.ReactNode;
   active?: boolean;
-}> = ({ children, active }) => {
+  onClick: () => void;
+}> = ({ children, active, onClick }) => {
   const baseClasses = "px-4 py-2 text-sm border rounded-md transition-colors";
   const activeClasses =
     "bg-white border-blue-500 text-blue-500 ring-1 ring-blue-500";
@@ -40,6 +63,7 @@ const FilterButton: React.FC<{
 
   return (
     <button
+      onClick={onClick}
       className={`${baseClasses} ${active ? activeClasses : inactiveClasses}`}
     >
       {children}

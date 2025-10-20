@@ -1,11 +1,14 @@
 import { StarRatingDetail } from "./starRating";
-import { IReview } from "@/interfaces/dataInterfaces";
+import { IReview, IReviewLike } from "@/interfaces/dataInterfaces";
 import { format } from "date-fns";
 import { LikeButton } from "./likeButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import api from "@/lib/axios";
+import useAuthStore from "@/stores/useAuthStore";
 
 export const ReviewCard = ({ review }: { review: IReview }) => {
+  const { isLoading, accessToken } = useAuthStore();
+  const [likes, setLikes] = useState([]);
   const [isReviewLiked, setIsReviewLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(review.likeCount);
 
@@ -16,12 +19,25 @@ export const ReviewCard = ({ review }: { review: IReview }) => {
 
     if (newIsLiked) {
       setLikeCount((prev) => prev + 1);
-      await api.patch(`/api/reviews/like`, {reviewId: review.id})
+      await api.patch(`/api/reviews/like`, { reviewId: review.id });
     } else {
       setLikeCount((prev) => prev - 1);
-      await api.patch(`/api/reviews/unlike`, {reviewId: review.id})
+      await api.patch(`/api/reviews/unlike`, { reviewId: review.id });
     }
   };
+
+  useEffect(() => {
+    if (isLoading && !accessToken) return;
+    const fetchLikes = async () => {
+      const response = await api.get("/api/reviews/like");
+      const like = response.data.likes.find(
+        (like: IReviewLike) => like.reviewId === review.id
+      );
+      if (like) setIsReviewLiked(true);
+      setLikes(response.data.likes);
+    };
+    fetchLikes();
+  }, [review, isLoading, accessToken]);
 
   return (
     <div

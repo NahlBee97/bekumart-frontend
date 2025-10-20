@@ -101,16 +101,6 @@ export async function getUserData(userId: string) {
   }
 }
 
-export async function getProductReviews(productId: string) {
-  try {
-    const response = await api.get(`/api/reviews/${productId}`);
-    return response.data.reviews;
-  } catch (error) {
-    console.error("Error fetching user:", error);
-    throw new Error("Gagal memuat data user. Coba lagi nanti.");
-  }
-}
-
 export async function getProductReviewsByUserId(userId: string) {
   try {
     const response = await api.get(`/api/reviews/user/${userId}`);

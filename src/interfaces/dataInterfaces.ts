@@ -131,3 +131,9 @@ export interface IProductInsights {
   lowStockProducts: { name: string; stock: number }[];
 }
 
+export interface IReviewLike {
+  id: string;
+  userId: string;
+  user: IUser;
+  reviewId: string;
+}
