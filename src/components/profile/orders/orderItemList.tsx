@@ -1,10 +1,10 @@
 import { IOrderItem, IReview } from "@/interfaces/dataInterfaces";
 import { OrderStatuses } from "@/interfaces/enums";
 import { useCallback, useEffect, useState } from "react";
-import RatingModal from "./ratingModal";
 import useAuthStore from "@/stores/useAuthStore";
 import { getProductReviewsByUserId } from "@/lib/data";
 import { StarRatingDetail } from "@/components/products/starRating";
+import RatingModal from "./ratingModal";
 
 interface OrderItemListProps {
   items: IOrderItem[];
@@ -80,9 +80,9 @@ const OrderItemList: React.FC<OrderItemListProps> = ({
         </ul>
       </div>
       <RatingModal
-        item={itemToRate as IOrderItem}
+        productId={itemToRate?.productId as string}
         isOpen={isRatingModalOpen}
-        onSave={() => refreshUserReviews()}
+        onSubmitSuccess={() => refreshUserReviews()}
         onClose={() => setIsRatingModalOpen(false)}
       />
     </div>

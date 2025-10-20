@@ -2,16 +2,10 @@
 
 import { IProduct } from "@/interfaces/dataInterfaces";
 import { StarIcon } from "./starRating";
+import { formatNumberCompact } from "@/utils/numberFormatter";
 
 // This component displays a single product's information in a styled card.
 const ProductCard: React.FC<{ product: IProduct }> = ({ product }) => {
-  const formatNumberCompact = (num: number) => {
-    return new Intl.NumberFormat("en-US", {
-      notation: "compact",
-      maximumFractionDigits: 1,
-    }).format(num);
-  };
-
   return (
     <div
       className="min-h-[250px] relative border border-gray-200 rounded-md overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300 ease-in-out bg-white flex flex-col cursor-pointer"

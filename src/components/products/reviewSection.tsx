@@ -28,7 +28,7 @@ export function ReviewSection({ product }: { product: IProduct }) {
 
   
   const [currentPage, setCurrentPage] = useState(1);
-  const reviewsPerPage = 2;
+  const reviewsPerPage = 10;
   
   // Pagination logic
   const indexOfLastReviews = currentPage * reviewsPerPage;

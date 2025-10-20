@@ -4,6 +4,7 @@ import { IUser } from "@/interfaces/dataInterfaces";
 import api from "@/lib/axios";
 import { getCookie } from "cookies-next";
 import { FC, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 // --- IMAGE UPLOAD MODAL ---
 interface ImageUploadModalProps {
@@ -69,11 +70,12 @@ const ProfileImageUploadModal: FC<ImageUploadModalProps> = ({
       const formData = new FormData();
       formData.append("file", file);
       await api.patch(`/api/users/${user.id}`, formData);
-      alert("Image uploaded successfully!");
+      toast.success("Berhasil Upload Photo");
       setLoading(false);
       onSave();
       onClose();
     } catch (error) {
+      toast.error("Gagal Upload Photo");
       console.error("Error uploading image:", error);
     }
   };

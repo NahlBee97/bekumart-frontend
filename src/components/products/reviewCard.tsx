@@ -5,6 +5,7 @@ import { LikeButton } from "./likeButton";
 import { useEffect, useState } from "react";
 import api from "@/lib/axios";
 import useAuthStore from "@/stores/useAuthStore";
+import { formatNumberCompact } from "@/utils/numberFormatter";
 
 export const ReviewCard = ({ review }: { review: IReview }) => {
   const { isLoading, accessToken } = useAuthStore();
@@ -65,7 +66,7 @@ export const ReviewCard = ({ review }: { review: IReview }) => {
 
         <div className="mt-4 flex w-20 h-20 gap-1">
           {review.reviewPhotos?.map((photo, index) => (
-            <div key={review.id} className="relative aspect-square">
+            <div key={photo.id} className="relative aspect-square">
               {/* eslint-disable-next-line */}
               <img
                 src={photo.imageUrl}
@@ -78,7 +79,9 @@ export const ReviewCard = ({ review }: { review: IReview }) => {
 
         <div className="mt-4 flex items-center text-gray-500 gap-1">
           <LikeButton hasLiked={isReviewLiked} onClick={handleLikeToggle} />
-          <span className="text-sm font-medium">{likeCount}</span>
+          <span className="text-sm font-medium">
+            {formatNumberCompact(likeCount)}
+          </span>
         </div>
       </div>
     </div>

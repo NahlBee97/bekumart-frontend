@@ -1,4 +1,4 @@
-import { IProductPhoto } from "@/interfaces/dataInterfaces";
+import { IProductPhoto, IReviewPhoto } from "@/interfaces/dataInterfaces";
 import { Star, Trash2, UploadCloud } from "lucide-react";
 
 const PhotoThumbnail = ({
@@ -8,7 +8,7 @@ const PhotoThumbnail = ({
   onUpdate,
   onDelete,
 }: {
-  photo: IProductPhoto;
+  photo: IProductPhoto | IReviewPhoto;
   isMain: boolean;
   onSetMain: (id: string) => void;
   onUpdate: (id: string) => void;
