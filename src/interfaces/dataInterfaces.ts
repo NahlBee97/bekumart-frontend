@@ -77,6 +77,7 @@ export interface ICartItem {
 export interface IOrder {
   id: string;
   userId: string;
+  user: IUser;
   items: IOrderItem[];
   totalAmount: number;
   totalWeight: number;

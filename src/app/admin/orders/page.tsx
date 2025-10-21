@@ -2,13 +2,14 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { ChevronDown, Package } from "lucide-react";
-import { IOrder, orderStatuses } from "@/interfaces/orderInterface";
 import OrderDetailAdminModal from "@/components/admin/orders/orderDetailAdminModal";
 import { getOrders } from "@/lib/data";
 import api from "@/lib/axios";
 import { format } from "date-fns";
 import useAuthStore from "@/stores/useAuthStore";
 import OperationalSection from "@/components/admin/dashboard/operationalSection";
+import { IOrder } from "@/interfaces/dataInterfaces";
+import { OrderStatuses } from "@/interfaces/enums";
 
 // --- MAIN PAGE COMPONENT ---
 const Orders: React.FC = () => {
@@ -21,7 +22,7 @@ const Orders: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [orderToView, setOrderToView] = useState<IOrder | null>(null);
 
-  const statusOptions: orderStatuses[] = [
+  const statusOptions = [
     "PENDING",
     "PROCESSING",
     "READY_FOR_PICKUP",
@@ -35,11 +36,7 @@ const Orders: React.FC = () => {
 
     try {
       const orders = await getOrders();
-      const sortedOrders = orders.sort(
-        (a: IOrder, b: IOrder) =>
-          new Date(a.updateAt).getTime() - new Date(b.updateAt).getTime()
-      );
-      setOrders(sortedOrders);
+      setOrders(orders);
     } catch (error) {
       console.error("Error fetching orders:", error);
       throw error;
@@ -53,7 +50,7 @@ const Orders: React.FC = () => {
   // Simulates an API call to update the order status
   const handleStatusChange = async (
     orderId: string,
-    newStatus: orderStatuses
+    newStatus: OrderStatuses
   ) => {
     try {
       setUpdatingOrderIds((prev) => new Set(prev).add(orderId));
@@ -71,6 +68,16 @@ const Orders: React.FC = () => {
       });
     }
   };
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const orderPerPage = 10;
+
+  // Pagination logic
+  const indexOfLastOrders = currentPage * orderPerPage;
+  const indexOfFirstOrders = indexOfLastOrders - orderPerPage;
+  const currentOrders = orders.slice(indexOfFirstOrders, indexOfLastOrders);
+
+  const totalPages = Math.ceil(orders.length / orderPerPage);
 
   return (
     <div className="  min-h-screen py-4 sm:py-6 lg:py-8 font-sans">
@@ -116,7 +123,7 @@ const Orders: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {orders.map((order) => (
+                  {currentOrders.map((order) => (
                     <tr
                       key={order.id}
                       onClick={() => {
@@ -144,7 +151,7 @@ const Orders: React.FC = () => {
                             onChange={(e) =>
                               handleStatusChange(
                                 order.id,
-                                e.target.value as orderStatuses
+                                e.target.value as OrderStatuses
                               )
                             }
                             className="appearance-none w-48 text-center bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block py-2 px-4 transition"
@@ -169,6 +176,30 @@ const Orders: React.FC = () => {
               </table>
             </div>
           </div>
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="mt-4 flex items-center justify-between">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              >
+                Sebelumnya
+              </button>
+              <span className="text-sm text-slate-700 dark:text-slate-400">
+                Halaman {currentPage} dari {totalPages}
+              </span>
+              <button
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              >
+                Berikutnya
+              </button>
+            </div>
+          )}
         </main>
         <OrderDetailAdminModal
           isOpen={isModalOpen}

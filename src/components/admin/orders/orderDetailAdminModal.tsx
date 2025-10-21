@@ -42,6 +42,16 @@ const OrderDetailAdminModal: React.FC<{
     };
   }, [onClose]);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemPerPage = 5;
+
+  // Pagination logic
+  const indexOfLastItems = currentPage * itemPerPage;
+  const indexOfFirstReviews = indexOfLastItems - itemPerPage;
+  const currentItems = orderItems.slice(indexOfFirstReviews, indexOfLastItems);
+
+  const totalPages = Math.ceil(orderItems.length / itemPerPage);
+
   // Return null if no order is selected to render nothing
   if (!isOpen || !order) return null;
 
@@ -111,7 +121,7 @@ const OrderDetailAdminModal: React.FC<{
             <h4 className="font-semibold text-gray-800">Items in this order</h4>
             <div className="flow-root">
               <ul className="-my-4 divide-y divide-gray-200">
-                {orderItems.map((item) => (
+                {currentItems.map((item) => (
                   <li
                     key={item.id}
                     className="flex items-center space-x-4 py-4"
@@ -143,6 +153,31 @@ const OrderDetailAdminModal: React.FC<{
             </div>
           </div>
         </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="mt-4 flex items-center justify-between">
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            >
+              Sebelumnya
+            </button>
+            <span className="text-sm text-slate-700 dark:text-slate-400">
+              Halaman {currentPage} dari {totalPages}
+            </span>
+            <button
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            >
+              Berikutnya
+            </button>
+          </div>
+        )}
 
         {/* Modal Footer */}
         <div className="flex items-center justify-end space-x-2 rounded-b border-t border-gray-200 p-4">
