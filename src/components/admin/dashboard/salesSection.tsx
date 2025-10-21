@@ -13,9 +13,11 @@ import {
 import StatCard from "./statCard";
 import api from "@/lib/axios";
 import useAuthStore from "@/stores/useAuthStore";
+import FilterDropdown from "./filterDropdown";
+import { useSearchParams } from "next/navigation";
 
 const SalesSection = () => {
-  // State for data, loading, and errors
+  const filter = useSearchParams().get("value");
   const { isLoading } = useAuthStore();
   const [data, setData] = useState<any | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -25,7 +27,7 @@ const SalesSection = () => {
     if (isLoading) return;
     const fetchData = async () => {
       try {
-        const response = await api.get("/api/dashboard/sales-summary");
+        const response = await api.get(`/api/dashboard/sales-summary?value=${filter}`);
         setData(response.data.salesSummary);
       } catch (error) {
         setError("Failed to load sales data");
@@ -33,7 +35,7 @@ const SalesSection = () => {
       }
     };
     fetchData();
-  }, [isLoading]);
+  }, [isLoading, filter]);
 
   // Conditional rendering for loading and error states
   if (isLoading) return <div>Loading sales data...</div>;
@@ -63,7 +65,10 @@ const SalesSection = () => {
         />
       </div>
       <div className="bg-white p-6 rounded-lg shadow-md">
-        <h3 className="font-bold mb-4">Revenue (Last 30 Days)</h3>
+        <div className="flex justify-between">
+          <h3 className="font-bold mb-4">Revenue</h3>
+          <FilterDropdown/>
+        </div>
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={data.chartData}>
             <CartesianGrid strokeDasharray="3 3" />
