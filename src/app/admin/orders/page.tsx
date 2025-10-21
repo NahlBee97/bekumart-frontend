@@ -80,7 +80,7 @@ const Orders: React.FC = () => {
   const totalPages = Math.ceil(orders.length / orderPerPage);
 
   return (
-    <div className="  min-h-screen py-4 sm:py-6 lg:py-8 font-sans">
+    <div className="min-h-screen">
       <div className="max-w-7xl mx-auto">
         <header className="mb-8">
           <div className="flex items-center space-x-3">

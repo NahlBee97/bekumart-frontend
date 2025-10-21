@@ -53,8 +53,19 @@ api.interceptors.response.use(
       _retry?: boolean;
     };
 
+    const authRoutes = [
+      "/api/auth/login",
+      "/api/auth/refresh-token",
+      "/api/auth/register",
+    ];
+
     // Only attempt refresh if we have a 401 and it's not already a retry
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      originalRequest.url &&
+      !authRoutes.includes(originalRequest.url)
+    ) {
       if (isRefreshing) {
         // If refresh is in progress, queue this request
         try {

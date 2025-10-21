@@ -6,6 +6,7 @@ import { ChangePasswordSchema } from "@/schemas/authSchemas";
 import axios from "axios";
 import { useFormik } from "formik";
 import { FC, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 // --- IMAGE UPLOAD MODAL ---
 interface ChangePasswordModalProps {
@@ -44,14 +45,14 @@ const ChangePasswordModal: FC<ChangePasswordModalProps> = ({
       try {
         await api.patch(`/api/users/password/${user?.id}`, values, );
 
-        alert("change password success");
+        toast.success("Berhasil Ganti Password");
         onClose();
       } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
           const errorMessage = err.response.data.message;
-          alert(`${errorMessage}`);
+          toast.error(`${errorMessage}`);
         } else {
-          alert("An unexpected error occurred");
+          toast.error("An unexpected error occurred");
         }
       }
     },
@@ -113,7 +114,7 @@ const ChangePasswordModal: FC<ChangePasswordModalProps> = ({
                   className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 ${
                     formik.touched.newPassword && formik.errors.newPassword
                       ? "border-red-500 focus:ring-red-500"
-                      : "border-gray-300 focus:ring-green-500"
+                      : "border-gray-300 focus:ring-blue-500"
                   }`}
                 />
               </div>
@@ -140,7 +141,7 @@ const ChangePasswordModal: FC<ChangePasswordModalProps> = ({
                     formik.touched.confirmPassword &&
                     formik.errors.confirmPassword
                       ? "border-red-500 focus:ring-red-500"
-                      : "border-gray-300 focus:ring-green-500"
+                      : "border-gray-300 focus:ring-blue-500"
                   }`}
                 />
               </div>
@@ -151,12 +152,12 @@ const ChangePasswordModal: FC<ChangePasswordModalProps> = ({
                   </p>
                 )}
               <input
-                className="mt-2"
+                className="mt-2 h-2"
                 type="checkbox"
                 checked={showPassword}
                 onChange={() => setShowPassword(!showPassword)}
               />{" "}
-              <label>Lihat Password</label>
+              <label className="text-gray-600 text-xs">Lihat Password</label>
             </div>{" "}
           </div>
 

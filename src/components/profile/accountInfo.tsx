@@ -76,9 +76,9 @@ export default function AccountInfo() {
             {/* eslint-disable-next-line */}
             <img
               src={
-                user
+                user.imageUrl
                   ? user.imageUrl
-                  : "https://placehold.co/128x128/6366f1/ffffff?text=Loading..."
+                  : "https://placehold.co/400x400/e2e8f0/64748b?text=N/A"
               }
               alt="Profile picture"
               className="h-32 w-32 rounded-xl border border-gray-300 object-cover shadow-sm transition-all duration-300 group-hover:brightness-75 md:h-44 md:w-44 bg-gray-200"

@@ -1,6 +1,5 @@
 "use client";
 
-import { IProduct } from "@/interfaces/productInterfaces";
 import { useEffect, useState, useCallback } from "react";
 import {
   CameraIcon,
@@ -16,6 +15,7 @@ import api from "@/lib/axios";
 import ConfirmModal from "@/components/confirmModal";
 import toast from "react-hot-toast";
 import ProductSection from "@/components/admin/dashboard/productSection";
+import { IProduct } from "@/interfaces/dataInterfaces";
 
 // --- MAIN COMPONENT ---
 // Renders the entire product table page.
@@ -38,11 +38,7 @@ export default function ProductsTable() {
     setLoading(true);
     try {
       const products = await getProducts();
-      const sortedProducts = products.sort(
-        (a: IProduct, b: IProduct) =>
-          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-      );
-      setProducts(sortedProducts);
+      setProducts(products);
     } catch (error) {
       console.error("Error fetching products:", error);
     } finally {
@@ -123,8 +119,8 @@ export default function ProductsTable() {
   };
 
   return (
-    <div className="min-h-screen text-blue-500 font-sans">
-      <div className="container mx-auto py-4 sm:py-6 lg:py-8">
+    <div className="min-h-screen text-blue-500">
+      <div className="container mx-auto ">
         <ProductSection />
         <div className="my-6 md:mb-2 md:flex md:items-center md:justify-between">
           <header className="mb-8">

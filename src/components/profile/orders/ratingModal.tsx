@@ -3,6 +3,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import type { FC } from "react";
 import api from "@/lib/axios";
+import toast from "react-hot-toast";
 
 // --- Helper Components & Icons ---
 
@@ -123,8 +124,7 @@ const RatingModal: FC<ReviewModalProps> = ({
         )
         .max(MAX_PHOTOS, `You can upload a maximum of ${MAX_PHOTOS} photos.`),
     }),
-    onSubmit: async (values, { setSubmitting, setStatus }) => {
-      setStatus(null);
+    onSubmit: async (values, { setSubmitting }) => {
       const formData = new FormData();
       formData.append("rating", String(values.rating));
       if (values.desc) formData.append("desc", values.desc);
@@ -132,13 +132,14 @@ const RatingModal: FC<ReviewModalProps> = ({
 
       try {
         await api.post(`/api/reviews/${productId}`, formData);
-        setStatus({ success: "Thank you! Your review has been submitted." });
+        toast.success("Berhasil Memberikan Review!");
         onSubmitSuccess();
         setTimeout(() => {
           onClose();
         }, 2000);
       } catch (error: any) {
-        setStatus({ error: error.message });
+        toast.error("Gagal Memberikan Review");
+        console.error(error.message);
         setSubmitting(false);
       }
     },
@@ -171,7 +172,7 @@ const RatingModal: FC<ReviewModalProps> = ({
     const newFiles = Array.from(event.currentTarget.files);
     const currentFiles = formik.values.photos;
     if (currentFiles.length + newFiles.length > MAX_PHOTOS) {
-      alert(`You can only upload a maximum of ${MAX_PHOTOS} photos.`);
+      toast.error(`Hanya bisa upload ${MAX_PHOTOS} gambar.`);
       if (fileInputRef.current) fileInputRef.current.value = "";
       return;
     }
@@ -215,12 +216,12 @@ const RatingModal: FC<ReviewModalProps> = ({
           <XIcon className="w-6 h-6" />
         </button>
         <h2 className="text-2xl font-bold text-gray-800 mb-6">
-          Write a Review
+          Tulis Review
         </h2>
         <form onSubmit={formik.handleSubmit}>
           <div className="mb-6">
             <label className="block text-gray-700 text-sm font-bold mb-2">
-              Your Rating
+              Rating
             </label>
             <div className="flex items-center">
               {[1, 2, 3, 4, 5].map((star) => (
@@ -245,7 +246,7 @@ const RatingModal: FC<ReviewModalProps> = ({
               htmlFor="desc"
               className="block text-gray-700 text-sm font-bold mb-2"
             >
-              Your Review
+              Pendapatmu Tentang Produk Ini
             </label>
             <textarea
               id="desc"
@@ -266,7 +267,7 @@ const RatingModal: FC<ReviewModalProps> = ({
 
           <div className="mb-6">
             <label className="block text-gray-700 text-sm font-bold mb-2">
-              Add Photos
+              Tambahkan Gambar
             </label>
             <input
               ref={fileInputRef}
@@ -283,11 +284,10 @@ const RatingModal: FC<ReviewModalProps> = ({
               disabled={formik.values.photos.length >= MAX_PHOTOS}
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
-              Choose Files
+              Pilih Gambar
             </button>
             <p className="text-xs text-gray-500 mt-2">
-              {formik.values.photos.length}/{MAX_PHOTOS} photos added. Max 5MB
-              each.
+              {formik.values.photos.length}/{MAX_PHOTOS} Max 1MB/Gambar
             </p>
             {formik.touched.photos &&
             typeof formik.errors.photos === "string" ? (
@@ -336,7 +336,7 @@ const RatingModal: FC<ReviewModalProps> = ({
               disabled={formik.isSubmitting}
               className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline disabled:bg-gray-400"
             >
-              {formik.isSubmitting ? "Submitting..." : "Submit Review"}
+              {formik.isSubmitting ? "Menulis Review..." : "Submit"}
             </button>
           </div>
         </form>

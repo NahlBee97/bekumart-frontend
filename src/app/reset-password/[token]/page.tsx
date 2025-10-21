@@ -6,6 +6,7 @@ import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import { ChangePasswordSchema } from "@/schemas/authSchemas";
 import api from "@/lib/axios";
+import toast from "react-hot-toast";
 
 export interface Props {
   params: Promise<{
@@ -40,22 +41,22 @@ export default function ResetPassword({ params }: Props) {
           token,
         });
 
-        alert("Set password successfully.");
+        toast.success("Berhasil Mengganti Password");
 
         router.push("/login");
       } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
           const errorMessage = err.response.data.message;
-          alert(`${errorMessage}`);
+          toast.error(`${errorMessage}`);
         } else {
-          alert("An unexpected error occurred");
+          toast.error("An unexpected error occurred");
         }
       }
     },
   });
 
   return (
-    <div className="bg-gray-100 flex flex-col items-center justify-center font-sans py-4 px-4">
+    <div className="bg-gray-100 flex flex-col items-center justify-center min-h-screen py-4 px-4">
       <div className="bg-white p-10 rounded-2xl shadow-lg w-full max-w-md">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
           Ganti password baru

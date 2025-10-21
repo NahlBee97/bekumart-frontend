@@ -1,5 +1,5 @@
 import useAuthStore from "@/stores/useAuthStore";
-import { LogOut } from "lucide-react";
+import { LogOut, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState, useEffect, useRef } from "react";
@@ -67,12 +67,16 @@ export const ProfileMenu: FC = () => {
         aria-haspopup="true"
         aria-expanded={isOpen}
       >
-        {/* eslint-disable-next-line */}
-        <img
-          src={user?.imageUrl}
-          alt="profile-picture"
-          className="rounded-full w-8 h-8 md:w-10 md:h-10 object-cover border border-slate-400 dark:border-slate-500 hover:border-blue-500 dark:hover:border-blue-500 transition-all"
-        />
+        {!user.imageUrl ? (
+          <User className="cursor-pointer" />
+        ) : (
+          // eslint-disable-next-line
+          <img
+            src={user?.imageUrl}
+            alt="profile-picture"
+            className="rounded-full w-8 h-8 md:w-10 md:h-10 object-cover border border-slate-400 dark:border-slate-500 hover:border-blue-500 dark:hover:border-blue-500 transition-all"
+          />
+        )}
       </button>
 
       {/* Dropdown Menu */}
