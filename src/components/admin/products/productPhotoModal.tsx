@@ -118,7 +118,7 @@ const ProductPhotoModal = ({
   const confirmDelete = async (photo: IProductPhoto) => {
     try {
       setIsLoading(true);
-      if (photo.isDefault === true ) {
+      if (photo.isDefault === true) {
         toast.error(
           "Tidak dapat menghapus foto yang sedang dijadikan foto utama."
         );
@@ -164,7 +164,11 @@ const ProductPhotoModal = ({
             <div className="w-50 bg-gray-200 border border-gray-200 rounded-md shadow-xl">
               {/* eslint-disable-next-line */}
               <img
-                src={mainImage?.imageUrl}
+                src={
+                  mainImage?.imageUrl
+                    ? mainImage.imageUrl
+                    : "https://placehold.co/400x400/e2e8f0/64748b?text=N/A"
+                }
                 alt="Foto utama produk"
                 className="w-50 h-50 object-cover"
                 onError={(e) => {
@@ -230,17 +234,6 @@ const ProductPhotoModal = ({
             {isLoading ? "Memproses..." : "Selesai"}
           </button>
         </div>
-        <ConfirmModal
-          isOpen={isConfirmModalOpen}
-          onClose={() => setIsConfirmModalOpen(false)}
-          onConfirm={() =>
-            isDeleting
-              ? confirmDelete(photoToDelete as IProductPhoto)
-              : confirmSetMain(photoToDelete as IProductPhoto)
-          }
-          title={isDeleting ? "Hapus Photo?" : "Atur Sebagai Photo Utama"}
-          confirmText={isDeleting ? "Hapus" : "Konfirmasi"}
-        />
       </div>
       {/* The <style jsx> tag was causing a React warning because the environment might not be
         processing styled-jsx correctly. Replaced with a standard <style> tag to define
@@ -255,6 +248,17 @@ const ProductPhotoModal = ({
           animation: fade-in-up 0.3s ease-out forwards;
         }
       `}</style>
+      <ConfirmModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
+        onConfirm={() =>
+          isDeleting
+            ? confirmDelete(photoToDelete as IProductPhoto)
+            : confirmSetMain(photoToDelete as IProductPhoto)
+        }
+        title={isDeleting ? "Hapus Photo?" : "Atur Sebagai Photo Utama"}
+        confirmText={isDeleting ? "Hapus" : "Konfirmasi"}
+      />
     </div>
   );
 };

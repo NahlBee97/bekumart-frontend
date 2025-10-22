@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { apiUrl } from "@/config";
 import { LoginSchema } from "@/schemas/authSchemas";
-import { setCookie } from "cookies-next";
 import { jwtDecode } from "jwt-decode";
 import toast from "react-hot-toast";
 import useAuthStore from "@/stores/useAuthStore";
@@ -43,11 +42,8 @@ export default function LoginPage() {
         const response = await api.post(`/api/auth/login`, values);
 
         // set token to cookie
-        const { refreshToken, accessToken } = response.data.tokens;
+        const { accessToken } = response.data;
 
-        setCookie("token", refreshToken, {
-          expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-        });
         setAccessToken(accessToken);
 
         const userData = jwtDecode<IUser>(accessToken);

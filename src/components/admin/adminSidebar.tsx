@@ -40,7 +40,7 @@ export default function AdminSidebar() {
               <li key={item.label}>
                 <Link
                   href={item.link}
-                  className={`flex items-center p-3 my-1 rounded-lg transition-colors
+                  className={`flex items-center py-3 px-2 my-1 rounded-lg transition-colors
                     ${
                       isActive
                         ? "bg-blue-500 text-white font-semibold"
