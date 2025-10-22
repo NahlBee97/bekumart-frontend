@@ -2,24 +2,32 @@
 
 import { usePathname } from "next/navigation";
 import useAuthStore from "@/stores/useAuthStore";
-import { useEffect } from "react";
-import { getCookie } from "cookies-next";
+import { useEffect, useState } from "react";
 import AdminNavbar from "./navbar/adminNavbar";
 import ClientNavbar from "./navbar/clientNavbar";
+import api from "@/lib/axios";
 
 export default function AuthWrapper({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const token = getCookie("token") as string;
   const pathname = usePathname();
-
   const { checkAuth } = useAuthStore();
 
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+
   useEffect(() => {
-    if (token) checkAuth();
-  }, [token, checkAuth]);
+    if (!isLoggedIn) checkAuth();
+  }, [isLoggedIn, checkAuth]);
+
+  useEffect(() => {
+    const checkIsLoggedIn = async () => {
+      const response = await api.get("/api/auth/check");
+      setIsLoggedIn(response.data.status.isLoggedIn);
+    };
+    checkIsLoggedIn();
+  }, []);
 
   // ❗️Mendeteksi halaman admin
   const isAdminRoute = pathname.startsWith("/admin");
@@ -27,7 +35,7 @@ export default function AuthWrapper({
   return (
     <>
       {/* ✅ Tampilkan Navbar jika BUKAN halaman admin */}
-      {!isAdminRoute ? <ClientNavbar /> : <AdminNavbar/>}
+      {!isAdminRoute ? <ClientNavbar /> : <AdminNavbar />}
 
       {/* ✅ Tampilkan konten utama */}
       {children}

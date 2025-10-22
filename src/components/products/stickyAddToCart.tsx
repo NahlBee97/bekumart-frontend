@@ -6,7 +6,6 @@ import { MessageSquareIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { StickyAddToCartSkeleton } from "./stickyAddToCartSkeleton";
 import toast from "react-hot-toast";
-import { getCookie } from "cookies-next";
 import ConfirmModal from "../confirmModal";
 import { useRouter } from "next/navigation";
 import { IProduct } from "@/interfaces/dataInterfaces";
@@ -15,7 +14,7 @@ const StickyAddToCart: React.FC<{
   product: IProduct;
 }> = ({ product }) => {
   const router = useRouter();
-  const { user } = useAuthStore();
+  const { user, isLoggedIn } = useAuthStore();
   const { addToCart } = useCartStore();
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -37,8 +36,7 @@ const StickyAddToCart: React.FC<{
   const handleAddToCart = async () => {
     try {
       setIsLoading(true);
-      const token = getCookie("token") as string;
-      if (!token) {
+      if (!isLoggedIn) {
         setIsShowConfirmModal(true);
         return;
       }
@@ -104,7 +102,7 @@ const StickyAddToCart: React.FC<{
         onClose={() => setIsShowConfirmModal(false)}
         title="Tidak bisa menambahkan kedalam keranjang"
         confirmText="Login"
-        onConfirm={() => router.push("/login") }
+        onConfirm={() => router.push("/login")}
       />
     </div>
   );

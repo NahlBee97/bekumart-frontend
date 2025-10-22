@@ -83,8 +83,9 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const { data } = await api.get(`/api/auth/refresh-token`);
-        const newToken = data.token;
+        const response = await api.get(`/api/auth/refresh-token`);
+
+        const newToken = response.data.accessToken;
 
         // Update store and axios defaults
         useAuthStore.getState().setAccessToken(newToken);
@@ -97,9 +98,9 @@ api.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return api(originalRequest);
       } catch (error) {
-        // Handle refresh failure
         const refreshError =
           error instanceof Error ? error : new Error("Token refresh failed");
+
         processQueue(refreshError, null);
         useAuthStore.getState().logout();
         return Promise.reject(refreshError);

@@ -2,7 +2,6 @@ import api from "@/lib/axios";
 import { jwtAccessSecret } from "@/config";
 import { jwtVerify } from "jose";
 import { create } from "zustand";
-import { deleteCookie } from "cookies-next";
 import { IUser } from "@/interfaces/dataInterfaces";
 
 interface AuthState {
@@ -47,7 +46,6 @@ const useAuthStore = create<AuthState>((set) => ({
   login: (user: IUser) => set({ user, isLoggedIn: true }),
   logout: async () => {
     await api.post("api/auth/logout", {});
-    deleteCookie("token");
     set({ user: {} as IUser, isLoggedIn: false, accessToken: null });
   },
 }));
