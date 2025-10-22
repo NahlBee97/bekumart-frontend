@@ -3,16 +3,18 @@
 import { useCallback, useEffect, useState } from "react";
 import { ChevronDown, Package } from "lucide-react";
 import OrderDetailAdminModal from "@/components/admin/orders/orderDetailAdminModal";
-import { getOrders } from "@/lib/data";
 import api from "@/lib/axios";
 import { format } from "date-fns";
 import useAuthStore from "@/stores/useAuthStore";
 import OperationalSection from "@/components/admin/dashboard/operationalSection";
 import { IOrder } from "@/interfaces/dataInterfaces";
 import { OrderStatuses } from "@/interfaces/enums";
+import { useSearchParams } from "next/navigation";
 
 // --- MAIN PAGE COMPONENT ---
 const Orders: React.FC = () => {
+  const status = useSearchParams().get("status");
+
   const { accessToken } = useAuthStore();
   const [orders, setOrders] = useState<IOrder[]>([]);
   const [updatingOrderIds, setUpdatingOrderIds] = useState<Set<string>>(
@@ -23,25 +25,40 @@ const Orders: React.FC = () => {
   const [orderToView, setOrderToView] = useState<IOrder | null>(null);
 
   const statusOptions = [
-    "PENDING",
-    "PROCESSING",
-    "READY_FOR_PICKUP",
-    "OUT_FOR_DELIVERY",
-    "COMPLETED",
-    "CANCELLED",
+    { label: "Menunggu", value: "PENDING" },
+    { label: "Dalam Proses", value: "PROCESSING" },
+    { label: "Siap Diambil", value: "READY_FOR_PICKUP" },
+    { label: "Dalam Pengiriman", value: "OUT_FOR_DELIVERY" },
+    { label: "Selesai", value: "COMPLETED" },
+    { label: "Dibatalkan", value: "CANCELLED" },
   ];
+
+  const statusColors: { [key: string]: string } = {
+    PENDING: "bg-yellow-100 text-yellow-800",
+    PROCESSING: "bg-blue-100 text-blue-800",
+    COMPLETED: "bg-green-100 text-green-800",
+    CANCELLED: "bg-red-100 text-red-800",
+    READY_FOR_PICKUP: "bg-indigo-100 text-indigo-800",
+    OUT_FOR_DELIVERY: "bg-purple-100 text-purple-800",
+  };
 
   const fetchOrders = useCallback(async () => {
     if (!accessToken) return;
 
     try {
-      const orders = await getOrders();
-      setOrders(orders);
+      let response;
+      if (status) {
+        response = await api.get(`/api/orders?status=${status}`);
+      } else {
+        response = await api.get(`/api/orders`);
+      }
+      
+      setOrders(response.data.data);
     } catch (error) {
       console.error("Error fetching orders:", error);
       throw error;
     }
-  }, [accessToken]);
+  }, [accessToken, status]);
 
   useEffect(() => {
     fetchOrders();
@@ -79,9 +96,17 @@ const Orders: React.FC = () => {
 
   const totalPages = Math.ceil(orders.length / orderPerPage);
 
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
   return (
     <div className="min-h-screen">
-      <div className="max-w-7xl mx-auto">
+      <div className="container mx-auto">
         <header className="mb-8">
           <div className="flex items-center space-x-3">
             <Package className="h-6 w-6 text-blue-500 dark:text-gray-200" />
@@ -96,28 +121,29 @@ const Orders: React.FC = () => {
 
         <main className="flex flex-col gap-4">
           <OperationalSection />
-          <h2 className="text-2xl text-blue-500 font-bold mt-4">Order List</h2>
+
+          <h2 className="text-2xl text-blue-500 font-bold mt-4">
+            Daftar Pesanan
+          </h2>
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead className="text-xs text-blue-500 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <div></div>
+              <table className="w-full text-sm text-left">
+                <thead className="bg-gray-50 border-b border-gray-200 text-xs text-blue-500 font-semibold uppercase ">
                   <tr>
-                    <th scope="col" className="px-4 py-3">
-                      Order ID
+                    <th scope="col" className="px-3 py-4">
+                      Cutomer
                     </th>
-                    <th scope="col" className="px-4 py-3">
-                      Customer
-                    </th>
-                    <th scope="col" className="px-4 py-3">
+                    <th scope="col" className="px-3 py-4">
                       Date
                     </th>
-                    <th scope="col" className="px-4 py-3 text-right">
+                    <th scope="col" className="px-3 py-4">
                       Total
                     </th>
-                    <th scope="col" className="px-4 py-3 text-right">
+                    <th scope="col" className="px-3 py-4">
                       Fullfilment Method
                     </th>
-                    <th scope="col" className="px-4 py-3 text-center">
+                    <th scope="col" className="px-3 py-4 text-center">
                       Update Status
                     </th>
                   </tr>
@@ -130,20 +156,24 @@ const Orders: React.FC = () => {
                         setIsModalOpen(true);
                         setOrderToView(order);
                       }}
-                      className="bg-white border-b border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-200"
+                      className="bg-white border-b border-gray-200 hover:bg-gray-50 transition-colors"
                     >
-                      <td className="px-4 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        {order.id}
+                      <td className="px-3 py-2 text-gray-900 whitespace-nowrap ">
+                        <div className="flex flex-col">
+                          <div className="font-semibold text-blue-500">
+                            {order.user.name}
+                          </div>
+                          <div>Order No: {order.id}</div>
+                        </div>
                       </td>
-                      <td className="px-4 py-4">{order.user.name}</td>
-                      <td className="px-4 py-4">
+                      <td className="px-3 py-2">
                         {format(order.createdAt, "dd MMMM yyy")}
                       </td>
-                      <td className="px-4 py-4 text-right">
+                      <td className="px-3 py-2">
                         Rp {order.totalAmount.toLocaleString()}
                       </td>
-                      <td className="px-4 py-4">{order.fulfillmentType}</td>
-                      <td className="px-4 py-4 text-center">
+                      <td className="px-3 py-2">{order.fulfillmentType}</td>
+                      <td className="px-3 py-2 text-center">
                         <div className="relative inline-block">
                           <select
                             value={order.status}
@@ -154,11 +184,17 @@ const Orders: React.FC = () => {
                                 e.target.value as OrderStatuses
                               )
                             }
-                            className="appearance-none w-48 text-center bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block py-2 px-4 transition"
+                            className={`appearance-none w-36 text-center text-xs font-semibold border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block py-2 px-3 transition ${
+                              statusColors[order.status]
+                            }`}
                           >
                             {statusOptions.map((option) => (
-                              <option key={option} value={option}>
-                                {option}
+                              <option
+                                key={option.label}
+                                value={option.value}
+                                className={`${statusColors[option.value]}`}
+                              >
+                                {option.label}
                               </option>
                             ))}
                           </select>
@@ -174,32 +210,32 @@ const Orders: React.FC = () => {
                   ))}
                 </tbody>
               </table>
+              {orders.length > orderPerPage && (
+                <div className="p-4 sm:p-6 flex items-center justify-between border-t border-gray-200">
+                  <span className="text-sm text-gray-600">
+                    Page <span className="font-semibold">{currentPage}</span> of{" "}
+                    <span className="font-semibold">{totalPages}</span>
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={handlePrevPage}
+                      disabled={currentPage === 1}
+                      className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      Previous
+                    </button>
+                    <button
+                      onClick={handleNextPage}
+                      disabled={currentPage === totalPages}
+                      className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="mt-4 flex items-center justify-between">
-              <button
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
-                className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-              >
-                Sebelumnya
-              </button>
-              <span className="text-sm text-slate-700 dark:text-slate-400">
-                Halaman {currentPage} dari {totalPages}
-              </span>
-              <button
-                onClick={() =>
-                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                }
-                disabled={currentPage === totalPages}
-                className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-              >
-                Berikutnya
-              </button>
-            </div>
-          )}
         </main>
         <OrderDetailAdminModal
           isOpen={isModalOpen}

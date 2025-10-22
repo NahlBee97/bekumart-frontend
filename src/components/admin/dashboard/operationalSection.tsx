@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import api from "@/lib/axios";
 import useAuthStore from "@/stores/useAuthStore";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const statusColors: { [key: string]: string } = {
   PENDING: "bg-yellow-100 text-yellow-800",
@@ -13,7 +14,19 @@ const statusColors: { [key: string]: string } = {
   OUT_FOR_DELIVERY: "bg-purple-100 text-purple-800",
 };
 
+const statusLabels: { [key: string]: string } = {
+  PENDING: "Menunggu",
+  PROCESSING: "Dalam Proses",
+  READY_FOR_PICKUP: "Siap Diambil",
+  OUT_FOR_DELIVERY: "Dalam Pengiriman",
+  COMPLETED: "Selesai",
+  CANCELLED: "Dibatalkan",
+};
+
 const OperationalSection = () => {
+  const keyword = useSearchParams().get("status");
+  const router = useRouter();
+  const pathname = usePathname();
   const { isLoading } = useAuthStore();
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
@@ -38,27 +51,43 @@ const OperationalSection = () => {
 
   return (
     <section>
-      <h2 className="text-2xl text-blue-500 font-bold mb-4">Operations</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="font-bold text-blue-500 mb-4">Current Order Status</h3>
+          <h3 className="font-bold text-blue-500 mb-4">Rangkuman Pesanan</h3>
           <div className="space-y-3">
+            <div
+              className={`flex py-1 px-2 rounded-md justify-between items-center cursor-pointer hover:bg-gray-300 ${
+                !keyword && "bg-gray-300"
+              }`}
+              onClick={() => router.push(`${pathname}`)}
+            >
+              <span className="text-base font-semibold px-2.5 py-0.5 rounded">
+                Semua
+              </span>
+              <span className="font-semibold">{data.totalOrders._count.id} Pesanan</span>
+            </div>
             {data.statusCounts.map((item: any, index: number) => (
-              <div key={index} className="flex justify-between items-center">
+              <div
+                key={index}
+                className={`flex py-1 px-2 rounded-md justify-between items-center cursor-pointer hover:bg-gray-300 ${
+                  keyword === item.status && "bg-gray-300"
+                }`}
+                onClick={() => router.push(`${pathname}?status=${item.status}`)}
+              >
                 <span
                   className={`text-xs font-semibold px-2.5 py-0.5 rounded ${
                     statusColors[item.status] || ""
                   }`}
                 >
-                  {item.status}
+                  {statusLabels[item.status]}
                 </span>
-                <span className="font-bold">{item._count.status} orders</span>
+                <span className="font-semibold">{item._count.status} Pesanan</span>
               </div>
             ))}
           </div>
         </div>
         <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="font-bold text-blue-500 mb-4">Recent Orders</h3>
+          <h3 className="font-bold text-blue-500 mb-4">Pesanan Terbaru</h3>
           <ul className="space-y-4">
             {data.recentOrders.map((order: any) => (
               <li
@@ -76,7 +105,7 @@ const OperationalSection = () => {
                     statusColors[order.status] || ""
                   }`}
                 >
-                  {order.status}
+                  {statusLabels[order.status]}
                 </span>
               </li>
             ))}

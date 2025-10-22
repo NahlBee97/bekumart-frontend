@@ -119,7 +119,7 @@ export default function ProductsTable() {
   };
 
   return (
-    <div className="min-h-screen text-blue-500">
+    <div className="min-h-screen">
       <div className="container mx-auto ">
         <ProductSection />
         <div className="my-6 md:mb-2 md:flex md:items-center md:justify-between">
@@ -176,22 +176,22 @@ export default function ProductsTable() {
             <table className="w-full text-sm text-left">
               <thead className="bg-gray-50 border-b border-gray-200 text-xs text-blue-500 font-semibold uppercase ">
                 <tr>
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" className="px-3 py-2">
                     Produk
                   </th>
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" className="px-3 py-2">
                     Kategori
                   </th>
-                  <th scope="col" className="px-6 py-3 text-right">
+                  <th scope="col" className="px-3 py-2 text-right">
                     Harga
                   </th>
-                  <th scope="col" className="px-6 py-3 text-center">
+                  <th scope="col" className="px-3 py-2 text-center">
                     Stok
                   </th>
-                  <th scope="col" className="px-6 py-3 text-center">
+                  <th scope="col" className="px-3 py-2 text-center">
                     Berat/pcs (Kg)
                   </th>
-                  <th scope="col" className="px-6 py-3 text-center">
+                  <th scope="col" className="px-3 py-2 text-center">
                     Tindakan
                   </th>
                 </tr>
@@ -202,7 +202,7 @@ export default function ProductsTable() {
                     key={product.id}
                     className="bg-white border-b border-gray-200 hover:bg-gray-50 transition-colors"
                   >
-                    <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                    <td className="px-3 py-2 font-medium text-gray-900 whitespace-nowrap">
                       <div className="flex items-center gap-4">
                         <div className="relative group flex-shrink-0">
                           {/* eslint-disable-next-line */}
@@ -239,23 +239,23 @@ export default function ProductsTable() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-3 py-2">
                       <span className="px-2 py-1 text-xs font-semibold leading-5 text-green-800 bg-green-100 rounded-full">
                         {product.category.name}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-3 py-2 text-right">
                       {new Intl.NumberFormat("id-ID", {
                         style: "currency",
                         currency: "IDR",
                         minimumFractionDigits: 0,
                       }).format(product.price)}
                     </td>
-                    <td className="px-6 py-4 text-center">{product.stock}</td>
-                    <td className="px-6 py-4 text-center">
+                    <td className="px-3 py-2 text-center">{product.stock}</td>
+                    <td className="px-3 py-2 text-center">
                       {product.weightInKg}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-3 py-2">
                       <div className="flex items-center justify-center space-x-4">
                         <button
                           onClick={() => handleOpenEditModal(product)}
