@@ -6,10 +6,13 @@ export default function DashboardPage() {
   return (
     <main className=" min-h-screen">
       <div className="space-y-8">
+        <h2 className="text-2xl text-blue-500 font-bold mb-4">
+          Penjualan & Pendapatan
+        </h2>
         <SalesSection />
         <div className="flec flex-col">
           <h2 className="text-2xl text-blue-500 font-bold mb-4">
-            Customer Insights
+            Data Pelanggan
           </h2>
           <div className="grid grid-cols-3 gap-4">
             <div className="col-span-2">

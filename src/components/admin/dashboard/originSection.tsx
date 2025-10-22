@@ -5,27 +5,28 @@ import { PieChart, ResponsiveContainer, Pie, Tooltip, Cell } from "recharts";
 import api from "@/lib/axios";
 import useAuthStore from "@/stores/useAuthStore";
 import { generateHslColors } from "@/utils/generateHslColors";
+import { OriginSectionSkeleton } from "@/components/skeletons/originSectionSkeleton";
 
 const OriginSection = () => {
-  // State for data, loading, and errors
-  const { isLoading } = useAuthStore();
+  const { isAuthLoading } = useAuthStore();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [data, setData] = useState<{ location: string; count: number }[]>([]);
-  const [error, setError] = useState<string | null>(null);
 
   // Fetch data on component mount
   useEffect(() => {
-    if (isLoading) return;
+    if (isAuthLoading) return;
     const fetchData = async () => {
       try {
         const response = await api.get("/api/dashboard/origin-summary");
         setData(response.data.summary);
       } catch (error) {
-        setError("Failed to load origin data");
         console.error("Failed to load origin data:" + error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchData();
-  }, [isLoading]);
+  }, [isAuthLoading]);
 
   const totalCount = data.reduce((acc, point) => {
     return (acc += point.count);
@@ -34,16 +35,12 @@ const OriginSection = () => {
   const colors = generateHslColors(data.length);
 
   // Conditional rendering for loading and error states
-  if (isLoading) return <div>Loading origin data...</div>;
-  if (error) return <div>{error}</div>;
-  if (data.length === 0) return null;
+  if (isLoading) return <OriginSectionSkeleton/>;
 
   return (
     <section>
       <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-xl text-gray-700 font-bold mb-4">
-          Customer Origin
-        </h2>
+        
         <ResponsiveContainer width="100%" height={300}>
           <PieChart>
             <Tooltip />

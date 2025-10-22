@@ -15,49 +15,50 @@ import api from "@/lib/axios";
 import useAuthStore from "@/stores/useAuthStore";
 import FilterDropdown from "./filterDropdown";
 import { useSearchParams } from "next/navigation";
+import { SalesSectionSkeleton } from "@/components/skeletons/salesSectionSkeleton";
 
 const SalesSection = () => {
   const filter = useSearchParams().get("value");
-  const { isLoading } = useAuthStore();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { isAuthLoading } = useAuthStore();
   const [data, setData] = useState<any | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
   // Fetch data on component mount
   useEffect(() => {
-    if (isLoading) return;
+    if (isAuthLoading) return;
     const fetchData = async () => {
       try {
-        const response = await api.get(`/api/dashboard/sales-summary?value=${filter}`);
+        const response = await api.get(
+          `/api/dashboard/sales-summary?value=${filter}`
+        );
         setData(response.data.salesSummary);
       } catch (error) {
-        setError("Failed to load sales data");
         console.error("Failed to load sales data:" + error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchData();
-  }, [isLoading, filter]);
+  }, [isAuthLoading, filter]);
 
   // Conditional rendering for loading and error states
-  if (isLoading) return <div>Loading sales data...</div>;
-  if (error) return <div>{error}</div>;
-  if (!data) return null;
+  if (isLoading) return <SalesSectionSkeleton />;
 
   return (
     <section>
-      <h2 className="text-2xl text-blue-500 font-bold mb-4">Sales & Revenue</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <StatCard
-          title="Total Revenue"
+          title="Total Pendapatan"
           value={`Rp ${data.totalRevenue.toLocaleString("id-ID")}`}
           icon={<span>💰</span>}
         />
         <StatCard
-          title="Total Orders"
+          title="Total Pesanan"
           value={data.totalOrders}
           icon={<span>📦</span>}
         />
         <StatCard
-          title="Average Order Value"
+          title="Nilai Pesanan Rata-Rata"
           value={`Rp ${Math.round(data.averageOrderValue).toLocaleString(
             "id-ID"
           )}`}
@@ -66,8 +67,8 @@ const SalesSection = () => {
       </div>
       <div className="bg-white p-6 rounded-lg shadow-md">
         <div className="flex justify-between">
-          <h3 className="font-bold mb-4">Revenue</h3>
-          <FilterDropdown/>
+          <h3 className="font-bold text-blue-500 mb-4">Pendapatan</h3>
+          <FilterDropdown />
         </div>
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={data.chartData}>

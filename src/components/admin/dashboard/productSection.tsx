@@ -3,36 +3,35 @@
 import useAuthStore from "@/stores/useAuthStore";
 import { useState, useEffect } from "react";
 import api from "@/lib/axios";
+import { ProductSectionSkeleton } from "@/components/skeletons/admin/products/productSectionSkeleton";
 
 const ProductSection = () => {
-  const { isLoading } = useAuthStore();
+  const { isAuthLoading } = useAuthStore();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [data, setData] = useState<any | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (isLoading) return;
+    if (isAuthLoading) return;
     const fetchData = async () => {
       try {
         const response = await api.get("api/dashboard/product-insights");
         setData(response.data.productInsights);
       } catch (error) {
         console.error("Failed to load product data: " + error);
-        setError("Failed to load product data");
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchData();
-  }, [isLoading]);
+  }, [isAuthLoading]);
 
-  if (isLoading) return <div>Loading product data...</div>;
-  if (error) return <div>{error}</div>;
-  if (!data) return null;
+  if (isLoading) return <ProductSectionSkeleton/>;
 
   return (
     <section>
-      <h2 className="text-2xl text-blue-500 font-bold mb-4">Product & Inventory</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="font-bold text-blue-500 mb-4">⭐ Best-Selling Products</h3>
+          <h3 className="font-bold text-blue-500 mb-4">⭐ Produk Dengan Penjualan Terbaik</h3>
           <ul className="space-y-3">
             {data.bestSellers.map(
               (
@@ -45,7 +44,7 @@ const ProductSection = () => {
                 >
                   <span>{product.name}</span>
                   <span className="font-semibold bg-gray-100 px-2 py-1 rounded">
-                    {product.quantitySold} sold
+                    {product.quantitySold} Terjual
                   </span>
                 </li>
               )
@@ -53,7 +52,7 @@ const ProductSection = () => {
           </ul>
         </div>
         <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-blue-500 font-bold mb-4">⚠️ Low Stock Alerts</h3>
+          <h3 className="text-blue-500 font-bold mb-4">⚠️ Produk Stok Rendah</h3>
           <ul className="space-y-3">
             {data.lowStockProducts.map(
               (product: { name: string; stock: number }, index: number) => (

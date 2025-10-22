@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import api from "@/lib/axios";
 import useAuthStore from "@/stores/useAuthStore";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import OperationalSectionSkeleton from "@/components/skeletons/admin/orders/operationalSectionSkeleton";
 
 const statusColors: { [key: string]: string } = {
   PENDING: "bg-yellow-100 text-yellow-800",
@@ -24,30 +25,30 @@ const statusLabels: { [key: string]: string } = {
 };
 
 const OperationalSection = () => {
+  const { isAuthLoading } = useAuthStore();
   const keyword = useSearchParams().get("status");
   const router = useRouter();
   const pathname = usePathname();
-  const { isLoading } = useAuthStore();
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [data, setData] = useState<any>(null);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (isLoading) return;
+    if (isAuthLoading) return;
     const fetchData = async () => {
       try {
         const response = await api.get("api/dashboard/operational-summary");
         setData(response.data.operationalSummary);
       } catch (error) {
         console.error("Failed to load operational data:" + error);
-        setError("Failed to load operational data");
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchData();
-  }, [isLoading]);
+  }, [isAuthLoading]);
 
-  if (isLoading) return <div>Loading operational data...</div>;
-  if (error) return <div>{error}</div>;
-  if (!data) return null;
+  if (isLoading) return <OperationalSectionSkeleton/>;
 
   return (
     <section>

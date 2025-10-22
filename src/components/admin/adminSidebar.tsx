@@ -30,7 +30,7 @@ export default function AdminSidebar() {
 
   return (
     <aside className="w-full lg:w-64 bg-white p-4 rounded-lg shadow-sm">
-      <h2 className="text-lg font-bold mb-4">Navigation</h2>
+      <h2 className="text-lg text-blue-500 font-bold mb-4">Navigation</h2>
       <nav>
         <ul>
           {navItems.map((item) => {
@@ -61,7 +61,7 @@ export default function AdminSidebar() {
           onClick={handleLogOut}
         >
           <LogOut />
-          <span>Log-out</span>
+          <span>Keluar</span>
         </button>
       </nav>
     </aside>

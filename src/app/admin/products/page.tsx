@@ -1,25 +1,24 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import {
-  CameraIcon,
-  DeleteIcon,
-  EditIcon,
-  PlusIcon,
-} from "@/components/admin/products/icons";
-import ProductFormModal from "@/components/admin/products/productFormModal";
 import { FileText } from "lucide-react";
-import ProductPhotoModal from "@/components/admin/products/productPhotoModal";
-import { getProducts } from "@/lib/data";
-import api from "@/lib/axios";
-import ConfirmModal from "@/components/confirmModal";
+import { getProducts } from "../../../lib/data";
+import api from "../../../lib/axios";
 import toast from "react-hot-toast";
-import ProductSection from "@/components/admin/dashboard/productSection";
-import { IProduct } from "@/interfaces/dataInterfaces";
+import { IProduct } from "../../../interfaces/dataInterfaces";
 
-// --- MAIN COMPONENT ---
-// Renders the entire product table page.
+import ProductFormModal from "@/components/admin/products/productFormModal";
+import ProductPhotoModal from "@/components/admin/products/productPhotoModal";
+import ConfirmModal from "@/components/confirmModal";
+import ProductsTableHeader from "@/components/admin/products/tableHeader";
+import ProductSection from "@/components/admin/dashboard/productSection";
+import ProductsTableRow from "@/components/admin/products/tableRow";
+import ProductsTableSkeleton from "@/components/skeletons/admin/products/tableSkeleton";
+import useAuthStore from "@/stores/useAuthStore";
+import TablePagination from "@/components/admin/products/tablePagination";
+
 export default function ProductsTable() {
+  const { isAuthLoading } = useAuthStore();
   const [products, setProducts] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -34,37 +33,40 @@ export default function ProductsTable() {
   const [productForImage, setProductForImage] = useState<IProduct | null>(null);
   const [productToDelete, setProductToDelete] = useState<IProduct | null>(null);
 
+  // --- DATA FETCHING ---
   const fetchProducts = useCallback(async () => {
-    setLoading(true);
+    if (!isAuthLoading) return;
     try {
       const products = await getProducts();
       setProducts(products);
     } catch (error) {
       console.error("Error fetching products:", error);
+      toast.error("Gagal mengambil data produk");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [isAuthLoading]);
 
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
 
-  // --- HANDLERS ---
+  // --- API HANDLERS ---
   const confirmDeleteProduct = async (product: IProduct) => {
+    if (!product) return;
+
     try {
       await api.delete(`/api/products/${product.id}`);
-
+      toast.success("Berhasil Menghapus Product");
       // Refetch products to ensure data is consistent
       fetchProducts();
-
-      toast.success("Berhasil Menghapus Product");
     } catch (error) {
       console.error("Error deleting product:", error);
       toast.error("Gagal Menghapus Product");
     }
   };
 
+  // --- MODAL HANDLERS ---
   const handleOpenAddModal = () => {
     setProductToEdit(null);
     setIsModalOpen(true);
@@ -80,13 +82,18 @@ export default function ProductsTable() {
     setIsImageModalOpen(true);
   };
 
-  const handleImageSave = () => {
-    setIsModalOpen(false);
-    fetchProducts();
+  const handleOpenDeleteModal = (product: IProduct) => {
+    setProductToDelete(product);
+    setIsConfirmModalOpen(true);
   };
 
   const handleProductSave = () => {
     setIsModalOpen(false);
+    fetchProducts();
+  };
+
+  const handleImageSave = () => {
+    setIsImageModalOpen(false);
     fetchProducts();
   };
 
@@ -121,9 +128,8 @@ export default function ProductsTable() {
   return (
     <div className="min-h-screen">
       <div className="container mx-auto ">
-        <ProductSection />
-        <div className="my-6 md:mb-2 md:flex md:items-center md:justify-between">
-          <header className="mb-8">
+        <div className=" md:flex md:items-center md:justify-between">
+          <header className="mb-2">
             <div className="flex items-center space-x-3">
               <FileText className="h-6 w-6 text-blue-500 dark:text-gray-200" />
               <h1 className="text-2xl font-bold text-blue-500 dark:text-white">
@@ -131,204 +137,87 @@ export default function ProductsTable() {
               </h1>
             </div>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-              View, manage, and update all stock products.
+              Melihat, mengatur, dan update stok produk.
             </p>
           </header>
-          <button
-            onClick={handleOpenAddModal}
-            className="mt-4 md:mt-0 flex items-center gap-2 bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition-all"
-          >
-            <PlusIcon />
-            Add Product
-          </button>
         </div>
 
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          {/* Table Header and Search */}
-          <div className="p-4 sm:p-6 border-b border-gray-200">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Cari berdasarkan nama produk atau kategori..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg
-                  className="h-5 w-5 text-gray-400"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                    clipRule="evenodd"
+        <ProductSection />
+
+        <main className="flex flex-col gap-4 py-6">
+          <div className="flex items-center gap-2">
+            <FileText className="text-blue-500" />
+            <h2 className="text-2xl text-blue-500 font-bold">Daftar Produk</h2>
+          </div>
+
+          <div className=" bg-white rounded-xl shadow-lg overflow-hidden">
+            {/* Component for Search and Add Button */}
+            <ProductsTableHeader
+              searchTerm={searchTerm}
+              onSearchTermChange={setSearchTerm}
+              onAddProductClick={handleOpenAddModal}
+            />
+
+            {/* Table Container */}
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm text-left">
+                <thead className="bg-gray-50 border-b border-gray-200 text-xs text-blue-500 font-semibold uppercase ">
+                  <tr>
+                    <th scope="col" className="px-3 py-2">
+                      Produk
+                    </th>
+                    <th scope="col" className="px-3 py-2">
+                      Kategori
+                    </th>
+                    <th scope="col" className="px-3 py-2 text-right">
+                      Harga
+                    </th>
+                    <th scope="col" className="px-3 py-2 text-center">
+                      Stok
+                    </th>
+                    <th scope="col" className="px-3 py-2 text-center">
+                      Berat/pcs (Kg)
+                    </th>
+                    <th scope="col" className="px-3 py-2 text-center">
+                      Tindakan
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {/* Component for Loading and Empty States */}
+                  <ProductsTableSkeleton
+                    loading={loading}
+                    isEmpty={filteredProducts.length === 0 && !loading}
+                    searchTerm={searchTerm}
                   />
-                </svg>
-              </div>
+                  {/* Component for Table Row */}
+                  {currentProducts.map((product) => (
+                    <ProductsTableRow
+                      key={product.id}
+                      product={product}
+                      onEdit={handleOpenEditModal}
+                      onDelete={handleOpenDeleteModal}
+                      onOpenImageModal={handleOpenImageModal}
+                    />
+                  ))}
+                </tbody>
+              </table>
+
+              {/* Component for Pagination */}
+              {filteredProducts.length > productsPerPage && (
+                <TablePagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPrevPage={handlePrevPage}
+                  onNextPage={handleNextPage}
+                />
+              )}
             </div>
           </div>
-
-          {/* Table Container */}
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left">
-              <thead className="bg-gray-50 border-b border-gray-200 text-xs text-blue-500 font-semibold uppercase ">
-                <tr>
-                  <th scope="col" className="px-3 py-2">
-                    Produk
-                  </th>
-                  <th scope="col" className="px-3 py-2">
-                    Kategori
-                  </th>
-                  <th scope="col" className="px-3 py-2 text-right">
-                    Harga
-                  </th>
-                  <th scope="col" className="px-3 py-2 text-center">
-                    Stok
-                  </th>
-                  <th scope="col" className="px-3 py-2 text-center">
-                    Berat/pcs (Kg)
-                  </th>
-                  <th scope="col" className="px-3 py-2 text-center">
-                    Tindakan
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentProducts.map((product) => (
-                  <tr
-                    key={product.id}
-                    className="bg-white border-b border-gray-200 hover:bg-gray-50 transition-colors"
-                  >
-                    <td className="px-3 py-2 font-medium text-gray-900 whitespace-nowrap">
-                      <div className="flex items-center gap-4">
-                        <div className="relative group flex-shrink-0">
-                          {/* eslint-disable-next-line */}
-                          <img
-                            src={
-                              product.productPhotos.find(
-                                (photo) => photo.isDefault === true
-                              )?.imageUrl ||
-                              "https://placehold.co/40x40/e2e8f0/64748b?text=N/A"
-                            }
-                            alt={product.name}
-                            className="w-12 h-12 rounded-md object-cover"
-                            onError={(e) => {
-                              e.currentTarget.src =
-                                "https://placehold.co/40x40/e2e8f0/64748b?text=Error";
-                            }}
-                          />
-                          <button
-                            onClick={() => handleOpenImageModal(product)}
-                            className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white rounded-md opacity-0 group-hover:opacity-50 transition-opacity"
-                            aria-label="Change image"
-                          >
-                            <CameraIcon />
-                          </button>
-                        </div>
-                        <div>
-                          <div className="font-bold">{product.name}</div>
-                          <div className="text-xs text-gray-500">
-                            Rating:{" "}
-                            {product.rating
-                              ? `${product.rating}/5`
-                              : "Belum ada rating"}
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-3 py-2">
-                      <span className="px-2 py-1 text-xs font-semibold leading-5 text-green-800 bg-green-100 rounded-full">
-                        {product.category.name}
-                      </span>
-                    </td>
-                    <td className="px-3 py-2 text-right">
-                      {new Intl.NumberFormat("id-ID", {
-                        style: "currency",
-                        currency: "IDR",
-                        minimumFractionDigits: 0,
-                      }).format(product.price)}
-                    </td>
-                    <td className="px-3 py-2 text-center">{product.stock}</td>
-                    <td className="px-3 py-2 text-center">
-                      {product.weightInKg}
-                    </td>
-                    <td className="px-3 py-2">
-                      <div className="flex items-center justify-center space-x-4">
-                        <button
-                          onClick={() => handleOpenEditModal(product)}
-                          className="group p-1 rounded-full hover:bg-blue-100 transition-colors"
-                          aria-label="Edit product"
-                        >
-                          <EditIcon />
-                        </button>
-                        <button
-                          onClick={() => {
-                            setProductToDelete(product);
-                            setIsConfirmModalOpen(true);
-                          }}
-                          className="group p-1 rounded-full hover:bg-red-100 transition-colors"
-                          aria-label="Delete product"
-                        >
-                          <DeleteIcon />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {loading && (
-              <div className="text-center py-12">
-                <h3 className="text-lg font-medium text-gray-700">
-                  Loading Products...
-                </h3>
-                <p className="mt-1 text-gray-500">
-                  Please wait while we fetch the product data.
-                </p>
-              </div>
-            )}
-            {filteredProducts.length === 0 && !loading && (
-              <div className="text-center py-12">
-                <h3 className="text-lg font-medium text-gray-700">
-                  No Products Found
-                </h3>
-                <p className="mt-1 text-gray-500">
-                  Your search for{" "}
-                  <span className="font-semibold">{searchTerm}</span> did not
-                  match any products.
-                </p>
-              </div>
-            )}
-            {filteredProducts.length > productsPerPage && (
-              <div className="p-4 sm:p-6 flex items-center justify-between border-t border-gray-200">
-                <span className="text-sm text-gray-600">
-                  Page <span className="font-semibold">{currentPage}</span> of{" "}
-                  <span className="font-semibold">{totalPages}</span>
-                </span>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={handlePrevPage}
-                    disabled={currentPage === 1}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                  >
-                    Previous
-                  </button>
-                  <button
-                    onClick={handleNextPage}
-                    disabled={currentPage === totalPages}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                  >
-                    Next
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+        </main>
       </div>
+
+      {/* Modals remain here, controlled by the container state */}
       <ProductFormModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

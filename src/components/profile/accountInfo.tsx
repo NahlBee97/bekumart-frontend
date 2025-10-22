@@ -14,14 +14,15 @@ import toast from "react-hot-toast";
 import AccountInfoSkeleton from "./accountInfoSkeleton";
 
 export default function AccountInfo() {
-  const { user, login, isLoading } = useAuthStore();
+  const { user, login, isAuthLoading } = useAuthStore();
+
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
 
   const refreshUser = useCallback(async () => {
     try {
-      if (isLoading) return;
+      if (isAuthLoading) return;
 
       const userData = await getUserData(user?.id);
 
@@ -30,7 +31,7 @@ export default function AccountInfo() {
       console.error("Error fetching addresses:", error);
       throw error;
     }
-  }, [user, login, isLoading]);
+  }, [user, login, isAuthLoading]);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -59,7 +60,7 @@ export default function AccountInfo() {
     },
   });
 
-  if (isLoading) return <AccountInfoSkeleton/>;
+  if (isAuthLoading) return <AccountInfoSkeleton/>;
 
   return (
     <div className="bg-white shadow-md sm:rounded-lg overflow-hidden">

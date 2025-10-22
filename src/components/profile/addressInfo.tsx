@@ -13,10 +13,11 @@ import { IAddress } from "@/interfaces/dataInterfaces";
 
 // --- Main Component ---
 export default function AddressInfo() {
-  const { user, isLoading } = useAuthStore();
+  const { user, isAuthLoading } = useAuthStore();
   // --- State Management ---
   const [addresses, setAddresses] = useState<IAddress[]>([]);
 
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false);
   const [addressToEdit, setAddressToEdit] = useState<IAddress | null>(null);
@@ -24,7 +25,7 @@ export default function AddressInfo() {
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
   const refreshAddresess = useCallback(async () => {
-    if (isLoading) return;
+    if (isAuthLoading) return;
 
     try {
       const addresses = await getUserAddresses(user.id);
@@ -32,8 +33,10 @@ export default function AddressInfo() {
     } catch (error) {
       console.error("Error fetching addresses:", error);
       throw error; // Re-throw to be caught by the caller
+    } finally {
+      setIsLoading(false);
     }
-  }, [user?.id, isLoading]);
+  }, [user?.id, isAuthLoading]);
 
   useEffect(() => {
     refreshAddresess();
