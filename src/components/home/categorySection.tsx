@@ -57,8 +57,8 @@ const CategorySection: FC<CategoryShowcaseProps> = ({ categories = [] }) => {
   };
 
   return (
-    <section className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-4 sm:p-6 shadow-sm">
-      <h2 className="text-base font-semibold text-slate-600 dark:text-slate-300 mb-4 uppercase tracking-wider">
+    <section className="w-full bg-white border border-slate-200 rounded-lg px-2 py-4 md:p-6 shadow-sm">
+      <h2 className="text-base font-semibold text-blue-500 mb-2 uppercase tracking-wider">
         Kategori
       </h2>
       <div className="relative">
@@ -79,7 +79,7 @@ const CategorySection: FC<CategoryShowcaseProps> = ({ categories = [] }) => {
         <div
           ref={scrollContainerRef}
           onScroll={handleScroll}
-          className="overflow-x-auto p-2 scrollbar-hide"
+          className="overflow-x-auto scrollbar-hide"
           style={{ scrollSnapType: "x mandatory" }}
         >
           <div className="flex items-center gap-1">

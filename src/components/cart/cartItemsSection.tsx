@@ -14,6 +14,9 @@ export const CartItemsSection = ({ cart, isCartLoading }: props) => {
       aria-labelledby="?-heading"
       className="w-full bg-white border-slate-200 rounded-lg p-4 sm:p-6 shadow-sm"
     >
+      <h2 className="text-xl md:text-3xl font-extrabold tracking-tight text-blue-500 sm:text-4xl mb-2">
+        Daftar Belanja
+      </h2>
       <ul role="list">
         {cart?.items?.map((item) => (
           <li key={item.id} className="flex mb-4">

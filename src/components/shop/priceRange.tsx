@@ -8,7 +8,7 @@ const cleanNumber = (value: string): number => {
   return cleaned ? parseInt(cleaned, 10) : 0;
 };
 
-export const PriceRangeFilter = () => {
+export const PriceRangeFilter = ({onApply}: {onApply: () => void}) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -36,13 +36,14 @@ export const PriceRangeFilter = () => {
     else params.delete("maxPrice");
 
     // Navigate with new params
+    onApply();
     router.push(`/shop?${params.toString()}`);
   };
 
   return (
-    <div className="w-50 max-w-sm border-t pt-2">
+    <div className="md:w-50 max-w-sm border-t pt-2">
       {/* Component Title */}
-      <h2 className="text-base font-semibold text-gray-800 mb-1">
+      <h2 className="text-base font-semibold text-blue-500 mb-1">
         Batas Harga
       </h2>
 

@@ -59,7 +59,7 @@ export function ReviewSection({ product }: { product: IProduct }) {
   return (
     <section className="w-full bg-white border-slate-200 rounded-lg p-4 sm:p-6 shadow-sm">
       <h2 className="text-lg font-semibold mb-4">Penilaian Produk</h2>
-      <div className=" flex flex-col sm:flex-row items-start sm:items-center p-6 border border-gray-200 rounded-lg bg-gray-50 mb-6">
+      <div className=" flex flex-col sm:flex-row md:items-start items-center p-2 md:p-6 border border-gray-200 rounded-lg bg-gray-50 mb-6">
         <ReviewFilter
           onFilter={handleFilter}
           averageRating={Number(averageRating.toFixed(2))}

@@ -1,7 +1,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { StarIcon } from "../products/starRating";
 
-export const RatingFilter: React.FC = () => {
+export const RatingFilter = ({onApply}: {onApply: () => void}) => {
   const router = useRouter();
   const queryParams = useSearchParams();
   const active = Number(queryParams.get("rating"));
@@ -21,12 +21,13 @@ export const RatingFilter: React.FC = () => {
     else params.delete("rating");
 
     // Navigate with new params
+    onApply();
     router.push(`/shop?${params.toString()}`);
   };
 
   return (
-    <div className="w-50 max-w-sm border-t pt-2">
-      <h2 className="text-base font-semibold text-gray-800 mb-1">Penilaian</h2>
+    <div className="md:w-50 max-w-sm border-t pt-2">
+      <h2 className="text-base font-semibold text-blue-500 mb-1">Penilaian</h2>
       <div className="space-y-1">
         {[5, 4, 3, 2, 1].map((rating) => {
           return (

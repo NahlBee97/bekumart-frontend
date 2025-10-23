@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { MainSection } from "./mainSection";
 import { ReviewSection } from "./reviewSection";
 import { IProduct, IProductPhoto } from "@/interfaces/dataInterfaces";
+import StickyAddToCart from "./stickyAddToCart";
 
 // The props interface remains the same.
 export interface props {
@@ -17,10 +18,11 @@ export default function ProductDetail({ product, photos }: props) {
 
   return (
     <div className="bg-slate-50 min-h-screen">
-      <div className="flex flex-col gap-10 mx-auto max-w-2xl py-4 sm:py-6 lg:max-w-7xl lg:py-8">
+      <div className="flex flex-col gap-5 md:gap-10 mx-auto max-w-2xl md:py-4 lg:max-w-7xl lg:py-8">
         <MainSection product={product} photos={photos} />
         {/* you can get reviews on server page */}
         <ReviewSection product={product}/> 
+        <StickyAddToCart product={product}/>
       </div>
     </div>
   );

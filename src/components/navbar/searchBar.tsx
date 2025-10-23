@@ -22,10 +22,9 @@ export const SearchBar = () => {
   };
 
   return (
-    // The form is now responsive: full-width on small screens with a max-width for larger screens.
     <form
       onSubmit={handleSubmit}
-      className="relative w-full max-w-lg bg-background-light/80 backdrop-blur-sm"
+      className="relative w-50 md:w-full max-w-lg bg-background-light/80 backdrop-blur-sm"
       role="search"
     >
       {/* The container is now always a flex row for a consistent look across all devices. */}
@@ -38,14 +37,14 @@ export const SearchBar = () => {
             value={searchTerm}
             onChange={handleChange}
             // Adjusted padding and removed default browser search icon appearance
-            className="w-full appearance-none bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+            className="w-full appearance-none bg-transparent px-2 py-1 md:px-4 md:py-2 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
             aria-label="Search products"
             autoComplete="off"
           />
         </div>
         <button
           type="submit"
-          className="border-l border-slate-300 bg-blue-500 px-4 py-3 text-white transition-colors hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+          className="border-l border-slate-300 bg-blue-500 px-2 py-2 md:px-4 md:py-3 text-white transition-colors hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
           aria-label="Submit search"
         >
           <Search className="h-5 w-5" />

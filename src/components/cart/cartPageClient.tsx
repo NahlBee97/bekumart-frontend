@@ -30,7 +30,7 @@ export default function CartPageClient({
   const handleCheckout = () => {
     setIsLoading(true);
     router.push("/checkout");
-  }
+  };
 
   // If the cart from the store is empty or null
   if (cart?.items?.length === 0) {
@@ -47,7 +47,7 @@ export default function CartPageClient({
           Sepertinya kamu belum menambahkan sesuatu, mari belanja!
         </p>
         <Link
-          href="/"
+          href="/shop"
           className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-300"
         >
           Lanjut Belanja
@@ -59,15 +59,17 @@ export default function CartPageClient({
   return (
     <>
       <div className="min-h-screen">
-        <ArrowLeft
-          className="md:hidden h-6 w-6 mt-2 ml-2 text-blue-500"
-          onClick={handleArrowClicked}
-        />
+        <div className="flex items-center gap-2 p-2">
+          <ArrowLeft
+            className="md:hidden h-6 w-6 text-blue-500"
+            onClick={handleArrowClicked}
+          />
+          <h1 className="text-xl md:text-3xl font-extrabold tracking-tight text-blue-500 sm:text-4xl">
+            Keranjang Belanja
+          </h1>
+        </div>
         <main className="bg-slate-50 min-h-screen">
-          <div className="flex flex-col gap-10 mx-auto max-w-2xl py-4 sm:py-6 lg:max-w-7xl lg:py-8">
-            <h1 className="text-xl md:text-3xl font-extrabold tracking-tight text-blue-500 sm:text-4xl">
-              Keranjang Belanja
-            </h1>
+          <div className="flex flex-col gap-5 md:gap-10 mx-auto max-w-2xl py-4 sm:py-6 lg:max-w-7xl lg:py-8">
             {/* Cart Items List */}
             <CartItemsSection cart={cart} isCartLoading={isCartLoading} />
             {/* Order Summary */}

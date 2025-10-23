@@ -64,18 +64,20 @@ export const ReviewCard = ({ review }: { review: IReview }) => {
           {review.desc}
         </p>
 
-        <div className="mt-4 flex w-20 h-20 gap-1">
-          {review.reviewPhotos?.map((photo, index) => (
-            <div key={photo.id} className="relative aspect-square">
-              {/* eslint-disable-next-line */}
-              <img
-                src={photo.imageUrl}
-                alt={`Review image ${index + 1}`}
-                className="absolute w-20 object-cover rounded-md"
-              />
-            </div>
-          ))}
-        </div>
+        {review.reviewPhotos.length > 0 && (
+          <div className="mt-4 flex w-20 h-20 gap-1">
+            {review.reviewPhotos?.map((photo, index) => (
+              <div key={photo.id} className="relative aspect-square">
+                {/* eslint-disable-next-line */}
+                <img
+                  src={photo.imageUrl}
+                  alt={`Review image ${index + 1}`}
+                  className="absolute w-20 object-cover rounded-md"
+                />
+              </div>
+            ))}
+          </div>
+        )}
 
         <div className="mt-4 flex items-center text-gray-500 gap-1">
           <LikeButton hasLiked={isReviewLiked} onClick={handleLikeToggle} />

@@ -53,7 +53,7 @@ export const MainSection = ({ product, photos }: props) => {
   };
   return (
     <section className="w-full bg-white border-slate-200 rounded-lg p-4 sm:p-6 shadow-sm">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
         {/* Left Column: Image Slider */}
         <ImageSlider photos={photos} />
 
@@ -69,19 +69,26 @@ export const MainSection = ({ product, photos }: props) => {
                 {product.sale} Terjual
               </p>
             </div>
-            <div className="bg-gray-50 p-4 rounded-md">
-              <h2 className="text-3xl font-bold text-blue-500">
+            <div className="bg-gray-50 p-2 md:p-4 rounded-md">
+              <h2 className="text-2xl md:text-3xl font-bold text-blue-500">
                 Rp {product.price.toLocaleString()}
               </h2>
             </div>
             <div className="space-y-2 mt-2">
-              <h2 className="text-lg font-semibold">Deskripsi Produk:</h2>
+              <h2 className="md:text-lg font-semibold">
+                Deskripsi Produk:
+              </h2>
+              <p>
+                <span className="font-semibold">Berat bersih: </span>
+                {product.weightInKg * 1000} Gram
+              </p>
               <p>{product.description}</p>
             </div>
           </div>
           <div className="hidden md:flex flex-col gap-6">
             <p>
-              <span className="font-semibold">Berat bersih: </span>{product.weightInKg * 1000} Gram
+              <span className="font-semibold">Berat bersih: </span>
+              {product.weightInKg * 1000} Gram
             </p>
             {/* Quantity Selector */}
             <div className="flex items-center gap-4">

@@ -16,8 +16,8 @@ export const ReviewFilter = ({
   };
 
   return (
-    <>
-      <div className="flex-shrink-0 text-center mr-6 mb-4 sm:mb-0">
+    <div className="flex flex-col justify-between items-center md:block">
+      <div className="flex-shrink-0 text-center md:mr-6 md:mb-4 mb-2">
         <p className="text-4xl font-bold text-blue-500">
           {Number.isNaN(averageRating) ? 0 : averageRating}{" "}
           <span className="text-2xl text-gray-600">dari 5</span>
@@ -28,8 +28,8 @@ export const ReviewFilter = ({
           />
         </div>
       </div>
-      <div className="flex flex-wrap items-center gap-2">
-        <h2 className="text-lg font-semibold">Filter Komentar:</h2>
+      <div className="grid grid-cols-3 md:flex md:flex-wrap items-center gap-2">
+        <h2 className="col-span-3 text-center md:text-right md:text-lg font-semibold">Filter Komentar:</h2>
         <FilterButton
           active={activeRating === 0}
           onClick={() => handleFilterClick(0)}
@@ -46,7 +46,7 @@ export const ReviewFilter = ({
           </FilterButton>
         ))}
       </div>
-    </>
+    </div>
   );
 };
 
@@ -55,7 +55,7 @@ const FilterButton: React.FC<{
   active?: boolean;
   onClick: () => void;
 }> = ({ children, active, onClick }) => {
-  const baseClasses = "px-4 py-2 text-sm border rounded-md transition-colors";
+  const baseClasses = "px-2 py-1 md:px-4 md:py-2 text-sm border rounded-md transition-colors";
   const activeClasses =
     "bg-white border-blue-500 text-blue-500 ring-1 ring-blue-500";
   const inactiveClasses =

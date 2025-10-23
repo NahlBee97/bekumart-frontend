@@ -21,17 +21,17 @@ export default function ClientNavbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-background-light/80 backdrop-blur-sm border-b border-slate-200 dark:border-slate-800">
+    <header className="px-2 md:px-0 sticky top-0 z-50 bg-background-light/80 backdrop-blur-sm border-b border-slate-200">
       <div className="container mx-auto">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between gap-2 md:gap-0 h-16">
           {/* Left Section: Logo & Desktop Nav */}
           <div className="flex items-center gap-6 md:gap-8">
             {/* Logo */}
-            <div className="flex items-center gap-2">
-              <Snowflake className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400" />
+            <div className="flex items-center gap-1 md:gap-2">
+              <Snowflake className="w-6 h-6 md:w-8 md:h-8 text-blue-400" />
               <Link
                 href="/"
-                className="font-semibold text-xl sm:text-2xl text-blue-500"
+                className="font-semibold md:text-xl text-blue-500"
               >
                 BekuMart
               </Link>
