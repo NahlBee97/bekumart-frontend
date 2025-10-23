@@ -8,7 +8,7 @@ import { getUserAddresses } from "@/lib/data";
 import api from "@/lib/axios";
 import toast from "react-hot-toast";
 import ConfirmModal from "../confirmModal";
-import AddressInfoSkeleton from "./addressInfoSkeleton";
+import AddressInfoSkeleton from "../skeletons/profile/addressInfoSkeleton";
 import { IAddress } from "@/interfaces/dataInterfaces";
 
 // --- Main Component ---
@@ -74,7 +74,7 @@ export default function AddressInfo() {
     }
   };
 
-  if (isLoading) return <AddressInfoSkeleton/>;
+  if (isLoading) return <AddressInfoSkeleton />;
 
   return (
     <div className="bg-white shadow-md sm:rounded-lg overflow-hidden">

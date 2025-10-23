@@ -12,7 +12,7 @@ import ModalActions from "./modalActions";
 
 // --- MODAL COMPONENT ---
 const OrderDetailModal: React.FC<{
-  order: IOrder;
+  order: IOrder | null;
   onClose: () => void;
 }> = ({ order, onClose }) => {
   const [orderItems, setOrderItems] = useState<IOrderItem[]>([]);

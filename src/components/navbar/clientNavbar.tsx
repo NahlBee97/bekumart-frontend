@@ -4,16 +4,14 @@ import useAuthStore from "@/stores/useAuthStore";
 import Link from "next/link";
 import { ShoppingCart, Snowflake } from "lucide-react";
 import { useCartStore } from "@/stores/useCartStore";
-import { useEffect } from "react";
 import { BurgerMenu } from "./burgerMenu";
 import { ProfileMenu } from "./profileMenu";
 import { usePathname } from "next/navigation";
-import { getCartData } from "@/lib/data";
 import { SearchBar } from "./searchBar";
 
 export default function ClientNavbar() {
-  const { user, isLoggedIn, isLoading } = useAuthStore();
-  const { cart, setCart } = useCartStore();
+  const { isLoggedIn } = useAuthStore();
+  const { cart } = useCartStore();
   const pathname = usePathname();
 
   const links = [
@@ -21,21 +19,6 @@ export default function ClientNavbar() {
     { name: "Tentang Kami", link: "/about" },
     { name: "Hubungi Kami", link: "/contact" },
   ];
-
-  useEffect(() => {
-    if (isLoading) return;
-    if (!isLoggedIn) return;
-    try {
-      const fetchUserCart = async () => {
-        const cart = await getCartData(user.id);
-        setCart(cart);
-      };
-      fetchUserCart();
-    } catch (error) {
-      console.error("Failed to fetch user cart:", error);
-      throw new Error("Failed to fetch user cart");
-    }
-  }, [user, setCart, isLoading, isLoggedIn]);
 
   return (
     <header className="sticky top-0 z-50 bg-background-light/80 backdrop-blur-sm border-b border-slate-200 dark:border-slate-800">

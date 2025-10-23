@@ -3,11 +3,10 @@
 import { ShoppingCartIcon } from "lucide-react";
 import { ImageSlider } from "./imageSlider";
 import ConfirmModal from "../confirmModal";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import useAuthStore from "@/stores/useAuthStore";
 import { useCartStore } from "@/stores/useCartStore";
 import { useState } from "react";
-import { getCookie } from "cookies-next";
 import toast from "react-hot-toast";
 import { StarRatingDetail } from "./starRating";
 import { IProduct, IProductPhoto } from "@/interfaces/dataInterfaces";
@@ -19,7 +18,8 @@ export interface props {
 
 export const MainSection = ({ product, photos }: props) => {
   const router = useRouter();
-  const { user } = useAuthStore();
+  const pathname = usePathname();
+  const { user, accessToken } = useAuthStore();
   const { addToCart } = useCartStore();
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -36,8 +36,7 @@ export const MainSection = ({ product, photos }: props) => {
   const handleAddToCart = async () => {
     try {
       setIsLoading(true);
-      const token = getCookie("token") as string;
-      if (!token) {
+      if (!accessToken) {
         setIsShowConfirmModal(true);
         return;
       }
@@ -130,7 +129,7 @@ export const MainSection = ({ product, photos }: props) => {
         onClose={() => setIsShowConfirmModal(false)}
         title="Tidak bisa menambahkan kedalam keranjang"
         confirmText="Login"
-        onConfirm={() => router.push("/login")}
+        onConfirm={() => router.push(`/login?callbackUrl=${pathname}`)}
       />
     </section>
   );

@@ -2,18 +2,16 @@
 
 import { apiUrl } from "@/config";
 import api from "@/lib/axios";
-import { getCookie } from "cookies-next";
+import useAuthStore from "@/stores/useAuthStore";
 import { CheckCircleIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
 
 export default function Success() {
+  const { accessToken } = useAuthStore();
   useEffect(() => {
+    if (!accessToken) return;
     try {
-      const token = getCookie("access_token") as string;
-
-      if (!token) throw new Error("No access token found");
-
       const urlParams = new URLSearchParams(window.location.search);
       const orderId = urlParams.get("order_id");
 
@@ -28,7 +26,7 @@ export default function Success() {
     } catch (error) {
       console.error("Error updating order status:", error);
     }
-  }, []);
+  }, [accessToken]);
 
   return (
     <div className="bg-gray-50 min-h-screen flex items-center justify-center p-4 font-sans">
@@ -41,8 +39,8 @@ export default function Success() {
 
         <div className="mt-10">
           <Link
-            href="/"
-            className="inline-block w-full sm:w-auto px-8 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition-colors duration-300"
+            href="/shop"
+            className="inline-block w-full sm:w-auto px-8 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition-colors duration-300"
           >
             Lanjut Belanja
           </Link>

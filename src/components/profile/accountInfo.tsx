@@ -11,7 +11,7 @@ import useAuthStore from "@/stores/useAuthStore";
 import { getUserData } from "@/lib/data";
 import api from "@/lib/axios";
 import toast from "react-hot-toast";
-import AccountInfoSkeleton from "./accountInfoSkeleton";
+import AccountInfoSkeleton from "../skeletons/profile/accountInfoSkeleton";
 
 export default function AccountInfo() {
   const { user, login, isAuthLoading } = useAuthStore();
@@ -60,7 +60,7 @@ export default function AccountInfo() {
     },
   });
 
-  if (isAuthLoading) return <AccountInfoSkeleton/>;
+  if (isAuthLoading) return <AccountInfoSkeleton />;
 
   return (
     <div className="bg-white shadow-md sm:rounded-lg overflow-hidden">

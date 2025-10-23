@@ -8,7 +8,7 @@ import useAuthStore from "@/stores/useAuthStore";
 import { formatNumberCompact } from "@/utils/numberFormatter";
 
 export const ReviewCard = ({ review }: { review: IReview }) => {
-  const { isLoading, accessToken } = useAuthStore();
+  const { isAuthLoading, accessToken } = useAuthStore();
   const [likes, setLikes] = useState([]);
   const [isReviewLiked, setIsReviewLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(review.likeCount);
@@ -28,7 +28,7 @@ export const ReviewCard = ({ review }: { review: IReview }) => {
   };
 
   useEffect(() => {
-    if (isLoading && !accessToken) return;
+    if (isAuthLoading && !accessToken) return;
     const fetchLikes = async () => {
       const response = await api.get("/api/reviews/like");
       const like = response.data.likes.find(
@@ -38,7 +38,7 @@ export const ReviewCard = ({ review }: { review: IReview }) => {
       setLikes(response.data.likes);
     };
     fetchLikes();
-  }, [review, isLoading, accessToken]);
+  }, [review, isAuthLoading, accessToken]);
 
   return (
     <div

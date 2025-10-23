@@ -16,8 +16,6 @@ const CategorySection: FC<CategoryShowcaseProps> = ({ categories = [] }) => {
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
 
-  // This effect checks if the content is wider than the container,
-  // determining if scrolling is possible and if arrows should be shown.
   useEffect(() => {
     const checkScrollable = () => {
       if (scrollContainerRef.current) {

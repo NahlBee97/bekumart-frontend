@@ -1,10 +1,11 @@
 import { StoreIcon, TruckIcon } from "lucide-react";
+import { DeliveryMethodSectionSkeleton } from "../skeletons/checkout/deliveryMethodSectionSkeleton";
 
 interface DeliveryMethodSectionProps {
+  isLoading: boolean;
   deliveryMethod: string;
   onDeliveryMethodChange: (method: "DELIVERY" | "PICKUP") => void;
 }
-
 
 interface DeliveryOptionProps {
   id: string;
@@ -58,33 +59,37 @@ const DeliveryOption: React.FC<DeliveryOptionProps> = ({
 );
 
 export const DeliveryMethodSection: React.FC<DeliveryMethodSectionProps> = ({
+  isLoading,
   deliveryMethod,
   onDeliveryMethodChange,
-}) => (
-  <div>
-    <h3 className="text-lg font-semibold text-gray-900">Metode Pelayanan</h3>
-    <div className="mt-4 grid gap-4 grid-cols-2">
-      <DeliveryOption
-        id="delivery"
-        value="DELIVERY"
-        label="Delivery"
-        description="15-30 menit Tergantung Jarak"
-        price="Bervariasi"
-        icon={<TruckIcon />}
-        isSelected={deliveryMethod === "DELIVERY"}
-        onChange={onDeliveryMethodChange}
-      />
-      <DeliveryOption
-        id="pickup"
-        value="PICKUP"
-        label="Pickup"
-        description="Langsung ambil di toko"
-        price="Gratis"
-        icon={<StoreIcon />}
-        isSelected={deliveryMethod === "PICKUP"}
-        onChange={onDeliveryMethodChange}
-      />
-    </div>
-  </div>
-);
+}) => {
+  if (isLoading) return <DeliveryMethodSectionSkeleton />;
 
+  return (
+    <div>
+      <h3 className="text-lg font-semibold text-blue-500">Metode Pelayanan</h3>
+      <div className="mt-4 grid gap-4 grid-cols-2">
+        <DeliveryOption
+          id="delivery"
+          value="DELIVERY"
+          label="Delivery"
+          description="15-30 menit Tergantung Jarak"
+          price="Bervariasi"
+          icon={<TruckIcon />}
+          isSelected={deliveryMethod === "DELIVERY"}
+          onChange={onDeliveryMethodChange}
+        />
+        <DeliveryOption
+          id="pickup"
+          value="PICKUP"
+          label="Pickup"
+          description="Langsung ambil di toko"
+          price="Gratis"
+          icon={<StoreIcon />}
+          isSelected={deliveryMethod === "PICKUP"}
+          onChange={onDeliveryMethodChange}
+        />
+      </div>
+    </div>
+  );
+};

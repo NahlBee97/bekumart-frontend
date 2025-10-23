@@ -1,7 +1,14 @@
-import { IAddress, ICart, ICartItem, IProductPhoto } from "@/interfaces/dataInterfaces";
+import {
+  IAddress,
+  ICart,
+  ICartItem,
+  IProductPhoto,
+} from "@/interfaces/dataInterfaces";
+import { OrderSummarySkeleton } from "../skeletons/checkout/orderSummarySkeleton";
 
 interface OrderSummaryProps {
-  cart: ICart;
+  isLoading: boolean;
+  cart: ICart | null;
   subtotal: number;
   shippingCost: number;
   tax: number;
@@ -14,6 +21,7 @@ interface OrderSummaryProps {
 }
 
 export const OrderSummary: React.FC<OrderSummaryProps> = ({
+  isLoading,
   cart,
   subtotal,
   shippingCost,
@@ -28,11 +36,13 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({
   const isConfirmDisabled =
     isSubmitting || (deliveryMethod === "DELIVERY" && !selectedAddress);
 
+  if (isLoading) return <OrderSummarySkeleton />;
+
   return (
     <section className="mt-8 border bg-white rounded-lg border-gray-300 shadow-sm px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8">
       <h2 className="text-xl font-semibold text-blue-500">Ringkasan Belanja</h2>
       <ul role="list" className="mt-6 divide-y divide-gray-200">
-        {cart.items.map((item: ICartItem) => (
+        {cart?.items.map((item: ICartItem) => (
           <CartItem key={item.id} item={item} />
         ))}
       </ul>
@@ -154,4 +164,3 @@ const SummaryRow = ({
     <dd className="text-sm font-medium text-gray-900">{value}</dd>
   </div>
 );
-

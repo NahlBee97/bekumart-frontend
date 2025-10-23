@@ -1,15 +1,16 @@
 import { IAddress } from "@/interfaces/dataInterfaces";
+import { AddressSectionSkeleton } from "../skeletons/checkout/addressSectionSkeleton";
 
 interface AddressSectionProps {
+  isLoading: boolean;
   selectedAddress?: IAddress;
   couriers: any[];
   onCourierChange: (courier: any) => void;
   onEditAddress: () => void;
 }
 
-
-
 export const AddressSection: React.FC<AddressSectionProps> = ({
+  isLoading,
   selectedAddress,
   couriers,
   onCourierChange,
@@ -21,15 +22,18 @@ export const AddressSection: React.FC<AddressSectionProps> = ({
     console.log(courier);
     onCourierChange(courier);
   };
+
+  if (isLoading) return <AddressSectionSkeleton />;
+
   return (
     <div>
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-900">
+        <h3 className="text-lg font-semibold text-blue-500">
           Alamat Pengiriman
         </h3>
         <button
           onClick={onEditAddress}
-          className="text-sm font-medium text-slate-600 hover:text-slate-800"
+          className="flex-shrink-0 flex items-center gap-2 bg-blue-500 text-white text-sm font-semibold py-1 px-4 rounded-lg shadow-md hover:bg-blue-600"
         >
           Ganti
         </button>
@@ -74,4 +78,5 @@ export const AddressSection: React.FC<AddressSectionProps> = ({
         </div>
       )}
     </div>
-  );};
+  );
+};

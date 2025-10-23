@@ -1,5 +1,14 @@
 import { IOrder } from "@/interfaces/dataInterfaces";
 
+const statusLabels: { [key: string]: string } = {
+  PENDING: "Menunggu",
+  PROCESSING: "Dalam Proses",
+  READY_FOR_PICKUP: "Siap Diambil",
+  OUT_FOR_DELIVERY: "Dalam Pengiriman",
+  COMPLETED: "Selesai",
+  CANCELLED: "Dibatalkan",
+};
+
 // A component to render the status badge with appropriate colors
 const StatusBadge: React.FC<{ status: IOrder["status"] }> = ({ status }) => {
   const baseClasses = "px-3 py-1 text-xs md:text-sm font-medium rounded-md";
@@ -13,7 +22,7 @@ const StatusBadge: React.FC<{ status: IOrder["status"] }> = ({ status }) => {
   };
 
   return (
-    <span className={`${baseClasses} ${statusClasses[status]}`}>{status}</span>
+    <span className={`${baseClasses} ${statusClasses[status]}`}>{statusLabels[status]}</span>
   );
 };
 

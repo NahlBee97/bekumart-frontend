@@ -38,8 +38,8 @@ interface ShippingCostData {
 // --- MAIN PAGE COMPONENT ---
 export default function CheckoutPageClient() {
   const router = useRouter();
-  const { user, isLoading } = useAuthStore();
-  const { cart, clearCart } = useCartStore();
+  const { user, isAuthLoading, accessToken } = useAuthStore();
+  const { cart, isCartLoading, clearCart } = useCartStore();
 
   // State Management
   const [deliveryMethod, setDeliveryMethod] = useState<"DELIVERY" | "PICKUP">(
@@ -57,6 +57,7 @@ export default function CheckoutPageClient() {
   const [isFormModalOpen, setFormModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCalculating, setIsCalculating] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [editingAddress, setEditingAddress] = useState<IAddress | null>(null);
 
   // Memoized calculations
@@ -77,7 +78,7 @@ export default function CheckoutPageClient() {
 
   // Fetch user addresses
   const refreshUserAddresses = useCallback(async () => {
-    if (!cart?.items.length || !user?.id || isLoading) return;
+    if (!cart?.items.length || !user?.id || isAuthLoading) return;
 
     try {
       const userAddresses = await getUserAddresses(user.id);
@@ -89,8 +90,10 @@ export default function CheckoutPageClient() {
     } catch (error) {
       console.error("Error fetching addresses:", error);
       toast.error("Gagal memuat alamat");
+    } finally {
+      setIsLoading(false);
     }
-  }, [user?.id, cart?.items.length, isLoading]);
+  }, [user?.id, cart?.items.length, isAuthLoading]);
 
   // Calculate shipping cost
   const getCouriers = useCallback(async () => {
@@ -176,8 +179,7 @@ export default function CheckoutPageClient() {
 
     try {
       setIsSubmitting(true);
-      const token = getCookie("token") as string;
-      if (!token) {
+      if (!accessToken) {
         throw new Error("No access token found");
       }
 
@@ -188,7 +190,7 @@ export default function CheckoutPageClient() {
         addressId:
           deliveryMethod === "DELIVERY" ? selectedAddress?.id : undefined,
         totalCheckoutPrice: total,
-        courier: selectedCourier.name
+        courier: selectedCourier.name,
       };
 
       const response = await api.post(`/api/orders`, orderData);
@@ -213,9 +215,9 @@ export default function CheckoutPageClient() {
   };
 
   // Loading and empty states
-  if (isLoading) return <Loading />;
+  if (isAuthLoading && isCartLoading) return <Loading />;
 
-  if (!cart?.items.length) {
+  if (cart?.items.length === 0) {
     return <EmptyCartState />;
   }
 
@@ -239,6 +241,7 @@ export default function CheckoutPageClient() {
               >
                 <div className="space-y-8 border border-gray-200 rounded-lg bg-white p-6 shadow-sm">
                   <DeliveryMethodSection
+                    isLoading={isLoading}
                     deliveryMethod={deliveryMethod}
                     onDeliveryMethodChange={handleDeliveryMethodChange}
                   />
@@ -252,6 +255,7 @@ export default function CheckoutPageClient() {
 
                   {deliveryMethod === "DELIVERY" && (
                     <AddressSection
+                      isLoading={isLoading}
                       selectedAddress={selectedAddress}
                       onEditAddress={() => setListModalOpen(true)}
                       onCourierChange={(courier) => {
@@ -266,6 +270,7 @@ export default function CheckoutPageClient() {
 
               {/* Right Column - Order Summary */}
               <OrderSummary
+                isLoading={isCartLoading}
                 cart={cart}
                 subtotal={subtotal}
                 shippingCost={shippingCost}

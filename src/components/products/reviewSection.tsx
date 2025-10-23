@@ -5,49 +5,57 @@ import { ReviewCard } from "./reviewCard";
 import { useEffect, useState } from "react";
 import { ReviewFilter } from "./reviewFilter";
 import api from "@/lib/axios";
+import { ReviewSectionSkeleton } from "../skeletons/products/reviewSectionSkeleton";
 
 export function ReviewSection({ product }: { product: IProduct }) {
   const [reviews, setReviews] = useState<IReview[]>([]);
   const [filterReviews, setFilterReviews] = useState<IReview[]>([]);
   const [averageRating, setAverageRating] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     if (!product) return;
     const fetchReviews = async () => {
-      const response = await api.get(`/api/reviews/${product.id}`);
-      setReviews(response.data.reviews);
-      const reviewCount = reviews.length;
-      const sumOfRatings = reviews.reduce((acc: number, review: IReview) => {
-        return acc + review.rating;
-      }, 0);
+      try {
+        const response = await api.get(`/api/reviews/${product.id}`);
+        setReviews(response.data.reviews);
+        const reviewCount = reviews.length;
+        const sumOfRatings = reviews.reduce((acc: number, review: IReview) => {
+          return acc + review.rating;
+        }, 0);
 
-      setAverageRating(sumOfRatings / reviewCount);
+        setAverageRating(sumOfRatings / reviewCount);
+      } catch (error) {
+        console.error("Error fetching reviews: " + error)
+      } finally {
+        setIsLoading(false);
+      }
     };
     fetchReviews();
   }, [product, reviews]);
 
-  
   const [currentPage, setCurrentPage] = useState(1);
   const reviewsPerPage = 10;
-  
+
   // Pagination logic
   const indexOfLastReviews = currentPage * reviewsPerPage;
   const indexOfFirstReviews = indexOfLastReviews - reviewsPerPage;
-  const currentReviews = (filterReviews.length === 0 ? reviews : filterReviews).slice(
-    indexOfFirstReviews,
-    indexOfLastReviews
-  );
+  const currentReviews = (
+    filterReviews.length === 0 ? reviews : filterReviews
+  ).slice(indexOfFirstReviews, indexOfLastReviews);
 
   const totalPages = Math.ceil(
     (filterReviews.length === 0 ? reviews : filterReviews).length /
-    reviewsPerPage
+      reviewsPerPage
   );
-  
+
   const handleFilter = (rating: number) => {
     const filterReviews = reviews.filter((review) => review.rating >= rating);
     setFilterReviews(filterReviews);
   };
-  
+
+  if (isLoading) return <ReviewSectionSkeleton />;
+
   return (
     <section className="w-full bg-white border-slate-200 rounded-lg p-4 sm:p-6 shadow-sm">
       <h2 className="text-lg font-semibold mb-4">Penilaian Produk</h2>
@@ -65,11 +73,9 @@ export function ReviewSection({ product }: { product: IProduct }) {
         </div>
       ) : (
         <div className="border-t border-gray-200 py-4 space-y-2">
-          {currentReviews.map(
-            (review: IReview) => (
-              <ReviewCard key={review.id} review={review} />
-            )
-          )}
+          {currentReviews.map((review: IReview) => (
+            <ReviewCard key={review.id} review={review} />
+          ))}
         </div>
       )}
       {/* Pagination */}

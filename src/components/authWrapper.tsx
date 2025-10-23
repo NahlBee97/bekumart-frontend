@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import AdminNavbar from "./navbar/adminNavbar";
 import ClientNavbar from "./navbar/clientNavbar";
 import api from "@/lib/axios";
+import { useCartStore } from "@/stores/useCartStore";
 
 export default function AuthWrapper({
   children,
@@ -13,13 +14,19 @@ export default function AuthWrapper({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const { checkAuth } = useAuthStore();
+  const { user, checkAuth } = useAuthStore();
+  const { checkCart } = useCartStore();
 
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   useEffect(() => {
     if (!isLoggedIn) checkAuth();
   }, [isLoggedIn, checkAuth]);
+
+  useEffect(() => {
+    if (!user.id) return;
+    checkCart(user.id);
+  }, [user.id, checkCart]);
 
   useEffect(() => {
     const checkIsLoggedIn = async () => {

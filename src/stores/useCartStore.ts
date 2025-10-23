@@ -1,11 +1,13 @@
 import { create } from "zustand";
 import api from "@/lib/axios";
 import { ICart } from "@/interfaces/dataInterfaces";
+import { getCartData } from "@/lib/data";
 
 // Define the shape of your store's state and actions
 interface CartState {
   cart: ICart | null;
-  setCart: (cart: ICart) => void;
+  isCartLoading: boolean;
+  checkCart: (userId: string) => Promise<void>;
   addToCart: (
     userId: string,
     productId: string,
@@ -21,16 +23,26 @@ interface CartState {
 }
 
 export const useCartStore = create<CartState>((set) => ({
-  // 1. Initial State
   cart: null,
+  isCartLoading: true,
+  checkCart: async (userId: string) => {
+    try {
+      const cart = await getCartData(userId);
 
-  // 2. Actions
-  setCart: (cart: ICart) => set({ cart }),
+      set({
+        cart,
+        isCartLoading: false,
+      });
+    } catch (error) {
+      set({ cart: null });
+      console.log("No active user found:", error);
+    } finally {
+      set({ isCartLoading: false });
+    }
+  },
 
-  // Corrected async action
   addToCart: async (userId: string, productId: string, quantity: number) => {
     try {
-      // Perform the async API call and wait for the response
       await api.post(`/api/carts/items`, { userId, productId, quantity });
 
       const response = await api.get(`/api/carts/${userId}`);

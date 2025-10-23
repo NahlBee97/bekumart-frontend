@@ -15,7 +15,7 @@ import api from "@/lib/axios";
 import useAuthStore from "@/stores/useAuthStore";
 import FilterDropdown from "./filterDropdown";
 import { useSearchParams } from "next/navigation";
-import { SalesSectionSkeleton } from "@/components/skeletons/salesSectionSkeleton";
+import { SalesSectionSkeleton } from "@/components/skeletons/admin/salesSectionSkeleton";
 
 const SalesSection = () => {
   const filter = useSearchParams().get("value");

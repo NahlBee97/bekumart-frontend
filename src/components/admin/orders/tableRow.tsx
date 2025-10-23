@@ -40,7 +40,7 @@ const OrdersTableRow: React.FC<OrdersTableRowProps> = ({
         </div>
       </td>
       <td className="px-3 py-2">{format(order.createdAt, "dd MMMM yyy")}</td>
-      <td className="px-3 py-2">{order.totalAmount.toLocaleString()}</td>
+      <td className="px-3 py-2">Rp. {order.totalAmount.toLocaleString()}</td>
       <td className="px-3 py-2">{order.fulfillmentType}</td>
       <td className="px-3 py-2 text-center">
         <OrderStatusSelector

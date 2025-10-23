@@ -5,7 +5,7 @@ import { PieChart, ResponsiveContainer, Pie, Tooltip, Cell } from "recharts";
 import api from "@/lib/axios";
 import useAuthStore from "@/stores/useAuthStore";
 import { generateHslColors } from "@/utils/generateHslColors";
-import { OriginSectionSkeleton } from "@/components/skeletons/originSectionSkeleton";
+import { OriginSectionSkeleton } from "@/components/skeletons/admin/originSectionSkeleton";
 
 const OriginSection = () => {
   const { isAuthLoading } = useAuthStore();
@@ -35,12 +35,11 @@ const OriginSection = () => {
   const colors = generateHslColors(data.length);
 
   // Conditional rendering for loading and error states
-  if (isLoading) return <OriginSectionSkeleton/>;
+  if (isLoading) return <OriginSectionSkeleton />;
 
   return (
     <section>
       <div className="bg-white p-6 rounded-lg shadow-md">
-        
         <ResponsiveContainer width="100%" height={300}>
           <PieChart>
             <Tooltip />

@@ -7,6 +7,7 @@ import useAuthStore from "@/stores/useAuthStore";
 import { useFormik } from "formik";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const AddressCheckoutModal = ({
   isOpen,
@@ -145,20 +146,21 @@ const AddressCheckoutModal = ({
             values
           );
           onSelect(response.data.data);
-          alert("Alamat berhasil diedit!");
+          toast.success("Alamat berhasil diedit!");
         } else {
           const response = await api.post(`/api/addresses`, {
             ...values,
             userId: user.id,
           });
           onSelect(response.data.data);
-          alert("Alamat baru berhasil ditambahkan!");
+          toast.success("Alamat baru berhasil ditambahkan!");
         }
 
         onSave();
         onClose();
       } catch (err) {
-        alert("Error adding new address: " + err);
+        console.error("Error adding new address: " + err);
+        toast.error("Gagal memproses alamat");
       }
     },
   });
