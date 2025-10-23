@@ -30,14 +30,14 @@ const CustomerSection = () => {
 
   return (
     <section>
-      <div className="grid grid-cols-1 grid-rows-2 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-1 md:grid-rows-2 gap-2">
         <StatCard
           title="Total Pelanggan"
           value={data.totalUsers}
           icon={<span>👥</span>}
         />
         <StatCard
-          title="Pelanggan Baru (30 Hari Terakhir)"
+          title="Pelanggan Baru (30 Hari)"
           value={data.newUsers}
           icon={<span>👋</span>}
         />

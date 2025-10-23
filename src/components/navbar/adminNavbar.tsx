@@ -33,7 +33,7 @@ export default function AdminNavbar() {
 
   return (
     <header className="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm border-b border-slate-200 ">
-      <div className="container mx-auto">
+      <div className="container mx-auto px-3 md:px-0">
         <div className="flex items-center justify-between h-16">
           {/* Left Section: Logo & Desktop Nav */}
           <div className="flex items-center gap-2 md:w-auto">

@@ -21,7 +21,7 @@ export default function ProductsTableHeader({
           placeholder="Cari berdasarkan nama produk atau kategori..."
           value={searchTerm}
           onChange={(e) => onSearchTermChange(e.target.value)}
-          className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full pl-10 pr-2 md:pr-4 py-1 md:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
           <svg
@@ -40,10 +40,10 @@ export default function ProductsTableHeader({
       </div>
       <button
         onClick={onAddProductClick}
-        className="flex-shrink-0 flex items-center gap-2 bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition-all"
+        className="flex-shrink-0 flex items-center gap-2 bg-blue-600 text-white font-semibold px-2 py-1 md:py-2 md:px-4 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition-all"
       >
         <PlusIcon />
-        Tambah Produk
+        Tambah
       </button>
     </div>
   );

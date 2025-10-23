@@ -146,8 +146,8 @@ export default function ProductsTable() {
 
         <main className="flex flex-col gap-4 py-6">
           <div className="flex items-center gap-2">
-            <FileText className="text-blue-500" />
-            <h2 className="text-2xl text-blue-500 font-bold">Daftar Produk</h2>
+            <FileText className="w-6 md:w-8 text-blue-500" />
+            <h2 className="text-xl md:text-2xl text-blue-500 font-bold">Daftar Produk</h2>
           </div>
 
           <div className=" bg-white rounded-xl shadow-lg overflow-hidden">
