@@ -24,7 +24,7 @@ export const SearchBar = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="relative w-50 md:w-full max-w-lg bg-background-light/80 backdrop-blur-sm"
+      className="relative md:w-full max-w-lg bg-background-light/80 backdrop-blur-sm"
       role="search"
     >
       {/* The container is now always a flex row for a consistent look across all devices. */}

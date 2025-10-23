@@ -74,14 +74,14 @@ export const ProfileMenu: FC = () => {
           <img
             src={user?.imageUrl}
             alt="profile-picture"
-            className="rounded-full w-8 h-8 md:w-10 md:h-10 object-cover border border-slate-400 dark:border-slate-500 hover:border-blue-500 dark:hover:border-blue-500 transition-all"
+            className="rounded-full w-6 h-6 md:w-10 md:h-10 object-cover border border-slate-400 dark:border-slate-500 hover:border-blue-500 dark:hover:border-blue-500 transition-all"
           />
         )}
       </button>
 
       {/* Dropdown Menu */}
       <div
-        className={`origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-slate-800 ring-1 ring-black ring-opacity-5 dark:ring-white/10 focus:outline-none transition ease-out duration-100 ${
+        className={`origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-slate-800 ring-1 ring-black ring-opacity-5 dark:ring-white/10 focus:outline-none transition ease-out duration-100 z-200 ${
           isOpen
             ? "transform opacity-100 scale-100"
             : "transform opacity-0 scale-95 pointer-events-none"

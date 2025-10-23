@@ -2,23 +2,35 @@
 
 import useAuthStore from "@/stores/useAuthStore";
 import Link from "next/link";
-import { ShoppingCart, Snowflake } from "lucide-react";
+import { Search, ShoppingCart, Snowflake } from "lucide-react";
 import { useCartStore } from "@/stores/useCartStore";
 import { BurgerMenu } from "./burgerMenu";
 import { ProfileMenu } from "./profileMenu";
 import { usePathname } from "next/navigation";
 import { SearchBar } from "./searchBar";
+import { useState } from "react";
+import MobileSearchBar from "./mobileSearchBar";
 
 export default function ClientNavbar() {
   const { isLoggedIn } = useAuthStore();
   const { cart } = useCartStore();
   const pathname = usePathname();
 
+  const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
+
   const links = [
     { name: "Toko", link: "/shop" },
     { name: "Tentang Kami", link: "/about" },
     { name: "Hubungi Kami", link: "/contact" },
   ];
+
+  if (isSearchOpen)
+    return (
+      <MobileSearchBar
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+      />
+    );
 
   return (
     <header className="px-2 md:px-0 sticky top-0 z-50 bg-background-light/80 backdrop-blur-sm border-b border-slate-200">
@@ -29,10 +41,7 @@ export default function ClientNavbar() {
             {/* Logo */}
             <div className="flex items-center gap-1 md:gap-2">
               <Snowflake className="w-6 h-6 md:w-8 md:h-8 text-blue-400" />
-              <Link
-                href="/"
-                className="font-semibold md:text-xl text-blue-500"
-              >
+              <Link href="/" className="font-semibold md:text-xl text-blue-500">
                 BekuMart
               </Link>
             </div>
@@ -58,12 +67,20 @@ export default function ClientNavbar() {
           </div>
 
           {/* center */}
-          <SearchBar />
+          <div className="hidden">
+            <SearchBar />
+          </div>
 
           {/* right side */}
-          <div className="flex items-center gap-6 md:gap-8">
+          <div className="flex items-center gap-1 md:gap-8">
+            <div
+              className="md:hidden mr-2 cursor-pointer rounded-sm hover:bg-gray-100"
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
+            >
+              <Search />
+            </div>
             {isLoggedIn && (
-              <div className="relative">
+              <div className="relative mr-3 md:mr-0">
                 <Link
                   href={`/cart?callbackUrl=${pathname}`}
                   className="flex items-center"
@@ -78,10 +95,10 @@ export default function ClientNavbar() {
               </div>
             )}
 
-            {isLoggedIn && <ProfileMenu />}
-
-            {!isLoggedIn && (
-              <div className="hidden sm:flex items-center gap-2">
+            {isLoggedIn ? (
+              <ProfileMenu />
+            ) : (
+              <div className="sm:flex items-center gap-2">
                 <Link
                   href={`/login?callbackUrl=${pathname}`}
                   className="px-4 py-2 text-sm text-center text-blue-500 font-semibold rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors"
@@ -90,16 +107,16 @@ export default function ClientNavbar() {
                 </Link>
                 <Link
                   href="/register"
-                  className="px-4 py-2 text-sm text-center text-white font-semibold bg-blue-500 rounded-lg hover:bg-blue-600 transition-colors"
+                  className="hidden md:block px-2 py-1 md:px-4 md:py-2 text-xs md:text-sm text-center text-white font-semibold bg-blue-500 rounded-lg hover:bg-blue-600 transition-colors"
                 >
                   Daftar
                 </Link>
               </div>
             )}
-          </div>
 
-          <div className="md:hidden">
-            <BurgerMenu links={links} />
+            <div className="md:hidden">
+              <BurgerMenu links={links} />
+            </div>
           </div>
         </div>
       </div>
