@@ -87,6 +87,8 @@ api.interceptors.response.use(
 
         const newToken = response.data.accessToken;
 
+        if(!newToken) return;
+
         // Update store and axios defaults
         useAuthStore.getState().setAccessToken(newToken);
         api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;

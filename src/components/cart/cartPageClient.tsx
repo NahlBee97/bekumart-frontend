@@ -58,20 +58,22 @@ export default function CartPageClient({
 
   return (
     <>
-      <div className="min-h-screen">
-        <div className="flex items-center gap-2 p-2">
+      <div className="min-h-screen bg-slate-50 text-gray-800">
+        <div className="md:px-8 md:py-4 flex bg-slate-50 items-center gap-2 p-2">
           <ArrowLeft
             className="md:hidden h-6 w-6 text-blue-500"
             onClick={handleArrowClicked}
           />
-          <h1 className="text-xl md:text-3xl font-extrabold tracking-tight text-blue-500 sm:text-4xl">
+          <h1 className=" text-xl md:text-3xl font-bold tracking-tight text-blue-500">
             Keranjang Belanja
           </h1>
         </div>
-        <main className="bg-slate-50 min-h-screen">
-          <div className="flex flex-col gap-5 md:gap-10 mx-auto max-w-2xl py-4 sm:py-6 lg:max-w-7xl lg:py-8">
+        <main className="bg-slate-50 min-h-screen pb-4 pt-2">
+          <div className="flex flex-col md:grid md:grid-cols-3 gap-5 mx-auto max-w-2xl py-4 sm:py-0 lg:max-w-7xl ">
             {/* Cart Items List */}
-            <CartItemsSection cart={cart} isCartLoading={isCartLoading} />
+            <div className="md:col-span-2">
+              <CartItemsSection cart={cart} isCartLoading={isCartLoading} />
+            </div>
             {/* Order Summary */}
             <CartSummarySection
               isLoading={isLoading}

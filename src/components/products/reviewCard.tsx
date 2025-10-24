@@ -9,11 +9,11 @@ import { formatNumberCompact } from "@/utils/numberFormatter";
 
 export const ReviewCard = ({ review }: { review: IReview }) => {
   const { isAuthLoading, accessToken } = useAuthStore();
-  const [likes, setLikes] = useState([]);
   const [isReviewLiked, setIsReviewLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(review.likeCount);
 
   const handleLikeToggle = async () => {
+    if(!accessToken) return;
     const newIsLiked = !isReviewLiked;
 
     setIsReviewLiked(newIsLiked);
@@ -28,14 +28,13 @@ export const ReviewCard = ({ review }: { review: IReview }) => {
   };
 
   useEffect(() => {
-    if (isAuthLoading && !accessToken) return;
+    if (isAuthLoading || !accessToken) return;
     const fetchLikes = async () => {
-      const response = await api.get("/api/reviews/like");
-      const like = response.data.likes.find(
+      const response = await api.get("/api/reviews/likes");
+      const isLiked = response.data.likes.some(
         (like: IReviewLike) => like.reviewId === review.id
       );
-      if (like) setIsReviewLiked(true);
-      setLikes(response.data.likes);
+      setIsReviewLiked(isLiked);
     };
     fetchLikes();
   }, [review, isAuthLoading, accessToken]);

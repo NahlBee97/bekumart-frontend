@@ -47,7 +47,7 @@ const SalesSection = () => {
   return (
     <section>
       <div className="grid grid-cols-2 grid-rows-2 md:grid-rows-1 md:grid-cols-3 gap-2 md:gap-4 mb-6">
-        <div className="col-span-2">
+        <div className="col-span-2 md:col-span-1">
           <StatCard
             title="Total Pendapatan"
             value={`Rp ${data.totalRevenue.toLocaleString("id-ID")}`}

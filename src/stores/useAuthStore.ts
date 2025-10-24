@@ -46,6 +46,7 @@ const useAuthStore = create<AuthState>((set) => ({
   login: (user: IUser) => set({ user, isLoggedIn: true }),
   logout: async () => {
     await api.post("api/auth/logout", {});
+    console.log("log out running!")
     set({ user: {} as IUser, isLoggedIn: false, accessToken: null });
   },
 }));

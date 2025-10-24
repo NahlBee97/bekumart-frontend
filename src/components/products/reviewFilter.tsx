@@ -16,7 +16,7 @@ export const ReviewFilter = ({
   };
 
   return (
-    <div className="flex flex-col justify-between items-center md:block">
+    <div className="flex flex-col md:flex-row justify-between items-center">
       <div className="flex-shrink-0 text-center md:mr-6 md:mb-4 mb-2">
         <p className="text-4xl font-bold text-blue-500">
           {Number.isNaN(averageRating) ? 0 : averageRating}{" "}

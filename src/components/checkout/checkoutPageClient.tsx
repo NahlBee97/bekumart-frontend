@@ -223,8 +223,8 @@ export default function CheckoutPageClient() {
 
   return (
     <>
-      <div className="min-h-screen bg-slate-50 font-sans text-gray-800">
-        <div className="flex items-center gap-2 p-2">
+      <div className="min-h-screen bg-slate-50 text-gray-800">
+        <div className="flex items-center gap-2 p-2 md:px-8 md:py-4">
           <ArrowLeft
             className="md:hidden h-6 w-6 text-blue-500"
             onClick={() => router.push("/cart")}

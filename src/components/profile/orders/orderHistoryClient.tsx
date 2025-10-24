@@ -12,7 +12,7 @@ import EmptyState from "./emptyState";
 
 // --- MAIN PAGE COMPONENT ---
 export default function OrderHistoryClient() {
-  const { user, isAuthLoading } = useAuthStore();
+  const { user, isAuthLoading, accessToken } = useAuthStore();
   const [orders, setOrders] = useState<IOrder[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<IOrder | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -29,7 +29,7 @@ export default function OrderHistoryClient() {
   const totalPages = Math.ceil(orders.length / ordersPerPage);
 
   useEffect(() => {
-    if (isAuthLoading) return;
+    if (isAuthLoading || !accessToken) return;
     try {
       const fetchOrders = async () => {
         const orders = await getUserOrders(user.id);
@@ -43,7 +43,7 @@ export default function OrderHistoryClient() {
     } finally {
       setIsLoading(false);
     }
-  }, [user, isAuthLoading]);
+  }, [user, isAuthLoading, accessToken]);
 
   const handleNextPage = () => {
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));

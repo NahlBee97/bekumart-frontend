@@ -18,7 +18,7 @@ import useAuthStore from "@/stores/useAuthStore";
 import TablePagination from "@/components/admin/products/tablePagination";
 
 export default function ProductsTable() {
-  const { isAuthLoading } = useAuthStore();
+  const { isAuthLoading, accessToken} = useAuthStore();
   const [products, setProducts] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -35,7 +35,7 @@ export default function ProductsTable() {
 
   // --- DATA FETCHING ---
   const fetchProducts = useCallback(async () => {
-    if (!isAuthLoading) return;
+    if (isAuthLoading || !accessToken) return;
     try {
       const products = await getProducts();
       setProducts(products);
@@ -45,7 +45,7 @@ export default function ProductsTable() {
     } finally {
       setLoading(false);
     }
-  }, [isAuthLoading]);
+  }, [isAuthLoading, accessToken]);
 
   useEffect(() => {
     fetchProducts();

@@ -20,7 +20,7 @@ export const ProductSection = ({
           {products.length === 0 ? "" : title}
         </h2>
         <Filter
-          className="border border-gray-300 text-gray-400 p-1 rounded-xs shadow-xs hover:bg-slate-50 cursor-pointer"
+          className="md:hidden border border-gray-300 text-gray-400 p-1 rounded-xs shadow-xs hover:bg-slate-50 cursor-pointer"
           onClick={() => setIsFilterOpen(true)}
         /> 
       </div>

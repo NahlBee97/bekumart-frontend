@@ -9,7 +9,7 @@ export interface IUser {
   id: string;
   email: string;
   name: string;
-  password?: string; // Often omitted from client-side interfaces
+  password: string; // Often omitted from client-side interfaces
   imageUrl: string;
   isVerified: boolean;
   role: UserRoles;

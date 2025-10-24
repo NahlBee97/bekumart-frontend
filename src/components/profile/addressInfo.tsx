@@ -13,7 +13,7 @@ import { IAddress } from "@/interfaces/dataInterfaces";
 
 // --- Main Component ---
 export default function AddressInfo() {
-  const { user, isAuthLoading } = useAuthStore();
+  const { user, isAuthLoading, accessToken } = useAuthStore();
   // --- State Management ---
   const [addresses, setAddresses] = useState<IAddress[]>([]);
 
@@ -25,7 +25,7 @@ export default function AddressInfo() {
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
   const refreshAddresess = useCallback(async () => {
-    if (isAuthLoading) return;
+    if (isAuthLoading || !accessToken) return;
 
     try {
       const addresses = await getUserAddresses(user.id);
@@ -36,7 +36,7 @@ export default function AddressInfo() {
     } finally {
       setIsLoading(false);
     }
-  }, [user?.id, isAuthLoading]);
+  }, [user?.id, isAuthLoading, accessToken]);
 
   useEffect(() => {
     refreshAddresess();

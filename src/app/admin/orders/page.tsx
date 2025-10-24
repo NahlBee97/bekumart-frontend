@@ -17,7 +17,7 @@ import OrdersTableSkeleton from "@/components/skeletons/admin/orders/tableSkelet
 const Orders: React.FC = () => {
   const status = useSearchParams().get("status");
 
-  const { accessToken } = useAuthStore();
+  const { isAuthLoading, accessToken } = useAuthStore();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [orders, setOrders] = useState<IOrder[]>([]);
@@ -47,7 +47,7 @@ const Orders: React.FC = () => {
   };
 
   const fetchOrders = useCallback(async () => {
-    if (!accessToken) return;
+    if (isAuthLoading || !accessToken) return;
 
     try {
       let response;
@@ -64,7 +64,7 @@ const Orders: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [accessToken, status]);
+  }, [isAuthLoading, accessToken, status]);
 
   useEffect(() => {
     fetchOrders();

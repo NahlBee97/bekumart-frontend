@@ -24,9 +24,9 @@ export default function AuthWrapper({
   }, [isLoggedIn, checkAuth]);
 
   useEffect(() => {
-    if (!user.id) return;
+    if (!user.id && user.role !== "CUSTOMER") return;
     checkCart(user.id);
-  }, [user.id, checkCart]);
+  }, [user.id, user.role, checkCart]);
 
   useEffect(() => {
     const checkIsLoggedIn = async () => {

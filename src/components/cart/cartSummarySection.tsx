@@ -15,7 +15,7 @@ export const CartSummarySection = ({ isLoading, isCartLoading, cart, onCheckout 
       aria-labelledby="summary-heading"
       className="w-full bg-white border-slate-200 rounded-lg p-4 sm:p-6 shadow-sm"
     >
-      <h2 id="summary-heading" className="text-xl font-bold text-blue-500">
+      <h2 id="summary-heading" className="text-lg font-semibold text-blue-500">
         Ringkasan Pesanan
       </h2>
 
