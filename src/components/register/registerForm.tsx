@@ -135,7 +135,7 @@ export default function RegisterForm() {
             />
           </>
           {/* Submit Button*/}
-          <SubmitButton formik={formik} type="submit" buttonText="Buat Akun" />
+          <SubmitButton formik={formik} buttonText="Buat Akun" />
 
           {/* --- OR Separator --- */}
           <div className="my-6 flex items-center">

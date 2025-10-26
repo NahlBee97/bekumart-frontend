@@ -1,12 +1,11 @@
 import { useAuthStore } from "@/stores/useAuthStore";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { LogOut, Snowflake } from "lucide-react";
 
 import { BurgerMenu } from "./burgerMenu";
 
 export default function AdminNavbar() {
   const { logout } = useAuthStore();
-  const pathname = usePathname();
   const router = useRouter();
 
   const links = [
@@ -16,19 +15,12 @@ export default function AdminNavbar() {
     { name: "Profile", link: "/admin/profile" },
   ];
 
-  const handleLogOut = () => {
-    const forbiddenPrefixes = ["/cart", "/checkout", "/profile"];
-
-    const isForbidden = forbiddenPrefixes.some((prefix) =>
-      pathname.startsWith(prefix)
-    );
-
-    logout();
-
-    if (isForbidden) {
+  const handleLogOut = async () => {
+    try {
+      await logout();
       router.push("/");
-    } else {
-      router.push(pathname);
+    } catch (error) {
+      console.error("Logout failed:", error);
     }
   };
 

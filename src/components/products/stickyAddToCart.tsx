@@ -12,9 +12,7 @@ import { IProduct } from "@/interfaces/dataInterfaces";
 import { QuantitySelector } from "./quantitySelector";
 import { AddToCartButton } from "./addToCartButton";
 
-export const StickyAddToCart: React.FC<{
-  product: IProduct;
-}> = ({ product }) => {
+export const StickyAddToCart = ({ product }: { product: IProduct }) => {
   const router = useRouter();
   const { user, isLoggedIn } = useAuthStore();
   const { addToCart } = useCartStore();
@@ -66,13 +64,17 @@ export const StickyAddToCart: React.FC<{
 
             {/* Quantity Selector */}
             <QuantitySelector
-              isLoading={isLoading}
+              isDisable={isLoading}
               quantity={quantity}
               onIncrease={incrementQuantity}
               onDecrease={decrementQuantity}
             />
             {/* Add to Cart Button */}
-            <AddToCartButton isLoading={isLoading} onAdd={handleAddToCart} name="Tambahkan"/>
+            <AddToCartButton
+              isLoading={isLoading}
+              onAdd={handleAddToCart}
+              name="Tambahkan"
+            />
           </div>
         </div>
       </div>

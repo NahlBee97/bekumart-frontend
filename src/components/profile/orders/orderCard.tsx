@@ -1,6 +1,6 @@
 "use client";
 
-import StatusBadge from "@/components/statusBadge";
+import { StatusBadge } from "@/components/statusBadge";
 import { IOrder } from "@/interfaces/dataInterfaces";
 import { format } from "date-fns";
 

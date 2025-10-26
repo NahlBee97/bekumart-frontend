@@ -2,22 +2,22 @@ import * as Yup from "yup";
 
 export const ProductSchema = Yup.object().shape({
   name: Yup.string()
-    .min(3, "Name is too short!")
-    .required("Product name is required"),
+    .min(3, "Nama produk terlalu pendek!")
+    .required("Nama produk wajib diisi"),
   price: Yup.number()
-    .min(0, "Price cannot be negative")
-    .required("Price is required"),
+    .min(0, "Harga tidak boleh negatif")
+    .required("Harga wajib diisi"),
   stock: Yup.number()
-    .integer("Stock must be a whole number")
-    .min(0, "Stock cannot be negative")
-    .required("Stock is required"),
+    .integer("Stok harus berupa bilangan bulat")
+    .min(0, "Stok tidak boleh negatif")
+    .required("Stok wajib diisi"),
   weightInKg: Yup.number()
-    .min(0, "Weight cannot be negative")
-    .required("Weight is required"),
+    .min(0, "Berat tidak boleh negatif")
+    .required("Berat wajib diisi"),
   category: Yup.object()
     .shape({
-      id: Yup.string().required("Please select a category"),
+      id: Yup.string().required("Silakan pilih kategori"),
     })
-    .required("Please select a category"),
-  description: Yup.string().max(500, "Description is too long"),
+    .required("Silakan pilih kategori"),
+  description: Yup.string().max(500, "Deskripsi terlalu panjang"),
 });

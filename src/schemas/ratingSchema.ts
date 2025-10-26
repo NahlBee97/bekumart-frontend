@@ -7,25 +7,25 @@ const allowTypes = ["image/jpeg", "image/png", "image/webp"];
 
 export const RatingSchema = Yup.object({
   rating: Yup.number()
-    .min(1, "Please select a rating")
-    .required("Rating is required"),
+    .min(1, "Silakan pilih rating")
+    .required("Rating wajib diisi"),
   desc: Yup.string()
     .optional()
-    .max(1000, "Comment must be 1000 characters or less"),
+    .max(1000, "Komentar tidak boleh lebih dari 1000 karakter"),
   photos: Yup.array()
     .of(
       Yup.mixed<File>()
         .test(
           "fileSize",
-          `File is too large. Max size is ${maxFileSize}MB.`,
+          `Ukuran file terlalu besar. Maksimal ${maxFileSize}MB.`,
           (value): value is File => !value || value.size <= maxFileSizeByte
         )
         .test(
           "fileType",
-          "Invalid file type. Only JPEG, PNG, and WEBP are allowed.",
+          "Tipe file tidak valid. Hanya JPEG, PNG, dan WEBP yang diizinkan.",
           (value): value is File =>
             !value || (value && allowTypes.includes(value.type))
         )
     )
-    .max(maxPhotos, `You can upload a maximum of ${maxPhotos} photos.`),
+    .max(maxPhotos, `Anda dapat mengunggah maksimal ${maxPhotos} foto.`),
 });
