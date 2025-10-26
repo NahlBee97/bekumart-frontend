@@ -1,5 +1,5 @@
 import { ICart } from "@/interfaces/dataInterfaces";
-import CartItemCard from "./cartItemsCard";
+import { CartItemCard } from "./cartItemsCard";
 import { CartItemsSectionSkeleton } from "../skeletons/cart/cartItemSectionSkeleton";
 
 interface props {

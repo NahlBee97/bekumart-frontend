@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import useAuthStore from "@/stores/useAuthStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { useEffect, useState } from "react";
 import AdminNavbar from "./navbar/adminNavbar";
 import ClientNavbar from "./navbar/clientNavbar";

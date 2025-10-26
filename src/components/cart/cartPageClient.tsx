@@ -1,12 +1,12 @@
 "use client";
 
-import { ArrowLeft, ShoppingCart } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useCartStore } from "@/stores/useCartStore";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { CartItemsSection } from "./cartItemsSection";
 import { CartSummarySection } from "./cartSummarySection";
+import { CartEmptyState } from "./cartEmptyState";
 
 // Accept the server-fetched cart data as a prop
 export default function CartPageClient({
@@ -33,28 +33,7 @@ export default function CartPageClient({
   };
 
   // If the cart from the store is empty or null
-  if (cart?.items?.length === 0) {
-    return (
-      <div className="bg-white min-h-[80vh] flex flex-col items-center justify-center text-center p-4">
-        <ShoppingCart
-          className="w-24 h-24 text-gray-300 mb-6"
-          strokeWidth={1}
-        />
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">
-          Keranjang Belanja Kosong
-        </h1>
-        <p className="text-gray-500 mb-6">
-          Sepertinya kamu belum menambahkan sesuatu, mari belanja!
-        </p>
-        <Link
-          href="/shop"
-          className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-300"
-        >
-          Lanjut Belanja
-        </Link>
-      </div>
-    );
-  }
+  if (cart?.items?.length === 0) return <CartEmptyState/>
 
   return (
     <>

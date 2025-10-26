@@ -1,29 +1,31 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { getOrderItems } from "@/lib/data";
 import api from "@/lib/axios";
 import toast from "react-hot-toast";
+import { X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { getOrderItems } from "@/lib/data";
 import { midtransClientKey } from "@/config";
 import { IOrder, IOrderItem } from "@/interfaces/dataInterfaces";
-import { OrderSummary } from "./orderSummary";
-import OrderItemList from "./orderItemList";
-import ModalActions from "./modalActions";
 
-// --- MODAL COMPONENT ---
-const OrderDetailModal: React.FC<{
+import { OrderSummary } from "./orderSummary";
+import { OrderItemList } from "./orderItemList";
+import { ModalActions } from "./modalActions";
+
+interface props {
   order: IOrder | null;
   onClose: () => void;
-}> = ({ order, onClose }) => {
+}
+
+export const OrderDetailModal = ({ order, onClose }: props) => {
   const [orderItems, setOrderItems] = useState<IOrderItem[]>([]);
 
-  // --- CHANGE 1: Add state and useEffect for the animation ---
-  const [show, setShow] = useState(false);
+  // Add state and useEffect for the animation ---
+  const [show, setShow] = useState<boolean>(false);
   const [isPaymentLoading, setIsPaymentLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (order) {
-      // When an order is passed, start the enter animation
       const timer = setTimeout(() => setShow(true), 10);
       return () => clearTimeout(timer);
     }
@@ -69,14 +71,11 @@ const OrderDetailModal: React.FC<{
     };
   }, []);
 
-  // --- FIX 2: Create a function to handle the exit animation ---
   const handleClose = () => {
-    // 1. Start the exit animation
     setShow(false);
-    // 2. Wait for the animation to finish (300ms), then call the parent's onClose
     setTimeout(() => {
       onClose();
-    }, 300); // This duration MUST match your CSS transition duration
+    }, 300); 
   };
 
   const handleProceedPayment = async () => {
@@ -126,31 +125,13 @@ const OrderDetailModal: React.FC<{
             className="ml-auto inline-flex h-8 w-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900"
             onClick={onClose}
           >
-            <svg
-              className="h-3 w-3"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 14 14"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-              />
-            </svg>
-            <span className="sr-only">Close modal</span>
+            <X/>
           </button>
         </div>
 
         <div className="max-h-[60vh] space-y-6 overflow-y-auto p-6">
           <OrderSummary order={order} />
-          <OrderItemList
-            items={orderItems}
-            orderStatus={order.status}
-          />
+          <OrderItemList items={orderItems} orderStatus={order.status} />
           <ModalActions
             order={order}
             isPaymentLoading={isPaymentLoading}
@@ -161,5 +142,3 @@ const OrderDetailModal: React.FC<{
     </div>
   );
 };
-
-export default OrderDetailModal;

@@ -1,13 +1,15 @@
-import useAuthStore from "@/stores/useAuthStore";
-import { LogOut, User } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import React, { useState, useEffect, useRef } from "react";
-import type { FC } from "react";
+"use client"
 
-// You can move this component to its own file and import it
-export const ProfileMenu: FC = () => {
+import Link from "next/link";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { LogOut, User } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useState, useEffect, useRef } from "react";
+
+export const ProfileMenu = () => {
   const pathname = usePathname();
+  const router = useRouter();
 
   const { user, logout } = useAuthStore();
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -48,10 +50,7 @@ export const ProfileMenu: FC = () => {
   const handleLogOut = async () => {
     try {
       await logout();
-      // Clear any potential navigation history
-      window.history.replaceState(null, "", "/");
-      // Force a hard navigation to /
-      window.location.href = pathname;
+      router.push(pathname);
     } catch (error) {
       console.error("Logout failed:", error);
     }

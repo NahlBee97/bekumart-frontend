@@ -1,18 +1,18 @@
 "use client";
 
-interface ProductsTablePaginationProps {
+interface props {
   currentPage: number;
   totalPages: number;
   onPrevPage: () => void;
   onNextPage: () => void;
 }
 
-export default function TablePagination({
+export const TablePagination = ({
   currentPage,
   totalPages,
   onPrevPage,
   onNextPage,
-}: ProductsTablePaginationProps) {
+}: props) => {
   return (
     <div className="p-4 sm:p-6 flex items-center justify-between border-t border-gray-200">
       <span className="text-sm text-gray-600">

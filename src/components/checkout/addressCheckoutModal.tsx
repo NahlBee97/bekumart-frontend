@@ -1,15 +1,20 @@
 "use client";
 
-import { IAddress } from "@/interfaces/dataInterfaces";
 import api from "@/lib/axios";
-import { AddressSchema } from "@/schemas/addressSchema";
-import useAuthStore from "@/stores/useAuthStore";
-import { useFormik } from "formik";
-import { X } from "lucide-react";
-import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { X } from "lucide-react";
+import { IAddress, ILocation } from "@/interfaces/dataInterfaces";
+import { AddressSchema } from "@/schemas/addressSchema";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useFormik } from "formik";
+import { useEffect, useState } from "react";
 
-const AddressCheckoutModal = ({
+import { TextInputField } from "../formFields/textInputField";
+import { SelectField } from "../formFields/selectField";
+import { TinyCommonButton } from "../buttons/tinyCommonButton";
+import { SubmitButton } from "../buttons/submitButton";
+
+export const AddressCheckoutModal = ({
   isOpen,
   onSave,
   onSelect,
@@ -24,16 +29,10 @@ const AddressCheckoutModal = ({
 }) => {
   const { user } = useAuthStore();
 
-  const [provinces, setProvinces] = useState<{ id: string; name: string }[]>(
-    []
-  );
-  const [cities, setCities] = useState<{ id: string; name: string }[]>([]);
-  const [districts, setDistricts] = useState<{ id: string; name: string }[]>(
-    []
-  );
-  const [subDistricts, setSubDistricts] = useState<
-    { id: string; name: string }[]
-  >([]);
+  const [provinces, setProvinces] = useState<ILocation[]>([]);
+  const [cities, setCities] = useState<ILocation[]>([]);
+  const [districts, setDistricts] = useState<ILocation[]>([]);
+  const [subDistricts, setSubDistricts] = useState<ILocation[]>([]);
 
   const [selectedProvince, setSelectedProvince] = useState<string>("");
   const [selectedCity, setSelectedCity] = useState<string>("");
@@ -41,8 +40,7 @@ const AddressCheckoutModal = ({
 
   // eslint-disable-next-line
   const [selectedSubDistrict, setSelectedSubDistrict] = useState<string>("");
-  // --- CHANGE 1: Add state and useEffect for the animation ---
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState<boolean>(false);
 
   useEffect(() => {
     if (address) {
@@ -165,35 +163,25 @@ const AddressCheckoutModal = ({
     },
   });
 
-  const handleProvinceChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const selectedName = event.target.value;
+  const handleProvinceChange = (selectedName: string) => {
     const province = provinces.find((p) => p.name === selectedName);
     if (province) setSelectedProvince(province.name);
     formik.setFieldValue("province", province?.name || "");
   };
 
-  const handleCityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedName = event.target.value;
+  const handleCityChange = (selectedName: string) => {
     const city = cities.find((c) => c.name === selectedName);
     if (city) setSelectedCity(city.name);
     formik.setFieldValue("city", city?.name || "");
   };
 
-  const handleDistrictChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const selectedName = event.target.value;
+  const handleDistrictChange = (selectedName: string) => {
     const district = districts.find((d) => d.name === selectedName);
     if (district) setSelectedDistrict(district.name);
     formik.setFieldValue("district", district?.name || "");
   };
 
-  const handleSubDistrictChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const selectedName = event.target.value;
+  const handleSubDistrictChange = (selectedName: string) => {
     const subdistrict = subDistricts.find((s) => s.name === selectedName);
     if (subdistrict) setSelectedSubDistrict(subdistrict.name);
     formik.setFieldValue("subdistrict", subdistrict?.name || "");
@@ -229,222 +217,93 @@ const AddressCheckoutModal = ({
             {/* Form fields */}
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-2">
-                <label
-                  htmlFor="receiver"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Nama Penerima
-                </label>
-                <input
+                <TextInputField
+                  formik={formik}
                   type="text"
-                  id="receiver"
-                  {...formik.getFieldProps("receiver")}
-                  className="mt-1 px-2 py-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  withLabel={true}
+                  label="Nama Penerima"
+                  fieldName="receiver"
+                  placeHolder=""
                 />
-                {formik.touched.receiver && formik.errors.receiver ? (
-                  <div className="text-red-500 text-sm mt-1">
-                    {formik.errors.receiver}
-                  </div>
-                ) : null}
               </div>
               <div className="col-span-2">
-                <label
-                  htmlFor="address"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Alamat Lengkap
-                </label>
-                <textarea
-                  id="street"
-                  {...formik.getFieldProps("street")}
-                  rows={3}
-                  className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                ></textarea>
-                {formik.touched.street && formik.errors.street ? (
-                  <div className="text-red-500 text-sm mt-1">
-                    {formik.errors.street}
-                  </div>
-                ) : null}
-              </div>
-              <div>
-                <label
-                  htmlFor="phone"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Nomor Telepon
-                </label>
-                <input
+                <TextInputField
+                  formik={formik}
                   type="text"
-                  id="phone"
-                  {...formik.getFieldProps("phone")}
-                  className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  withLabel={true}
+                  label="ALamat Lengkap"
+                  fieldName="street"
+                  placeHolder=""
                 />
-                {formik.touched.phone && formik.errors.phone ? (
-                  <div className="text-red-500 text-sm mt-1">
-                    {formik.errors.phone}
-                  </div>
-                ) : null}
+              </div>
+
+              <div>
+                <SelectField
+                  formik={formik}
+                  items={provinces}
+                  fieldName="province"
+                  label="Provinsi"
+                  onItemChange={handleProvinceChange}
+                />
               </div>
               <div>
-                <label
-                  htmlFor="province"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Provinsi
-                </label>
-                <select
-                  id="province"
-                  {...formik.getFieldProps("province")}
-                  onChange={handleProvinceChange}
-                  className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="">Pilih Provinsi</option>
-                  {provinces.map((p) => (
-                    <option key={p.id} value={p.name}>
-                      {p.name}
-                    </option>
-                  ))}
-                </select>
-                {formik.touched.province && formik.errors.province ? (
-                  <div className="text-red-500 text-sm mt-1">
-                    {formik.errors.province}
-                  </div>
-                ) : null}
+                <SelectField
+                  formik={formik}
+                  items={cities}
+                  fieldName="city"
+                  label="Kota/Kabupaten"
+                  onItemChange={handleCityChange}
+                />
               </div>
               <div>
-                <label
-                  htmlFor="city"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Kota/Kabupaten
-                </label>
-                <select
-                  id="city"
-                  {...formik.getFieldProps("city")}
-                  onChange={handleCityChange}
-                  disabled={!formik.values.province}
-                  className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
-                >
-                  <option value="">Pilih Kota</option>
-                  {formik.values.province &&
-                    cities.map((c) => (
-                      <option key={c.id} value={c.name}>
-                        {c.name}
-                      </option>
-                    ))}
-                </select>
-                {formik.touched.city && formik.errors.city ? (
-                  <div className="text-red-500 text-sm mt-1">
-                    {formik.errors.city}
-                  </div>
-                ) : null}
+                <SelectField
+                  formik={formik}
+                  items={districts}
+                  fieldName="district"
+                  label="Kecamatan"
+                  onItemChange={handleDistrictChange}
+                />
               </div>
               <div>
-                <label
-                  htmlFor="district"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Kecamatan
-                </label>
-                <select
-                  id="district"
-                  {...formik.getFieldProps("district")}
-                  onChange={handleDistrictChange}
-                  disabled={!formik.values.city}
-                  className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
-                >
-                  <option value="">Pilih Kecamatan</option>
-                  {formik.values.city &&
-                    districts.map((d) => (
-                      <option key={d.id} value={d.name}>
-                        {d.name}
-                      </option>
-                    ))}
-                </select>
-                {formik.touched.district && formik.errors.district ? (
-                  <div className="text-red-500 text-sm mt-1">
-                    {formik.errors.district}
-                  </div>
-                ) : null}
+                <SelectField
+                  formik={formik}
+                  items={subDistricts}
+                  fieldName="subdistrict"
+                  label="Desa"
+                  onItemChange={handleSubDistrictChange}
+                />
               </div>
               <div>
-                <label
-                  htmlFor="district"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Desa
-                </label>
-                <select
-                  id="subdistrict"
-                  {...formik.getFieldProps("subdistrict")}
-                  onChange={handleSubDistrictChange}
-                  disabled={!formik.values.district}
-                  className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
-                >
-                  <option value="">Pilih Desa</option>
-                  {formik.values.district &&
-                    subDistricts.map((s) => (
-                      <option key={s.id} value={s.name}>
-                        {s.name}
-                      </option>
-                    ))}
-                </select>
-                {formik.touched.subdistrict && formik.errors.subdistrict ? (
-                  <div className="text-red-500 text-sm mt-1">
-                    {formik.errors.subdistrict}
-                  </div>
-                ) : null}
-              </div>
-              <div>
-                <label
-                  htmlFor="postalCode"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Kode Pos
-                </label>
-                <input
+                <TextInputField
+                  formik={formik}
                   type="text"
-                  id="postalCode"
-                  {...formik.getFieldProps("postalCode")}
-                  className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  withLabel={true}
+                  label="Nomor Telepon"
+                  fieldName="phone"
+                  placeHolder=""
                 />
-                {formik.touched.postalCode && formik.errors.postalCode ? (
-                  <div className="text-red-500 text-sm mt-1">
-                    {formik.errors.postalCode}
-                  </div>
-                ) : null}
+              </div>
+              <div>
+                <TextInputField
+                  formik={formik}
+                  type="text"
+                  withLabel={true}
+                  label="Kode Pos"
+                  fieldName="postalCode"
+                  placeHolder=""
+                />
               </div>
             </div>
             <div className="mt-6 flex justify-end gap-3">
-              <button
-                type="button"
+              <TinyCommonButton
                 onClick={() => onClose()}
-                className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300"
-              >
-                Batal
-              </button>
+                buttonText="Batal"
+                isPositive={false}
+              />
               {address ? (
-                <button
-                  type="submit"
-                  className="w-40 flex items-center justify-center bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-                >
-                  {formik.isSubmitting ? (
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-                  ) : (
-                    "Ubah Alamat"
-                  )}
-                </button>
+                <SubmitButton formik={formik} buttonText="Ubah Alamat" />
               ) : (
-                <button
-                  type="submit"
-                  className="w-40 flex items-center justify-center bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-                >
-                  {formik.isSubmitting ? (
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-                  ) : (
-                    "Tambah Alamat"
-                  )}
-                </button>
+                <SubmitButton formik={formik} buttonText="Tambah Alamat" />
               )}
             </div>
           </form>
@@ -454,4 +313,3 @@ const AddressCheckoutModal = ({
   );
 };
 
-export default AddressCheckoutModal;

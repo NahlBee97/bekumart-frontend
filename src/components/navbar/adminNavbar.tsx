@@ -1,7 +1,8 @@
-import useAuthStore from "@/stores/useAuthStore";
-import { LogOut, Snowflake } from "lucide-react";
-import { BurgerMenu } from "./burgerMenu";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { usePathname, useRouter } from "next/navigation";
+import { LogOut, Snowflake } from "lucide-react";
+
+import { BurgerMenu } from "./burgerMenu";
 
 export default function AdminNavbar() {
   const { logout } = useAuthStore();

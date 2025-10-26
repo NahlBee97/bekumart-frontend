@@ -1,6 +1,6 @@
 // lib/axios.ts
 import { apiUrl } from "@/config";
-import useAuthStore from "@/stores/useAuthStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 
 // Create axios instance with base configuration

@@ -138,3 +138,27 @@ export interface IReviewLike {
   user: IUser;
   reviewId: string;
 }
+
+export interface IOrderData {
+  userId: string;
+  fullfillmentType: string;
+  paymentMethod: string;
+  addressId?: string;
+  totalCheckoutPrice: number;
+  courier: string;
+}
+
+export interface IShippingCostData {
+  addressId: string;
+  totalWeight: number;
+}
+
+export interface ICourier {
+  name: string;
+  cost: number;
+}
+
+export interface ILocation {
+  id: string;
+  name: string;
+}

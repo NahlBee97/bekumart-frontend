@@ -1,15 +1,17 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
-import { MapPin, Trash2, Edit3, PlusCircle } from "lucide-react";
-import useAuthStore from "@/stores/useAuthStore";
-import AddressModal from "./addressModal";
-import { getUserAddresses } from "@/lib/data";
 import api from "@/lib/axios";
 import toast from "react-hot-toast";
-import ConfirmModal from "../confirmModal";
-import AddressInfoSkeleton from "../skeletons/profile/addressInfoSkeleton";
+import { useState, useCallback, useEffect } from "react";
+import { PlusCircle } from "lucide-react";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { AddressModal } from "./addressModal";
+import { getUserAddresses } from "@/lib/data";
+
+import { ConfirmModal } from "../confirmModal";
+import { AddressInfoSkeleton } from "../skeletons/profile/addressInfoSkeleton";
 import { IAddress } from "@/interfaces/dataInterfaces";
+import { AddressCard } from "./addressCard";
 
 // --- Main Component ---
 export default function AddressInfo() {
@@ -102,57 +104,22 @@ export default function AddressInfo() {
           <ul role="list" className="-my-5 divide-y divide-gray-200">
             {addresses.map((address) => (
               <li key={address.id} className="py-5">
-                <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
-                  <div className="flex items-start gap-3">
-                    <MapPin className="h-6 w-6 text-gray-400 mt-1 flex-shrink-0" />
-                    <div className="text-sm">
-                      <p className="font-medium text-gray-900">
-                        {address.street}
-                      </p>
-                      <p className="text-gray-500">
-                        {address.subdistrict}, {address.district},{" "}
-                        {address.postalCode}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4 self-end sm:self-center">
-                    {address.isDefault && (
-                      <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
-                        Utama
-                      </span>
-                    )}
-                    {!address.isDefault && (
-                      <button
-                        onClick={() => {
-                          setAddressToDelete(address);
-                          setIsConfirmModalOpen(true);
-                        }}
-                        className="text-sm font-medium text-blue-600 hover:text-blue-500"
-                      >
-                        Jadikan Alamat Utama
-                      </button>
-                    )}
-                    <button
-                      className="p-1 text-gray-500 hover:text-blue-600"
-                      onClick={() => {
-                        setAddressToEdit(address);
-                        setIsModalOpen(true);
-                      }}
-                    >
-                      <Edit3 className="h-4 w-4" />
-                    </button>
-                    <button
-                      onClick={() => {
-                        setAddressToDelete(address);
-                        setIsDeleting(true);
-                        setIsConfirmModalOpen(true);
-                      }}
-                      className="p-1 text-gray-500 hover:text-red-600"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  </div>
-                </div>
+                <AddressCard
+                  address={address}
+                  onClickSetMain={() => {
+                    setAddressToDelete(address);
+                    setIsConfirmModalOpen(true);
+                  }}
+                  onClickEdit={() => {
+                    setAddressToEdit(address);
+                    setIsModalOpen(true);
+                  }}
+                  onClickDelete={() => {
+                    setAddressToDelete(address);
+                    setIsDeleting(true);
+                    setIsConfirmModalOpen(true);
+                  }}
+                />
               </li>
             ))}
           </ul>

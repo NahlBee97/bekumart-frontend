@@ -2,13 +2,12 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { ArrowLeft } from "lucide-react";
-import useAuthStore from "@/stores/useAuthStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { useCartStore } from "@/stores/useCartStore";
-import { getCookie } from "cookies-next";
 import { midtransClientKey } from "@/config";
-import AddressListModal from "@/components/checkout/addressListModal";
+import { AddressListModal } from "@/components/checkout/addressListModal";
 import { useRouter } from "next/navigation";
-import AddressCheckoutModal from "@/components/checkout/addressCheckoutModal";
+import { AddressCheckoutModal } from "@/components/checkout/addressCheckoutModal";
 import toast from "react-hot-toast";
 import { getUserAddresses } from "@/lib/data";
 import api from "@/lib/axios";
@@ -18,22 +17,13 @@ import { DeliveryMethodSection } from "./deliveryMethodSection";
 import { PaymentMethodSection } from "./paymentMethodSection";
 import { AddressSection } from "./addressSection";
 import { OrderSummary } from "./orderSummarySection";
-import { IAddress } from "@/interfaces/dataInterfaces";
-
-// Types for better type safety
-export interface OrderData {
-  userId: string;
-  fullfillmentType: string;
-  paymentMethod: string;
-  addressId?: string;
-  totalCheckoutPrice: number;
-  courier: string;
-}
-
-interface ShippingCostData {
-  addressId: string;
-  totalWeight: number;
-}
+import {
+  IAddress,
+  ICourier,
+  IOrderData,
+  IShippingCostData,
+} from "@/interfaces/dataInterfaces";
+import { FulfillmentTypes, PaymentMethod } from "@/interfaces/enums";
 
 // --- MAIN PAGE COMPONENT ---
 export default function CheckoutPageClient() {
@@ -42,22 +32,22 @@ export default function CheckoutPageClient() {
   const { cart, isCartLoading, clearCart } = useCartStore();
 
   // State Management
-  const [deliveryMethod, setDeliveryMethod] = useState<"DELIVERY" | "PICKUP">(
-    "DELIVERY"
+  const [deliveryMethod, setDeliveryMethod] = useState<FulfillmentTypes>(
+    FulfillmentTypes["DELIVERY"]
   );
-  const [paymentMethod, setPaymentMethod] = useState<"ONLINE" | "INSTORE">(
-    "ONLINE"
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(
+    PaymentMethod["ONLINE"]
   );
   const [addresses, setAddresses] = useState<IAddress[]>([]);
-  const [selectedAddress, setSelectedAddress] = useState<IAddress>();
-  const [shippingCost, setShippingCost] = useState(0);
-  const [couriers, setCouriers] = useState([]);
-  const [selectedCourier, setSelectedCourier] = useState<any | null>(null);
-  const [isListModalOpen, setListModalOpen] = useState(false);
-  const [isFormModalOpen, setFormModalOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isCalculating, setIsCalculating] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
+  const [selectedAddress, setSelectedAddress] = useState<IAddress | null>(null);
+  const [shippingCost, setShippingCost] = useState<number>(0);
+  const [couriers, setCouriers] = useState<ICourier[]>([]);
+  const [selectedCourier, setSelectedCourier] = useState<ICourier | null>(null);
+  const [isListModalOpen, setListModalOpen] = useState<boolean>(false);
+  const [isFormModalOpen, setFormModalOpen] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isCalculating, setIsCalculating] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [editingAddress, setEditingAddress] = useState<IAddress | null>(null);
 
   // Memoized calculations
@@ -82,10 +72,12 @@ export default function CheckoutPageClient() {
 
     try {
       const userAddresses = await getUserAddresses(user.id);
-      const mainAddress = userAddresses.find(
-        (address: IAddress) => address.isDefault
-      );
-      setSelectedAddress(mainAddress);
+      if (!selectedAddress) {
+        const mainAddress = userAddresses.find(
+          (address: IAddress) => address.isDefault
+        );
+        setSelectedAddress(mainAddress);
+      }
       setAddresses(userAddresses);
     } catch (error) {
       console.error("Error fetching addresses:", error);
@@ -93,7 +85,7 @@ export default function CheckoutPageClient() {
     } finally {
       setIsLoading(false);
     }
-  }, [user?.id, cart?.items.length, isAuthLoading]);
+  }, [user?.id, cart?.items.length, selectedAddress, isAuthLoading]);
 
   // Calculate shipping cost
   const getCouriers = useCallback(async () => {
@@ -110,7 +102,7 @@ export default function CheckoutPageClient() {
     }
 
     try {
-      const data: ShippingCostData = {
+      const data: IShippingCostData = {
         addressId: selectedAddress.id,
         totalWeight: cart.totalWeight,
       };
@@ -151,10 +143,10 @@ export default function CheckoutPageClient() {
   }, []);
 
   // Event handlers
-  const handleDeliveryMethodChange = (method: "DELIVERY" | "PICKUP") => {
+  const handleDeliveryMethodChange = (method: FulfillmentTypes) => {
     setDeliveryMethod(method);
     if (method === "PICKUP") {
-      setPaymentMethod("ONLINE");
+      setPaymentMethod(PaymentMethod["ONLINE"]);
     }
   };
 
@@ -183,14 +175,14 @@ export default function CheckoutPageClient() {
         throw new Error("No access token found");
       }
 
-      const orderData: OrderData = {
+      const orderData: IOrderData = {
         userId: user.id,
         fullfillmentType: deliveryMethod,
         paymentMethod,
         addressId:
           deliveryMethod === "DELIVERY" ? selectedAddress?.id : undefined,
         totalCheckoutPrice: total,
-        courier: selectedCourier.name,
+        courier: selectedCourier?.name as string,
       };
 
       const response = await api.post(`/api/orders`, orderData);
@@ -206,9 +198,9 @@ export default function CheckoutPageClient() {
 
       clearCart();
       toast.success("Pesanan Berhasil Dibuat");
-    } catch (err: any) {
-      console.error("Error checking out:", err);
-      toast.error(err.response?.data?.message || "Error checking out");
+    } catch (error) {
+      console.error("Error checking out:", error);
+      toast.error("Error checking out");
     } finally {
       setIsSubmitting(false);
     }
@@ -258,7 +250,7 @@ export default function CheckoutPageClient() {
                   {deliveryMethod === "DELIVERY" && (
                     <AddressSection
                       isLoading={isLoading}
-                      selectedAddress={selectedAddress}
+                      selectedAddress={selectedAddress as IAddress}
                       onEditAddress={() => setListModalOpen(true)}
                       onCourierChange={(courier) => {
                         setSelectedCourier(courier);
@@ -282,7 +274,7 @@ export default function CheckoutPageClient() {
                 isSubmitting={isSubmitting}
                 onConfirmOrder={handleConfirmOrder}
                 deliveryMethod={deliveryMethod}
-                selectedAddress={selectedAddress}
+                selectedAddress={selectedAddress as IAddress}
               />
             </div>
           </div>

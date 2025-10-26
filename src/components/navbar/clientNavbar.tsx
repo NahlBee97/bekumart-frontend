@@ -1,15 +1,16 @@
 "use client";
 
-import useAuthStore from "@/stores/useAuthStore";
 import Link from "next/link";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { Search, ShoppingCart, Snowflake } from "lucide-react";
 import { useCartStore } from "@/stores/useCartStore";
-import { BurgerMenu } from "./burgerMenu";
-import { ProfileMenu } from "./profileMenu";
 import { usePathname } from "next/navigation";
-import { SearchBar } from "./searchBar";
 import { useState } from "react";
-import MobileSearchBar from "./mobileSearchBar";
+
+import { ProfileMenu } from "./profileMenu";
+import { BurgerMenu } from "./burgerMenu";
+import { SearchBar } from "./searchBar";
+import { MobileSearchBar } from "./mobileSearchBar";
 
 export default function ClientNavbar() {
   const { isLoggedIn } = useAuthStore();

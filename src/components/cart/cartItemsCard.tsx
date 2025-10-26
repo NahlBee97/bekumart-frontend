@@ -1,13 +1,17 @@
 "use client";
 
-import { ICartItem } from "@/interfaces/dataInterfaces";
-import useAuthStore from "@/stores/useAuthStore";
-import { useCartStore } from "@/stores/useCartStore";
-import { Minus, Plus, Trash2 } from "lucide-react";
-import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import { ICartItem } from "@/interfaces/dataInterfaces";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useCartStore } from "@/stores/useCartStore";
+import { Trash2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-const CartItemCard: React.FC<{ item: ICartItem }> = ({ item }) => {
+import { QuantitySelector } from "../products/quantitySelector";
+
+export const CartItemCard = ({ item }: { item: ICartItem }) => {
+  const router = useRouter();
   const { user } = useAuthStore();
   const { updateItemQuantity, deleteItem } = useCartStore();
   const [localQuantity, setLocalQuantity] = useState(item.quantity);
@@ -29,7 +33,7 @@ const CartItemCard: React.FC<{ item: ICartItem }> = ({ item }) => {
         setIsLoading(true);
         await updateItemQuantity(user.id, item.id, localQuantity);
         setIsLoading(false);
-        toast.success("Berhasil merubah jumlah")
+        toast.success("Berhasil merubah jumlah");
       } catch (error) {
         // Revert to item quantity on error
         setLocalQuantity(item.quantity);
@@ -57,8 +61,9 @@ const CartItemCard: React.FC<{ item: ICartItem }> = ({ item }) => {
         {/* eslint-disable-next-line */}
         <img
           src={
-            item.product?.productPhotos?.find((photo) => photo.isDefault === true)
-              ?.imageUrl
+            item.product?.productPhotos?.find(
+              (photo) => photo.isDefault === true
+            )?.imageUrl
           }
           alt="product image"
           className="w-24 h-24 border border-gray-300 rounded-md object-cover sm:w-32 sm:h-32"
@@ -67,8 +72,11 @@ const CartItemCard: React.FC<{ item: ICartItem }> = ({ item }) => {
 
       <div className="flex-1 flex flex-col justify-between sm:ml-6">
         <div className="relative flex justify-between sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
-          <h3 className="text-base font-medium line-clamp-2 text-gray-800">
-            <a href={`/products/${item.product?.id}`}>{item.product?.name}</a>
+          <h3
+            className="text-base font-medium line-clamp-2 text-gray-800"
+            onClick={() => router.push(`/products/${item.product?.id}`)}
+          >
+            {item.product?.name}
           </h3>
         </div>
 
@@ -78,10 +86,10 @@ const CartItemCard: React.FC<{ item: ICartItem }> = ({ item }) => {
           </p>
           <div className="mt-4 sm:mt-0 sm:pr-9">
             {isLoading ? (
-              <div className="h-9 w-26 animate-pulse rounded-md bg-gray-200"></div>
+              <div className="h-9 w-35 animate-pulse rounded-md bg-gray-200"></div>
             ) : (
               <div className="flex items-center border border-gray-300 rounded-md w-fit">
-                {localQuantity === 1 ? (
+                {localQuantity === 1 && (
                   <button
                     type="button"
                     onClick={() => deleteItem(user.id, item.id)}
@@ -90,28 +98,13 @@ const CartItemCard: React.FC<{ item: ICartItem }> = ({ item }) => {
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={handleDecrement}
-                    className="p-2 text-gray-500 hover:bg-gray-100 rounded-l-md disabled:opacity-50"
-                    disabled={localQuantity <= 1}
-                  >
-                    <Minus className="h-4 w-4" />
-                  </button>
                 )}
-                <span
-                  className={`px-4 text-center text-sm font-medium text-gray-700 tabular-nums`}
-                >
-                  {localQuantity}
-                </span>
-                <button
-                  type="button"
-                  onClick={handleIncrement}
-                  className="p-2 text-gray-500 hover:bg-gray-100 rounded-r-md"
-                >
-                  <Plus className="h-4 w-4" />
-                </button>
+                <QuantitySelector
+                  isDisable={localQuantity <= 1}
+                  quantity={localQuantity}
+                  onDecrease={handleDecrement}
+                  onIncrease={handleIncrement}
+                />
               </div>
             )}
           </div>
@@ -120,5 +113,3 @@ const CartItemCard: React.FC<{ item: ICartItem }> = ({ item }) => {
     </div>
   );
 };
-
-export default CartItemCard;

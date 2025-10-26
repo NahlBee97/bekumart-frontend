@@ -1,4 +1,9 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+
 export default function Hero() {
+  const router = useRouter();
   return (
     <div
       className="relative rounded-md md:rounded-xl overflow-hidden md:min-h-[480px] flex items-end p-6 md:p-10 bg-cover bg-center"
@@ -16,10 +21,10 @@ export default function Hero() {
           berkualitas yang kami kirim sampai ke rumah Anda.
         </p>
         <button
-          onClick={() => window.location.href="/shop"}
+          onClick={() => router.push("/shop")}
           className="flex px-5 py-1 md:px-10 md:py-3 bg-blue-500 text-sm md:text-base text-white font-semibold rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300 ease-in-out transform hover:-translate-y-1"
         >
-          <p>Belanja</p>
+          Belanja
         </button>
       </div>
     </div>

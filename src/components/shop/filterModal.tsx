@@ -17,9 +17,10 @@ export const FilterModal = ({ onClose, isOpen }: props) => {
   const queryParams = useSearchParams();
   const router = useRouter();
 
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState<boolean>(false);
+  
   const [categories, setCategories] = useState<ICategory[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   // Handle modal animation

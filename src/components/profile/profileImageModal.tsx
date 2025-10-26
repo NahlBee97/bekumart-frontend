@@ -3,23 +3,23 @@
 import { IUser } from "@/interfaces/dataInterfaces";
 import api from "@/lib/axios";
 import { getCookie } from "cookies-next";
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 // --- IMAGE UPLOAD MODAL ---
-interface ImageUploadModalProps {
+interface props {
   isOpen: boolean;
   onClose: () => void;
   onSave: () => void;
   user: IUser | null;
 }
 
-const ProfileImageUploadModal: FC<ImageUploadModalProps> = ({
+export const ProfileImageUploadModal = ({
   isOpen,
   onClose,
   onSave,
   user,
-}) => {
+}:props) => {
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);

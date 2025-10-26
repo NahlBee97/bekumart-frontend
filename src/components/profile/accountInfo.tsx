@@ -1,24 +1,29 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { useFormik } from "formik";
-import { Camera } from "lucide-react";
-import { UpdateProfileSchema } from "@/schemas/profileSchemas";
-import ProfileImageUploadModal from "@/components/profile/profileImageModal";
-import axios from "axios";
-import ChangePasswordModal from "./changePasswordModal";
-import useAuthStore from "@/stores/useAuthStore";
-import { getUserData } from "@/lib/data";
 import api from "@/lib/axios";
 import toast from "react-hot-toast";
-import AccountInfoSkeleton from "../skeletons/profile/accountInfoSkeleton";
+import axios from "axios";
+import { useFormik } from "formik";
+import { useState, useCallback } from "react";
+import { Camera } from "lucide-react";
+import { getUserData } from "@/lib/data";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { UpdateProfileSchema } from "@/schemas/profileSchemas";
+
+import { ProfileImageUploadModal } from "@/components/profile/profileImageModal";
+import { ChangePasswordModal } from "./changePasswordModal";
+import { AccountInfoSkeleton } from "../skeletons/profile/accountInfoSkeleton";
+import { TextInputField } from "../formFields/textInputField";
+import { SubmitButton } from "../buttons/submitButton";
+import { TinyCommonButton } from "../buttons/tinyCommonButton";
 
 export default function AccountInfo() {
   const { user, login, isAuthLoading } = useAuthStore();
 
-  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
-  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
+  const [isImageModalOpen, setIsImageModalOpen] = useState<boolean>(false);
+  const [isPasswordModalOpen, setIsPasswordModalOpen] =
+    useState<boolean>(false);
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
   const refreshUser = useCallback(async () => {
     try {
@@ -109,20 +114,14 @@ export default function AccountInfo() {
               </label>
               {isEditMode ? (
                 <>
-                  <input
-                    id="name"
-                    {...formik.getFieldProps("name")}
-                    className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 ${
-                      formik.touched.name && formik.errors.name
-                        ? "border-red-500"
-                        : "border-gray-300"
-                    }`}
+                  <TextInputField
+                    formik={formik}
+                    type="text"
+                    fieldName="name"
+                    label=""
+                    withLabel={false}
+                    placeHolder=""
                   />
-                  {formik.touched.name && formik.errors.name ? (
-                    <div className="text-red-600 text-sm mt-1">
-                      {formik.errors.name}
-                    </div>
-                  ) : null}
                 </>
               ) : (
                 <div className="w-full px-3 py-2">
@@ -140,21 +139,14 @@ export default function AccountInfo() {
               </label>
               {isEditMode ? (
                 <>
-                  <input
-                    id="email"
+                  <TextInputField
+                    formik={formik}
                     type="email"
-                    {...formik.getFieldProps("email")}
-                    className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 ${
-                      formik.touched.email && formik.errors.email
-                        ? "border-red-500"
-                        : "border-gray-300"
-                    }`}
+                    fieldName="email"
+                    label=""
+                    withLabel={false}
+                    placeHolder=""
                   />
-                  {formik.touched.email && formik.errors.email ? (
-                    <div className="text-red-600 text-sm mt-1">
-                      {formik.errors.email}
-                    </div>
-                  ) : null}
                 </>
               ) : (
                 <div className="w-full px-3 py-2">
@@ -166,38 +158,26 @@ export default function AccountInfo() {
             <div className="flex gap-4 sm:col-span-2">
               {/* Submit Button*/}
               {isEditMode ? (
-                <button
-                  type="submit"
-                  className="inline-flex w-full sm:w-auto items-center justify-center text-xs text-center rounded-md border border-transparent bg-indigo-600 py-2 px-6 md:text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-400 disabled:cursor-wait"
-                >
-                  {formik.isSubmitting ? (
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-                  ) : (
-                    "Simpan"
-                  )}
-                </button>
+                <SubmitButton formik={formik} buttonText="Simpan" />
               ) : (
-                <div
-                  className="inline-flex w-full sm:w-auto justify-center items-center text-xs text-center rounded-md border border-transparent bg-indigo-600 py-1 px-3 md:py-2 md:px-6 md:text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-400 disabled:cursor-wait"
+                <TinyCommonButton
                   onClick={() => setIsEditMode(true)}
-                >
-                  Edit
-                </div>
+                  isPositive={true}
+                  buttonText="Edit"
+                />
               )}
               {isEditMode ? (
-                <div
-                  className="inline-flex w-full sm:w-auto justify-center items-center text-xs text-center rounded-md border border-transparent bg-red-600 py-1 px-3 md:py-2 md:px-6 md:text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:bg-indigo-400 disabled:cursor-wait"
+                <TinyCommonButton
                   onClick={() => setIsEditMode(false)}
-                >
-                  Batal
-                </div>
+                  isPositive={false}
+                  buttonText="Batal"
+                />
               ) : (
-                <div
-                  className="inline-flex w-full sm:w-auto justify-center items-center text-xs text-center rounded-md border border-transparent bg-red-600 py-1 px-3 md:py-2 md:px-6 md:text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:bg-indigo-400 disabled:cursor-wait"
+                <TinyCommonButton
                   onClick={() => setIsPasswordModalOpen(true)}
-                >
-                  Ganti Password
-                </div>
+                  isPositive={false}
+                  buttonText="Ganti Password"
+                />
               )}
             </div>
           </form>

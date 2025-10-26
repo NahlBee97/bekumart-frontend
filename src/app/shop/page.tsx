@@ -1,4 +1,4 @@
-import Shop from "@/components/shop/shop";
+import { ShopClient } from "@/components/shop/shopClient";
 import { apiUrl } from "@/config";
 import api from "@/lib/axios";
 import { getProducts } from "@/lib/data";
@@ -36,5 +36,5 @@ export default async function ShopPage({
   } else {
     products = await getProducts();
   }
-  return <Shop products={products} />;
+  return <ShopClient products={products} />;
 }

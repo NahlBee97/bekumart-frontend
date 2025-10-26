@@ -4,8 +4,8 @@ import { format } from "date-fns";
 import { LikeButton } from "./likeButton";
 import { useEffect, useState } from "react";
 import api from "@/lib/axios";
-import useAuthStore from "@/stores/useAuthStore";
-import { formatNumberCompact } from "@/utils/numberFormatter";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { formatNumberCompact } from "@/helper/functions";
 
 export const ReviewCard = ({ review }: { review: IReview }) => {
   const { isAuthLoading, accessToken } = useAuthStore();
@@ -13,7 +13,7 @@ export const ReviewCard = ({ review }: { review: IReview }) => {
   const [likeCount, setLikeCount] = useState(review.likeCount);
 
   const handleLikeToggle = async () => {
-    if(!accessToken) return;
+    if (!accessToken) return;
     const newIsLiked = !isReviewLiked;
 
     setIsReviewLiked(newIsLiked);

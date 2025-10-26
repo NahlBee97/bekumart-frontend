@@ -1,19 +1,22 @@
 "use client";
 
-import { useFormik } from "formik";
 import Link from "next/link";
 import axios from "axios";
+import toast from "react-hot-toast";
+import api from "@/lib/axios";
+import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { apiUrl } from "@/config";
 import { LoginSchema } from "@/schemas/authSchemas";
 import { jwtDecode } from "jwt-decode";
-import toast from "react-hot-toast";
-import useAuthStore from "@/stores/useAuthStore";
-import api from "@/lib/axios";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { IUser } from "@/interfaces/dataInterfaces";
-import { GoogleIcon } from "@/components/icons";
 import { useGoogleLogin } from "@react-oauth/google";
+
+import { TextInputField } from "../formFields/textInputField";
+import { SubmitButton } from "../buttons/submitButton";
+import { GoogleButton } from "../buttons/googleButton";
+import { CheckBox } from "../formFields/checkBox";
 
 export default function LoginForm() {
   const { setAccessToken, login } = useAuthStore();
@@ -64,7 +67,7 @@ export default function LoginForm() {
           router.push("/");
         }
         toast.success("Berhasil Login");
-    } catch (error) {
+      } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
           if (error.response.data.message === "Incorrect Password")
             setIsCorrectPassword(false);
@@ -83,26 +86,26 @@ export default function LoginForm() {
         const userInfoResponse = await axios.get(
           "https://www.googleapis.com/oauth2/v3/userinfo",
           {
-              headers: {
-                  Authorization: `Bearer ${tokenResponse.access_token}`,
-                },
-            }
+            headers: {
+              Authorization: `Bearer ${tokenResponse.access_token}`,
+            },
+          }
         );
-        
+
         const { name, email } = userInfoResponse.data;
-        
+
         const values = {
-            name,
-            email,
+          name,
+          email,
         };
-        
+
         const response = await api.post(`/api/auth/google-login`, values);
-        
+
         // set token to cookie
         const { accessToken } = response.data;
-        
+
         setAccessToken(accessToken);
-        
+
         const userData = jwtDecode<IUser>(accessToken);
         login(userData);
         toast.success("Berhasil Login");
@@ -116,7 +119,7 @@ export default function LoginForm() {
         } else {
           router.push("/");
         }
-    } catch (err) {
+      } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
           const errorMessage = err.response.data.message;
           console.error(`Login Gagal: ${errorMessage}`);
@@ -134,7 +137,7 @@ export default function LoginForm() {
 
   const handleResetPassword = async () => {
     const email = formik.values.email;
-    await axios.post(`${apiUrl}/api/auth/verify-reset`, { email });
+    await api.post(`/api/auth/verify-reset`, { email });
     toast("Kami sudah mengirimkan email untuk mengatur ulang password");
   };
 
@@ -144,76 +147,47 @@ export default function LoginForm() {
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
           Login Akun
         </h1>
-        <form onSubmit={formik.handleSubmit} className="space-y-4">
+        <form onSubmit={formik.handleSubmit} className="space-y-2" noValidate>
           {/* Email Field */}
-          <div>
-            <div className="relative">
-              <input
-                id="email"
-                type="email"
-                placeholder="Email"
-                {...formik.getFieldProps("email")}
-                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 ${
-                  formik.touched.email && formik.errors.email
-                    ? "border-red-500 focus:ring-red-500"
-                    : "border-gray-300 focus:ring-blue-500"
-                }`}
-              />
-            </div>
-            {formik.touched.email && formik.errors.email && (
-              <p className="text-red-500 text-xs mt-1">{formik.errors.email}</p>
-            )}
-          </div>
+          <TextInputField
+            formik={formik}
+            type="email"
+            fieldName="email"
+            label=""
+            withLabel={false}
+            placeHolder="Email"
+          />
 
           {/* Password Field */}
-          <div>
-            <div className="relative">
-              {!isCorrectPassword && (
-                <div
-                  className="text-xs text-red-500 mb-2 cursor-pointer hover:text-blue-500"
-                  onClick={handleResetPassword}
-                >
-                  Lupa Password?
-                </div>
-              )}
-              <input
-                id="password"
-                type={showPassword ? "text" : "password"}
-                placeholder="Password"
-                {...formik.getFieldProps("password")}
-                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 ${
-                  formik.touched.password && formik.errors.password
-                    ? "border-red-500 focus:ring-red-500"
-                    : "border-gray-300 focus:ring-blue-500"
-                }`}
-              />
-              <input
-                className="mt-2 h-2"
-                type="checkbox"
-                checked={showPassword}
-                onChange={() => setShowPassword(!showPassword)}
-              />{" "}
-              <label className="text-gray-600 text-xs">Lihat Password</label>
-            </div>
-            {formik.touched.password && formik.errors.password && (
-              <p className="text-red-500 text-xs mt-1">
-                {formik.errors.password}
-              </p>
+          <>
+            {!isCorrectPassword && (
+              <div
+                className="text-xs text-red-500 mb-2 cursor-pointer hover:text-blue-500"
+                onClick={handleResetPassword}
+              >
+                Lupa Password?
+              </div>
             )}
-          </div>
+            <TextInputField
+              formik={formik}
+              type={showPassword ? "text" : "password"}
+              fieldName="password"
+              label=""
+              withLabel={false}
+              placeHolder="Password"
+            />
+            <CheckBox
+              isChecked={showPassword}
+              onChecked={() => setShowPassword(!showPassword)}
+              label="Lihat Password"
+            />
+          </>
 
           {/* Submit Button*/}
-          <button
-            type="submit"
-            disabled={!formik.isValid || !formik.dirty || formik.isSubmitting}
-            className="w-full flex items-center justify-center py-3 mt-4 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed"
-          >
-            {formik.isSubmitting ? (
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-            ) : (
-              "Login"
-            )}
-          </button>
+          <div className="w-full">
+            <SubmitButton formik={formik} buttonText="Masuk" />
+          </div>
+
           {/* --- OR Separator --- */}
           <div className="my-6 flex items-center">
             <div className="flex-grow border-t border-gray-300"></div>
@@ -222,14 +196,10 @@ export default function LoginForm() {
           </div>
 
           {/* --- Google Login Button --- */}
-          <button
-            type="button"
-            onClick={() => googleLogin()}
-            className="w-full flex items-center justify-center py-3 px-4 border border-gray-300 rounded-lg bg-white text-gray-700 font-semibold hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition-colors duration-300"
-          >
-            <GoogleIcon />
-           Masuk Dengan Google
-          </button>
+          <GoogleButton
+            onLogin={googleLogin}
+            buttonText="Masuk Dengan Google"
+          />
         </form>
 
         <p className="text-center text-sm text-gray-600 mt-8">

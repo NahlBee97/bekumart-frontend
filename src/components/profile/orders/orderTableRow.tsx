@@ -2,17 +2,18 @@
 
 import { format } from "date-fns";
 import { IOrder } from "@/interfaces/dataInterfaces";
-import StatusBadge from "@/components/statusBadge";
 
-interface OrdersTableRowProps {
+import { StatusBadge } from "@/components/statusBadge";
+
+interface props {
   order: IOrder;
   onRowClick: (order: IOrder) => void;
 }
 
-const OrdersTableRow: React.FC<OrdersTableRowProps> = ({
+export const OrdersTableRow = ({
   order,
   onRowClick,
-}) => {
+}:props) => {
   return (
     <tr
       key={order.id}
@@ -31,5 +32,3 @@ const OrdersTableRow: React.FC<OrdersTableRowProps> = ({
     </tr>
   );
 };
-
-export default OrdersTableRow;

@@ -14,16 +14,13 @@ export const BurgerMenu = ({
   const pathname = usePathname();
 
   useEffect(() => {
-    // Using Next.js's usePathname is more reliable for client-side navigation
     setActiveLink(pathname);
   }, [pathname]);
 
-  // Function to toggle menu visibility
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
-  // Effect to handle clicks outside the dropdown to close it
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (

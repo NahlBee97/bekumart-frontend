@@ -1,25 +1,25 @@
-import { IAddress } from "@/interfaces/dataInterfaces";
-import { AddressSectionSkeleton } from "../skeletons/checkout/addressSectionSkeleton";
+import { IAddress, ICourier } from "@/interfaces/dataInterfaces";
 
-interface AddressSectionProps {
+import { AddressSectionSkeleton } from "../skeletons/checkout/addressSectionSkeleton";
+import { Couriers } from "./couriers";
+
+interface props {
   isLoading: boolean;
   selectedAddress?: IAddress;
-  couriers: any[];
-  onCourierChange: (courier: any) => void;
+  couriers: ICourier[];
+  onCourierChange: (courier: ICourier) => void;
   onEditAddress: () => void;
 }
 
-export const AddressSection: React.FC<AddressSectionProps> = ({
+export const AddressSection = ({
   isLoading,
   selectedAddress,
   couriers,
   onCourierChange,
   onEditAddress,
-}) => {
-  const handleCourierChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const courierIndex = Number(event.target.value);
-    const courier = couriers[courierIndex];
-    console.log(courier);
+}: props) => {
+
+  const handleCourierChange = (courier: ICourier) => {
     onCourierChange(courier);
   };
 
@@ -52,24 +52,10 @@ export const AddressSection: React.FC<AddressSectionProps> = ({
             <p>{selectedAddress.province}</p>
           </div>
           <div className="mt-2">
-            <label
-              htmlFor="district"
-              className="block text-sm font-semibold text-gray-700"
-            >
-              Pilihan Kurir:
-            </label>
-            <select
-              id="courier"
-              onChange={handleCourierChange}
-              className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
-            >
-              {couriers.map((c, index) => (
-                <option key={index} value={index}>
-                  {c.name}, Biaya Pengiriman: Rp{" "}
-                  {c.cost.toLocaleString("id-ID")}
-                </option>
-              ))}
-            </select>
+            <Couriers
+              couriers={couriers}
+              onCourierChange={handleCourierChange}
+            />
           </div>
         </div>
       ) : (

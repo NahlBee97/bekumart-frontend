@@ -1,7 +1,7 @@
 import AccountInfo from "@/components/profile/accountInfo";
 import AddressInfo from "@/components/profile/addressInfo";
 
-export default async function ProfilePage() {
+export default function ProfilePage() {
   
   return (
     <div className="min-h-screen antialiased">

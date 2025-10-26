@@ -11,7 +11,7 @@ interface ConfirmModalProps {
   confirmText?: string;
 }
 
-export default function ConfirmModal({
+export function ConfirmModal({
   isOpen,
   onClose,
   onConfirm,

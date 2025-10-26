@@ -1,16 +1,18 @@
 "use client";
 
-import useAuthStore from "@/stores/useAuthStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { useCartStore } from "@/stores/useCartStore";
-import { MessageSquareIcon, PlusIcon } from "lucide-react";
+import { MessageSquareIcon } from "lucide-react";
 import { useState } from "react";
 import { StickyAddToCartSkeleton } from "./stickyAddToCartSkeleton";
 import toast from "react-hot-toast";
-import ConfirmModal from "../confirmModal";
+import { ConfirmModal } from "../confirmModal";
 import { useRouter } from "next/navigation";
 import { IProduct } from "@/interfaces/dataInterfaces";
+import { QuantitySelector } from "./quantitySelector";
+import { AddToCartButton } from "./addToCartButton";
 
-const StickyAddToCart: React.FC<{
+export const StickyAddToCart: React.FC<{
   product: IProduct;
 }> = ({ product }) => {
   const router = useRouter();
@@ -57,43 +59,20 @@ const StickyAddToCart: React.FC<{
       <div className="container mx-auto px-3 sm:px-4 lg:px-6">
         <div className="flex items-center justify-between h-18">
           {/* Actions */}
-          <div className="flex items-center space-x-4 md:space-x-6">
+          <div className="flex items-center space-x-2">
             <div className="flex p-2 items-center border border-gray-300 text-gray-500 rounded-md">
               <MessageSquareIcon className="w-6 h-6" />
             </div>
 
             {/* Quantity Selector */}
-            <div className="flex items-center border border-gray-300 rounded-md">
-              <button
-                onClick={decrementQuantity}
-                disabled={isLoading}
-                className="px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-l-md transition duration-200 focus:outline-none"
-                aria-label="Decrement quantity"
-              >
-                -
-              </button>
-              <span className="px-4 py-2 text-center w-16 bg-white font-medium">
-                {quantity}
-              </span>
-              <button
-                onClick={incrementQuantity}
-                disabled={isLoading}
-                className="px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-r-md transition duration-200 focus:outline-none"
-                aria-label="Increment quantity"
-              >
-                +
-              </button>
-            </div>
-
+            <QuantitySelector
+              isLoading={isLoading}
+              quantity={quantity}
+              onIncrease={incrementQuantity}
+              onDecrease={decrementQuantity}
+            />
             {/* Add to Cart Button */}
-            <button
-              onClick={handleAddToCart}
-              disabled={isLoading}
-              className="flex gap-2 px-4 py-3 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300 ease-in-out transform hover:-translate-y-1 disabled:bg-blue-300 disabled:cursor-not-allowed"
-            >
-              <PlusIcon />
-              <p>Keranjang</p>
-            </button>
+            <AddToCartButton isLoading={isLoading} onAdd={handleAddToCart} name="Tambahkan"/>
           </div>
         </div>
       </div>
@@ -107,5 +86,3 @@ const StickyAddToCart: React.FC<{
     </div>
   );
 };
-
-export default StickyAddToCart;

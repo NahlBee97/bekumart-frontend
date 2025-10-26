@@ -1,5 +1,5 @@
-import ProductDetail from "@/components/products/productDetail";
-import { getProductById, getProductPhotos } from "@/lib/data";
+import { ProductClient } from "@/components/products/productClient";
+import { getProductById, getProductPhotos, getProductReviews } from "@/lib/data";
 
 export default async function ProductDetailPage({
   params,
@@ -8,10 +8,24 @@ export default async function ProductDetailPage({
 }) {
   const { id } = await params;
 
-  const [product, photos] = await Promise.all([
+  const dataPromises = Promise.all([
     getProductById(id),
     getProductPhotos(id),
+    getProductReviews(id),
   ]);
 
-  return <ProductDetail product={product} photos={photos} />;
+  let isLoading = true
+
+  const [product, photos, reviews] = await dataPromises;
+
+  isLoading = false;
+
+  return (
+    <ProductClient 
+      product={product} 
+      photos={photos} 
+      reviews={reviews} 
+      isLoading={isLoading}
+    />
+  )
 }

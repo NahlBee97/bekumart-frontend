@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import { PieChart, ResponsiveContainer, Pie, Tooltip, Cell } from "recharts";
 import api from "@/lib/axios";
 import useAuthStore from "@/stores/useAuthStore";
-import { generateHslColors } from "@/utils/generateHslColors";
+import { generateHslColors } from "@/helper/generateHslColors";
 import { OriginSectionSkeleton } from "@/components/skeletons/admin/originSectionSkeleton";
 import { useWindowSize } from "@/hooks/useWindowSize";
 

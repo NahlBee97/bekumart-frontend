@@ -5,21 +5,21 @@ import api from "@/lib/axios";
 import { ChangePasswordSchema } from "@/schemas/authSchemas";
 import axios from "axios";
 import { useFormik } from "formik";
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 // --- IMAGE UPLOAD MODAL ---
-interface ChangePasswordModalProps {
+interface props {
   isOpen: boolean;
   onClose: () => void;
   user: IUser | null;
 }
 
-const ChangePasswordModal: FC<ChangePasswordModalProps> = ({
+export const ChangePasswordModal = ({
   isOpen,
   onClose,
   user,
-}) => {
+}:props) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   // --- CHANGE 1: Add state and useEffect for the animation ---
@@ -186,5 +186,3 @@ const ChangePasswordModal: FC<ChangePasswordModalProps> = ({
     </div>
   );
 };
-
-export default ChangePasswordModal;

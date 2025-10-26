@@ -3,7 +3,7 @@ import api from "./axios";
 export async function getUserAddresses(userId: string) {
   try {
     const response = await api.get(`/api/addresses/${userId}`);
-    return response.data.data;
+    return response.data.addresses;
   } catch (error) {
     console.error("Error fetching alamat:", error);
     throw new Error("Gagal memuat alamat. Coba lagi nanti.");
@@ -106,8 +106,18 @@ export async function getProductReviewsByUserId(userId: string) {
     const response = await api.get(`/api/reviews/user/${userId}`);
     return response.data.reviews;
   } catch (error) {
-    console.error("Error fetching user:", error);
-    throw new Error("Gagal memuat data user. Coba lagi nanti.");
+    console.error("Error fetching user reviews:", error);
+    throw new Error("Gagal memuat data user reviews. Coba lagi nanti.");
+  }
+}
+
+export async function getProductReviews(productId: string) {
+  try {
+    const response = await api.get(`/api/reviews/${productId}`);
+    return response.data.reviews;
+  } catch (error) {
+    console.error("Error fetching reviews:", error);
+    throw new Error("Gagal memuat data reviews. Coba lagi nanti.");
   }
 }
 

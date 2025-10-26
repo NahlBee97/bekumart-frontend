@@ -1,5 +1,6 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, useState } from "react";
+import { CommonButton } from "../buttons/commonButton";
 
 // Helper to clean input to numbers only
 const cleanNumber = (value: string): number => {
@@ -80,13 +81,11 @@ export const PriceRangeFilter = ({onApply}: {onApply: () => void}) => {
       </div>
 
       {/* Apply Button */}
-      <button
+      <CommonButton
         onClick={handleApplyClick}
-        className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-md mt-2 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-300 disabled:bg-gray-300 disabled:cursor-not-allowed"
-        disabled={maxPrice ? maxPrice < minPrice : false}
-      >
-        Terapkan
-      </button>
+        isDisable={maxPrice ? maxPrice < minPrice : false}
+        buttonText="Terapkan"
+      />
     </div>
   );
 };

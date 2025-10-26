@@ -1,14 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import OrderDetailModal from "@/components/profile/orders/orderDetailModal";
 import { getUserOrders } from "@/lib/data";
-import useAuthStore from "@/stores/useAuthStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { IOrder } from "@/interfaces/dataInterfaces";
-import TablePagination from "@/components/admin/products/tablePagination";
-import OrdersTableSkeleton from "@/components/skeletons/admin/orders/tableSkeleton";
-import OrdersTableRow from "./orderTableRow";
-import EmptyState from "./emptyState";
+
+import { TablePagination } from "@/components/admin/products/tablePagination";
+import { OrdersTableSkeleton } from "@/components/skeletons/admin/orders/tableSkeleton";
+import { OrdersTableRow } from "./orderTableRow";
+import { EmptyState } from "./emptyState";
+import { OrderDetailModal } from "@/components/profile/orders/orderDetailModal";
+import { getTotalPages } from "@/helper/functions";
 
 // --- MAIN PAGE COMPONENT ---
 export default function OrderHistoryClient() {
@@ -17,16 +19,13 @@ export default function OrderHistoryClient() {
   const [selectedOrder, setSelectedOrder] = useState<IOrder | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const ordersPerPage = 10;
 
   const handleViewOrder = (order: IOrder) => setSelectedOrder(order);
   const handleCloseModal = () => setSelectedOrder(null);
 
-  const indexOfLastOrder = currentPage * ordersPerPage;
-  const indexOfFirstorder = indexOfLastOrder - ordersPerPage;
-  const currentOrders = orders.slice(indexOfFirstorder, indexOfLastOrder);
-  const totalPages = Math.ceil(orders.length / ordersPerPage);
+  const {totalPages, currentItems} = getTotalPages(orders, currentPage, ordersPerPage)
 
   useEffect(() => {
     if (isAuthLoading || !accessToken) return;
@@ -85,7 +84,7 @@ export default function OrderHistoryClient() {
                 {isLoading ? (
                   <OrdersTableSkeleton />
                 ) : (
-                  currentOrders.map((order) => (
+                  currentItems.map((order) => (
                     <OrdersTableRow
                       key={order.id}
                       order={order}

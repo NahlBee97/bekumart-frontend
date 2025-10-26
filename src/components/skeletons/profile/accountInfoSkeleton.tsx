@@ -1,4 +1,4 @@
-export default function AccountInfoSkeleton() {
+export const AccountInfoSkeleton = () => {
   return (
     <div className="bg-white shadow-md sm:rounded-lg overflow-hidden">
       <div className="p-6">

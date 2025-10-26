@@ -1,18 +1,22 @@
 "use client";
 
-import { useFormik } from "formik";
-import { RegisterSchema } from "@/schemas/authSchemas";
 import Link from "next/link";
 import axios from "axios";
+import api from "@/lib/axios";
+import toast from "react-hot-toast";
+import { useFormik } from "formik";
+import { RegisterSchema } from "@/schemas/authSchemas";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import toast from "react-hot-toast";
-import api from "@/lib/axios";
-import { GoogleIcon } from "../icons";
 import { useGoogleLogin } from "@react-oauth/google";
-import useAuthStore from "@/stores/useAuthStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { jwtDecode } from "jwt-decode";
 import { IUser } from "@/interfaces/dataInterfaces";
+
+import { TextInputField } from "../formFields/textInputField";
+import { CheckBox } from "../formFields/checkBox";
+import { SubmitButton } from "../buttons/submitButton";
+import { GoogleButton } from "../buttons/googleButton";
 
 export default function RegisterForm() {
   const { setAccessToken, login } = useAuthStore();
@@ -95,88 +99,44 @@ export default function RegisterForm() {
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
           Buat Akun
         </h1>
-        <form onSubmit={formik.handleSubmit} className="space-y-4">
+        <form onSubmit={formik.handleSubmit} className="space-y-2" noValidate>
           {/* Name Field */}
-          <div>
-            <div className="relative">
-              <input
-                id="name"
-                type="text"
-                placeholder="Nama"
-                {...formik.getFieldProps("name")}
-                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 ${
-                  formik.touched.name && formik.errors.name
-                    ? "border-red-500 focus:ring-red-500"
-                    : "border-gray-300 focus:ring-blue-500"
-                }`}
-              />
-            </div>
-            {formik.touched.name && formik.errors.name && (
-              <p className="text-red-500 text-xs mt-1">{formik.errors.name}</p>
-            )}
-          </div>
-
+          <TextInputField
+            formik={formik}
+            type="text"
+            fieldName="name"
+            label=""
+            withLabel={false}
+            placeHolder="Nama"
+          />
           {/* Email Field */}
-          <div>
-            <div className="relative">
-              <input
-                id="email"
-                type="email"
-                placeholder="Email"
-                {...formik.getFieldProps("email")}
-                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 ${
-                  formik.touched.email && formik.errors.email
-                    ? "border-red-500 focus:ring-red-500"
-                    : "border-gray-300 focus:ring-blue-500"
-                }`}
-              />
-            </div>
-            {formik.touched.email && formik.errors.email && (
-              <p className="text-red-500 text-xs mt-1">{formik.errors.email}</p>
-            )}
-          </div>
-
+          <TextInputField
+            formik={formik}
+            type="email"
+            fieldName="email"
+            label=""
+            withLabel={false}
+            placeHolder="Email"
+          />
           {/* Password Field */}
-          <div>
-            <div className="relative">
-              <input
-                id="password"
-                type={showPassword ? "text" : "password"}
-                placeholder="Password"
-                {...formik.getFieldProps("password")}
-                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 ${
-                  formik.touched.password && formik.errors.password
-                    ? "border-red-500 focus:ring-red-500"
-                    : "border-gray-300 focus:ring-blue-500"
-                }`}
-              />
-              <input
-                className="mt-2 h-2"
-                type="checkbox"
-                checked={showPassword}
-                onChange={() => setShowPassword(!showPassword)}
-              />{" "}
-              <label className="text-gray-600 text-xs">Lihat Password</label>
-            </div>
-            {formik.touched.password && formik.errors.password && (
-              <p className="text-red-500 text-xs mt-1">
-                {formik.errors.password}
-              </p>
-            )}
-          </div>
-
+          <>
+            <TextInputField
+              formik={formik}
+              type={showPassword ? "text" : "password"}
+              fieldName="password"
+              label=""
+              withLabel={false}
+              placeHolder="Password"
+            />
+            <CheckBox
+              isChecked={showPassword}
+              onChecked={() => setShowPassword(!showPassword)}
+              label="Lihat Password"
+            />
+          </>
           {/* Submit Button*/}
-          <button
-            type="submit"
-            disabled={!formik.isValid || !formik.dirty || formik.isSubmitting}
-            className="w-full flex items-center justify-center py-3 mt-4 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed"
-          >
-            {formik.isSubmitting ? (
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-            ) : (
-              "Buat Akun"
-            )}
-          </button>
+          <SubmitButton formik={formik} type="submit" buttonText="Buat Akun" />
+
           {/* --- OR Separator --- */}
           <div className="my-6 flex items-center">
             <div className="flex-grow border-t border-gray-300"></div>
@@ -185,14 +145,10 @@ export default function RegisterForm() {
           </div>
 
           {/* --- Google Login Button --- */}
-          <button
-            type="button"
-            onClick={() => googleLogin()}
-            className="w-full flex items-center justify-center py-3 px-4 border border-gray-300 rounded-lg bg-white text-gray-700 font-semibold hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition-colors duration-300"
-          >
-            <GoogleIcon />
-            Daftar Dengan Google
-          </button>
+          <GoogleButton
+            onLogin={googleLogin}
+            buttonText="Daftar Dengan Google"
+          />
         </form>
 
         <p className="text-center text-sm text-gray-600 mt-8">

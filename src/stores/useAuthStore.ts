@@ -15,7 +15,7 @@ interface AuthState {
   logout: () => Promise<void>;
 }
 
-const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthState>((set) => ({
   accessToken: null,
   user: {} as IUser,
   isLoggedIn: false,
@@ -51,4 +51,3 @@ const useAuthStore = create<AuthState>((set) => ({
   },
 }));
 
-export default useAuthStore;

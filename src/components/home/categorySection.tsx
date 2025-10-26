@@ -1,20 +1,16 @@
 "use client";
 
-import { useState, useRef, useEffect, FC } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { CategoryCard } from "./categoryCard";
 import { ICategory } from "@/interfaces/dataInterfaces";
 
-// Define the props for our component
-interface CategoryShowcaseProps {
-  categories: ICategory[];
-}
-
-const CategorySection: FC<CategoryShowcaseProps> = ({ categories = [] }) => {
+const CategorySection = ({ categories }: { categories: ICategory[] }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [isScrollable, setIsScrollable] = useState(false);
-  const [showLeftArrow, setShowLeftArrow] = useState(false);
-  const [showRightArrow, setShowRightArrow] = useState(false);
+
+  const [isScrollable, setIsScrollable] = useState<boolean>(false);
+  const [showLeftArrow, setShowLeftArrow] = useState<boolean>(false);
+  const [showRightArrow, setShowRightArrow] = useState<boolean>(false);
 
   useEffect(() => {
     const checkScrollable = () => {
@@ -84,7 +80,7 @@ const CategorySection: FC<CategoryShowcaseProps> = ({ categories = [] }) => {
         >
           <div className="flex items-center gap-1">
             {categories.map((category) => (
-              <CategoryCard key={category.id} category={category}/>
+              <CategoryCard key={category.id} category={category} />
             ))}
           </div>
         </div>

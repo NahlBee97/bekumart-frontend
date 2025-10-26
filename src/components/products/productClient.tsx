@@ -1,28 +1,33 @@
 "use client";
 
+import { IProduct, IProductPhoto, IReview } from "@/interfaces/dataInterfaces";
+
 import { notFound } from "next/navigation";
 import { MainSection } from "./mainSection";
 import { ReviewSection } from "./reviewSection";
-import { IProduct, IProductPhoto } from "@/interfaces/dataInterfaces";
-import StickyAddToCart from "./stickyAddToCart";
+import { StickyAddToCart } from "./stickyAddToCart";
 
-// The props interface remains the same.
-export interface props {
+interface props {
   product: IProduct;
   photos: IProductPhoto[];
+  reviews: IReview[];
+  isLoading: boolean;
 }
 
-// The component now uses responsive Tailwind classes.
-export default function ProductDetail({ product, photos }: props) {
+export function ProductClient({
+  product,
+  photos,
+  reviews,
+  isLoading,
+}: props) {
   if (!product) return notFound();
 
   return (
     <div className="bg-slate-50 min-h-screen">
       <div className="flex flex-col gap-5 md:gap-10 mx-auto max-w-2xl md:py-4 lg:max-w-7xl lg:py-8">
         <MainSection product={product} photos={photos} />
-        {/* you can get reviews on server page */}
-        <ReviewSection product={product}/> 
-        <StickyAddToCart product={product}/>
+        <ReviewSection reviews={reviews} isLoading={isLoading} />
+        <StickyAddToCart product={product} />
       </div>
     </div>
   );

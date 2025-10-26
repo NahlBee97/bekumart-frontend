@@ -1,6 +1,6 @@
 import { IOrder } from "@/interfaces/dataInterfaces";
 import { format } from "date-fns";
-import StatusBadge from "../../statusBadge";
+import { StatusBadge } from "../../statusBadge";
 
 export const OrderSummary = ({ order }: { order: IOrder }) => (
   <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">

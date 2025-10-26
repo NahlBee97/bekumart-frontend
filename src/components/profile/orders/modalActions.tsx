@@ -1,16 +1,12 @@
 import { IOrder } from "@/interfaces/dataInterfaces";
 
-interface ModalActionsProps {
+interface props {
   order: IOrder;
   isPaymentLoading: boolean;
   onProceedPayment: () => void;
 }
 
-const ModalActions: React.FC<ModalActionsProps> = ({
-  order,
-  isPaymentLoading,
-  onProceedPayment,
-}) => {
+export const ModalActions = ({ order, isPaymentLoading, onProceedPayment }: props) => {
   if (order.status !== "PENDING") {
     return null; // No actions if order is not pending
   }
@@ -41,5 +37,3 @@ const ModalActions: React.FC<ModalActionsProps> = ({
 
   return null;
 };
-
-export default ModalActions;

@@ -28,7 +28,7 @@ const SkeletonRow = () => (
   </tr>
 );
 
-const OrdersTableSkeleton = () => {
+export const OrdersTableSkeleton = () => {
   return (
     <>
       {/* Show 5 skeleton rows */}
@@ -40,5 +40,3 @@ const OrdersTableSkeleton = () => {
     </>
   );
 };
-
-export default OrdersTableSkeleton;

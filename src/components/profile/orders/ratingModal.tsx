@@ -1,131 +1,44 @@
-import { useState, useRef, useEffect } from "react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import type { FC } from "react";
 import api from "@/lib/axios";
 import toast from "react-hot-toast";
+import { useState, useRef, useEffect } from "react";
+import { useFormik } from "formik";
+import { Trash2, X } from "lucide-react";
 
-// --- Helper Components & Icons ---
+import { StarIcon } from "@/components/icons";
+import { RatingSchema } from "@/schemas/ratingSchema";
+import { AreaInputField } from "@/components/formFields/areaInputField";
+import { SubmitButton } from "@/components/buttons/submitButton";
 
-const StarIcon: FC<{
-  filled: boolean;
-  onClick: () => void;
-  onMouseEnter: () => void;
-  onMouseLeave: () => void;
-}> = ({ filled, onClick, onMouseEnter, onMouseLeave }) => (
-  <svg
-    onClick={onClick}
-    onMouseEnter={onMouseEnter}
-    onMouseLeave={onMouseLeave}
-    className={`w-8 h-8 cursor-pointer transition-transform duration-200 ${
-      filled ? "text-yellow-400" : "text-gray-300"
-    } hover:scale-125`}
-    fill="currentColor"
-    viewBox="0 0 20 20"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-  </svg>
-);
+const maxPhotos = 5;
 
-const TrashIcon: FC<{ className?: string }> = ({ className }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    className={className}
-  >
-    <path
-      fillRule="evenodd"
-      d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.006a.75.75 0 01-.749.654H5.25a.75.75 0 01-.749-.654L3.495 6.66l-.209.035a.75.75 B 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.347-9zm5.459 0a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.347-9z"
-      clipRule="evenodd"
-    />
-  </svg>
-);
-
-const XIcon: FC<{ className?: string }> = ({ className }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
-    className={className}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M6 18L18 6M6 6l12 12"
-    />
-  </svg>
-);
-
-// --- Constants & Types ---
-
-const MAX_PHOTOS = 5;
-const MAX_FILE_SIZE_MB = 5;
-const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
-const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"];
-
-interface ReviewFormValues {
-  rating: number;
-  desc: string;
-  photos: File[];
-}
-
-interface ReviewModalProps {
+interface props {
   productId: string;
   isOpen: boolean;
   onClose: () => void;
   onSubmitSuccess: () => void;
 }
 
-// --- Main Modal Component ---
-
-const RatingModal: FC<ReviewModalProps> = ({
+export const RatingModal = ({
   productId,
   isOpen,
   onClose,
   onSubmitSuccess,
-}) => {
+}: props) => {
   const [photoPreviews, setPhotoPreviews] = useState<string[]>([]);
-  const [hoverRating, setHoverRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState<number>(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const modalContentRef = useRef<HTMLDivElement>(null);
 
-  const formik = useFormik<ReviewFormValues>({
+  const formik = useFormik({
     initialValues: {
       rating: 0,
       desc: "",
       photos: [],
     },
-    validationSchema: Yup.object({
-      rating: Yup.number()
-        .min(1, "Please select a rating")
-        .required("Rating is required"),
-      desc: Yup.string()
-        .optional()
-        .max(1000, "Comment must be 1000 characters or less"),
-      photos: Yup.array()
-        .of(
-          Yup.mixed<File>()
-            .test(
-              "fileSize",
-              `File is too large. Max size is ${MAX_FILE_SIZE_MB}MB.`,
-              (value): value is File =>
-                !value || value.size <= MAX_FILE_SIZE_BYTES
-            )
-            .test(
-              "fileType",
-              "Invalid file type. Only JPEG, PNG, and WEBP are allowed.",
-              (value): value is File =>
-                !value || (value && ALLOWED_MIME_TYPES.includes(value.type))
-            )
-        )
-        .max(MAX_PHOTOS, `You can upload a maximum of ${MAX_PHOTOS} photos.`),
-    }),
-    onSubmit: async (values, { setSubmitting }) => {
+    validationSchema: RatingSchema,
+    onSubmit: async (values) => {
       const formData = new FormData();
+
       formData.append("rating", String(values.rating));
       if (values.desc) formData.append("desc", values.desc);
       values.photos.forEach((photo) => formData.append("files", photo));
@@ -134,34 +47,19 @@ const RatingModal: FC<ReviewModalProps> = ({
         await api.post(`/api/reviews/${productId}`, formData);
         toast.success("Berhasil Memberikan Review!");
         onSubmitSuccess();
-        setTimeout(() => {
-          onClose();
-        }, 2000);
-      } catch (error: any) {
+        onClose();
+      } catch (error) {
         toast.error("Gagal Memberikan Review");
-        console.error(error.message);
-        setSubmitting(false);
+        console.error("Gagal Memberikan Review:" + error);
       }
     },
   });
 
-  // Clean up object URLs to prevent memory leaks
   useEffect(() => {
     return () => {
       photoPreviews.forEach((url) => URL.revokeObjectURL(url));
     };
   }, [photoPreviews]);
-
-  // Effect to close modal on "Escape" key press
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        onClose();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onClose]);
 
   if (!isOpen) {
     return null;
@@ -169,17 +67,23 @@ const RatingModal: FC<ReviewModalProps> = ({
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.currentTarget.files) return;
+
     const newFiles = Array.from(event.currentTarget.files);
     const currentFiles = formik.values.photos;
-    if (currentFiles.length + newFiles.length > MAX_PHOTOS) {
-      toast.error(`Hanya bisa upload ${MAX_PHOTOS} gambar.`);
+
+    if (currentFiles.length + newFiles.length > maxPhotos) {
+      toast.error(`Hanya bisa upload ${maxPhotos} gambar.`);
       if (fileInputRef.current) fileInputRef.current.value = "";
       return;
     }
+
     const allFiles = [...currentFiles, ...newFiles];
+
     formik.setFieldValue("photos", allFiles);
+
     const newPreviews = newFiles.map((file) => URL.createObjectURL(file));
     setPhotoPreviews((prev) => [...prev, ...newPreviews]);
+
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
@@ -196,7 +100,7 @@ const RatingModal: FC<ReviewModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center p-4 transition-opacity duration-300"
+      className="fixed inset-0 bg-black/50 z-50 flex justify-center items-center p-4 transition-opacity duration-300"
       onClick={onClose}
     >
       <div
@@ -213,11 +117,9 @@ const RatingModal: FC<ReviewModalProps> = ({
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
         >
-          <XIcon className="w-6 h-6" />
+          <X className="w-6 h-6" />
         </button>
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">
-          Tulis Review
-        </h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">Tulis Review</h2>
         <form onSubmit={formik.handleSubmit}>
           <div className="mb-6">
             <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -242,27 +144,11 @@ const RatingModal: FC<ReviewModalProps> = ({
           </div>
 
           <div className="mb-6">
-            <label
-              htmlFor="desc"
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
-              Pendapatmu Tentang Produk Ini
-            </label>
-            <textarea
-              id="desc"
-              name="desc"
-              rows={4}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.desc}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="What did you like or dislike?"
+            <AreaInputField
+              formik={formik}
+              fieldName="desc"
+              label="Pendapat Tentang Produk Ini"
             />
-            {formik.touched.desc && formik.errors.desc ? (
-              <p className="text-red-500 text-xs italic mt-2">
-                {formik.errors.desc}
-              </p>
-            ) : null}
           </div>
 
           <div className="mb-6">
@@ -281,13 +167,13 @@ const RatingModal: FC<ReviewModalProps> = ({
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              disabled={formik.values.photos.length >= MAX_PHOTOS}
+              disabled={formik.values.photos.length >= maxPhotos}
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
               Pilih Gambar
             </button>
             <p className="text-xs text-gray-500 mt-2">
-              {formik.values.photos.length}/{MAX_PHOTOS} Max 1MB/Gambar
+              {formik.values.photos.length}/{maxPhotos} Max 1MB/Gambar
             </p>
             {formik.touched.photos &&
             typeof formik.errors.photos === "string" ? (
@@ -312,7 +198,7 @@ const RatingModal: FC<ReviewModalProps> = ({
                     onClick={() => removePhoto(index)}
                     className="absolute top-1 right-1 bg-black bg-opacity-50 rounded-full p-1 text-white opacity-0 group-hover:opacity-100 transition-opacity"
                   >
-                    <TrashIcon className="w-4 h-4" />
+                    <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
               ))}
@@ -331,18 +217,10 @@ const RatingModal: FC<ReviewModalProps> = ({
           )}
 
           <div className="flex items-center justify-end">
-            <button
-              type="submit"
-              disabled={formik.isSubmitting}
-              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline disabled:bg-gray-400"
-            >
-              {formik.isSubmitting ? "Menulis Review..." : "Submit"}
-            </button>
+            <SubmitButton formik={formik} buttonText="Beri Review" />
           </div>
         </form>
       </div>
     </div>
   );
 };
-
-export default RatingModal;

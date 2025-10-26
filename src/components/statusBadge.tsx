@@ -10,7 +10,7 @@ const statusLabels: { [key: string]: string } = {
 };
 
 // A component to render the status badge with appropriate colors
-const StatusBadge: React.FC<{ status: IOrder["status"] }> = ({ status }) => {
+export const StatusBadge: React.FC<{ status: IOrder["status"] }> = ({ status }) => {
   const baseClasses = "px-3 py-1 text-xs md:text-sm font-medium rounded-md";
   const statusClasses = {
     PENDING: "bg-yellow-100 text-orange-800",
@@ -26,4 +26,3 @@ const StatusBadge: React.FC<{ status: IOrder["status"] }> = ({ status }) => {
   );
 };
 
-export default StatusBadge;

@@ -1,8 +1,7 @@
 "use client";
 
-import { apiUrl } from "@/config";
 import api from "@/lib/axios";
-import useAuthStore from "@/stores/useAuthStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { CheckCircleIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
@@ -17,7 +16,7 @@ export default function Success() {
 
       const updateOrderStatus = async () => {
         if (orderId) {
-          await api.patch(`${apiUrl}/api/orders/${orderId}`, {
+          await api.patch(`/api/orders/${orderId}`, {
             status: "PROCESSING",
           });
         }

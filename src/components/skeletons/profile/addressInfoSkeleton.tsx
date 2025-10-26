@@ -1,4 +1,4 @@
-export default function AddressInfoSkeleton() {
+export const AddressInfoSkeleton = () => {
   return (
     <div className="bg-white shadow-md sm:rounded-lg overflow-hidden">
       <div className="p-6">

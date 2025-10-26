@@ -1,52 +1,38 @@
 "use client";
 
-import { IProduct, IReview } from "@/interfaces/dataInterfaces";
+import { IReview } from "@/interfaces/dataInterfaces";
 import { ReviewCard } from "./reviewCard";
-import { useEffect, useState } from "react";
 import { ReviewFilter } from "./reviewFilter";
-import api from "@/lib/axios";
 import { ReviewSectionSkeleton } from "../skeletons/products/reviewSectionSkeleton";
+import { getTotalPages } from "@/helper/functions";
+import { useEffect, useState } from "react";
+import { Pagination } from "../shop/pagination";
 
-export function ReviewSection({ product }: { product: IProduct }) {
-  const [reviews, setReviews] = useState<IReview[]>([]);
+interface props {
+  reviews: IReview[];
+  isLoading: boolean;
+}
+
+export function ReviewSection({ reviews, isLoading }: props) {
   const [filterReviews, setFilterReviews] = useState<IReview[]>([]);
   const [averageRating, setAverageRating] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   useEffect(() => {
-    if (!product) return;
-    const fetchReviews = async () => {
-      try {
-        const response = await api.get(`/api/reviews/${product.id}`);
-        setReviews(response.data.reviews);
-        const reviewCount = reviews.length;
-        const sumOfRatings = reviews.reduce((acc: number, review: IReview) => {
-          return acc + review.rating;
-        }, 0);
+    if (reviews) {
+      const reviewCount = reviews.length;
+      const sumOfRatings = reviews.reduce((acc: number, review: IReview) => {
+        return acc + review.rating;
+      }, 0);
 
-        setAverageRating(sumOfRatings / reviewCount);
-      } catch (error) {
-        console.error("Error fetching reviews: " + error)
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchReviews();
-  }, [product, reviews]);
+      setAverageRating(sumOfRatings / reviewCount);
+    }
+  }, [reviews]);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const reviewsPerPage = 10;
-
-  // Pagination logic
-  const indexOfLastReviews = currentPage * reviewsPerPage;
-  const indexOfFirstReviews = indexOfLastReviews - reviewsPerPage;
-  const currentReviews = (
-    filterReviews.length === 0 ? reviews : filterReviews
-  ).slice(indexOfFirstReviews, indexOfLastReviews);
-
-  const totalPages = Math.ceil(
-    (filterReviews.length === 0 ? reviews : filterReviews).length /
-      reviewsPerPage
+  const { currentItems, totalPages } = getTotalPages(
+    filterReviews,
+    currentPage,
+    10
   );
 
   const handleFilter = (rating: number) => {
@@ -73,34 +59,24 @@ export function ReviewSection({ product }: { product: IProduct }) {
         </div>
       ) : (
         <div className="border-t border-gray-200 py-4 space-y-2">
-          {currentReviews.map((review: IReview) => (
-            <ReviewCard key={review.id} review={review} />
-          ))}
+          {(filterReviews.length === 0 ? reviews : currentItems).map(
+            (review: IReview) => (
+              <ReviewCard key={review.id} review={review} />
+            )
+          )}
         </div>
       )}
+
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="mt-4 flex items-center justify-between">
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-          >
-            Kembali
-          </button>
-          <span className="text-sm text-slate-700 dark:text-slate-400">
-            Hal {currentPage} dari {totalPages}
-          </span>
-          <button
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-            disabled={currentPage === totalPages}
-            className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-          >
-            Lanjut
-          </button>
-        </div>
+        <Pagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          onClickPrev={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          onClickNext={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
+        />
       )}
     </section>
   );
