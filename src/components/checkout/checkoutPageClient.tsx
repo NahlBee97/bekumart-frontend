@@ -181,7 +181,7 @@ export default function CheckoutPageClient() {
         paymentMethod,
         addressId:
           deliveryMethod === "DELIVERY" ? selectedAddress?.id : undefined,
-        totalCheckoutPrice: total,
+        totalAmount: total,
         courier: selectedCourier?.name as string,
       };
 

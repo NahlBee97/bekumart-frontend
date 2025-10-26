@@ -177,7 +177,7 @@ export interface IOrderData {
   fullfillmentType: string;
   paymentMethod: string;
   addressId?: string;
-  totalCheckoutPrice: number;
+  totalAmount: number;
   courier: string;
 }
 

@@ -14,7 +14,7 @@ export async function getCartData(userId: string) {
   try {
     const response = await api.get(`/api/carts/${userId}`);
 
-    return response.data.data;
+    return response.data.cart;
   } catch (error) {
     console.error("Failed to fetch cart data on server:", error);
     throw new Error("Gagal memuat keranjang");
@@ -25,7 +25,7 @@ export async function getOrders() {
   try {
     const response = await api.get(`/api/orders`);
 
-    return response.data.data;
+    return response.data.orders;
   } catch (error) {
     console.error("Failed to fetch orders data:", error);
     throw new Error("Gagal memuat pesanan");
@@ -35,7 +35,7 @@ export async function getOrders() {
 export async function getUserOrders(userId: string) {
   try {
     const response = await api.get(`/api/orders/${userId}`);
-    return response.data.data;
+    return response.data.orders;
   } catch (error) {
     console.error("Error fetching user order:", error);
     throw new Error("Gagal memuat riwayat pesanan. Coba lagi nanti.");
@@ -44,7 +44,7 @@ export async function getUserOrders(userId: string) {
 export async function getOrderItems(orderId: string) {
   try {
     const response = await api.get(`/api/orders/order-items/${orderId}`);
-    return response.data.data;
+    return response.data.orderItems;
   } catch (error) {
     console.error("Error fetching user order:", error);
     throw new Error("Gagal memuat riwayat pesanan. Coba lagi nanti.");
@@ -54,7 +54,7 @@ export async function getOrderItems(orderId: string) {
 export async function getProducts() {
   try {
     const response = await api.get(`/api/products`);
-    return response.data.data;
+    return response.data.products;
   } catch (error) {
     console.error("Database Error: Failed to fetch products.", error);
     throw new Error("Gagal memuat produk. Coba lagi nanti.");
@@ -64,7 +64,7 @@ export async function getProducts() {
 export async function getCategories() {
   try {
     const response = await api.get(`/api/categories`);
-    return response.data.data;
+    return response.data.categories;
   } catch (error) {
     console.error("Database Error: Failed to fetch categories.", error);
     throw new Error("Gagal memuat kategori. Coba lagi nanti.");
@@ -74,7 +74,7 @@ export async function getCategories() {
 export async function getProductById(id: string) {
   try {
     const response = await api.get(`/api/products/${id}`);
-    return response.data.data;
+    return response.data.products;
   } catch (error) {
     console.error("Error fetching product:", error);
     throw new Error("Gagal memuat product. Coba lagi nanti.");
@@ -84,7 +84,7 @@ export async function getProductById(id: string) {
 export async function getProductPhotos(id: string) {
   try {
     const response = await api.get(`/api/product-photos/${id}`);
-    return response.data.data;
+    return response.data.photos;
   } catch (error) {
     console.error("Error fetching product photos:", error);
     throw new Error("Gagal memuat product photo. Coba lagi nanti.");
