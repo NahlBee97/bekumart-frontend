@@ -1,19 +1,21 @@
 import { IProductPhoto, IReviewPhoto } from "@/interfaces/dataInterfaces";
 import { Star, Trash2, UploadCloud } from "lucide-react";
 
-const PhotoThumbnail = ({
-  photo,
-  isMain,
-  onSetMain,
-  onUpdate,
-  onDelete,
-}: {
+interface props {
   photo: IProductPhoto | IReviewPhoto;
   isMain: boolean;
   onSetMain: (id: string) => void;
   onUpdate: (id: string) => void;
   onDelete: (id: string) => void;
-}) => (
+}
+
+export const PhotoThumbnail = ({
+  photo,
+  isMain,
+  onSetMain,
+  onUpdate,
+  onDelete,
+}:props ) => (
   <div className="relative group aspect-square">
     {/* eslint-disable-next-line */}
     <img
@@ -58,5 +60,3 @@ const PhotoThumbnail = ({
     </div>
   </div>
 );
-
-export default PhotoThumbnail;

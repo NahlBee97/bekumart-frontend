@@ -74,7 +74,6 @@ const router = useRouter();
   };
 
   const handleImageSave = () => {
-    setIsImageModalOpen(false);
     router.refresh();
   };
 

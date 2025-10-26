@@ -1,14 +1,16 @@
 "use client";
 
-import { useState, useRef, ChangeEvent, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { X } from "lucide-react";
-import PhotoThumbnail from "./photoThumbnail";
-import AddPhotoButton from "./addPhotoButton";
+import { PhotoThumbnail } from "./photoThumbnail";
+import { AddPhotoButton } from "./addPhotoButton";
 import api from "@/lib/axios";
 import { useAuthStore } from "@/stores/useAuthStore";
 import toast from "react-hot-toast";
 import { ConfirmModal } from "@/components/confirmModal";
 import { IProduct, IProductPhoto } from "@/interfaces/dataInterfaces";
+import { useFormik } from "formik";
+import { ProductPhotoSchema } from "@/schemas/productPhotoSchema";
 
 export const ProductPhotoModal = ({
   isOpen,
@@ -59,41 +61,56 @@ export const ProductPhotoModal = ({
     }
   }, [product, fetchProductPhotos]);
 
-  if (!isOpen) return null;
-
   // Triggers the hidden file input
   const triggerFileInput = (photoId: string | null = null) => {
     setPhotoToUpdateId(photoId); // If null, it's a new photo. Otherwise, it's an update.
     fileInputRef.current?.click();
   };
 
-  // Handles the actual file selection and update
-  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
-    try {
-      const file = event.target.files?.[0];
+  const formik = useFormik({
+    initialValues: {
+      photo: null as File | null,
+    },
+    validationSchema: ProductPhotoSchema,
+    onSubmit: async (values) => {
+      try {
+        if (!values.photo) return;
 
-      if (!file) throw new Error("No file");
+        const formData = new FormData();
+        formData.append("file", values.photo);
 
-      const formData = new FormData();
-      formData.append("file", file);
+        setIsLoading(true);
 
-      // Simulate upload and create a temporary local URL for preview
-      setIsLoading(true);
-
-      if (photoToUpdateId) {
-        await api.patch(`/api/product-photos/${photoToUpdateId}`, formData);
-        toast.success("berhasil mengganti photo");
-      } else {
-        await api.post(`/api/product-photos/${product?.id}`, formData);
-        toast.success("berhasil menambahkan photo");
+        if (photoToUpdateId) {
+          await api.patch(`/api/product-photos/${photoToUpdateId}`, formData);
+          toast.success("Berhasil mengganti foto");
+        } else {
+          await api.post(`/api/product-photos/${product?.id}`, formData);
+          toast.success("Berhasil menambahkan foto");
+        }
+        onSave();
+        fetchProductPhotos();
+        formik.resetForm();
+      } catch (error) {
+        toast.error("Gagal memproses foto");
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+        setPhotoToUpdateId(null);
       }
-      onSave();
-      fetchProductPhotos();
-      setIsLoading(false);
-      setPhotoToUpdateId(null);
-    } catch (error) {
-      toast.error("Gagal memproses photo");
-      console.error(error);
+    },
+  });
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      formik.setFieldValue("photo", file).then(() => {
+        if (!formik.errors.photo) {
+          formik.submitForm();
+        } else {
+          toast.error(formik.errors.photo);
+        }
+      });
     }
   };
 
@@ -136,6 +153,8 @@ export const ProductPhotoModal = ({
       setIsConfirmModalOpen(false);
     }
   };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4 transition-opacity">

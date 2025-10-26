@@ -4,7 +4,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { useCartStore } from "@/stores/useCartStore";
 import { MessageSquareIcon } from "lucide-react";
 import { useState } from "react";
-import { StickyAddToCartSkeleton } from "./stickyAddToCartSkeleton";
+import { StickyAddToCartSkeleton } from "../skeletons/products/stickyAddToCartSkeleton";
 import toast from "react-hot-toast";
 import { ConfirmModal } from "../confirmModal";
 import { useRouter } from "next/navigation";

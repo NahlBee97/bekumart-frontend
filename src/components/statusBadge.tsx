@@ -1,13 +1,5 @@
+import { statusLabels } from "@/helper/variable";
 import { IOrder } from "@/interfaces/dataInterfaces";
-
-const statusLabels: { [key: string]: string } = {
-  PENDING: "Menunggu",
-  PROCESSING: "Dalam Proses",
-  READY_FOR_PICKUP: "Siap Diambil",
-  OUT_FOR_DELIVERY: "Dalam Pengiriman",
-  COMPLETED: "Selesai",
-  CANCELLED: "Dibatalkan",
-};
 
 // A component to render the status badge with appropriate colors
 export const StatusBadge: React.FC<{ status: IOrder["status"] }> = ({ status }) => {
