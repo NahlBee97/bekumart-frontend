@@ -3,12 +3,14 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const FilterDropdown = () => {
+export const FilterDropdown = () => {
   const pathname = usePathname();
   const value = useSearchParams().get("value");
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedFilter, setSelectedFilter] = useState("Last 30 Days");
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [selectedFilter, setSelectedFilter] = useState<string>("Last 30 Days");
+
   const filters = [
     { name: "Last 30 Days", value: 30 },
     { name: "Last 7 Days", value: 7 },
@@ -20,6 +22,7 @@ const FilterDropdown = () => {
     const selectedFilter = filters.find((filter) => filter.value === Number(value) );
     if (!selectedFilter) return;
     setSelectedFilter(selectedFilter.name);
+    // eslint-disable-next-line
   }, [value])
 
   const handleFilterSelect = (filter: {name: string, value: number}) => {
@@ -86,5 +89,3 @@ const FilterDropdown = () => {
     </div>
   );
 };
-
-export default FilterDropdown;

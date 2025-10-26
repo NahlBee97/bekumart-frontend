@@ -2,14 +2,16 @@
 
 import React, { useState, useEffect } from "react";
 import api from "@/lib/axios";
-import useAuthStore from "@/stores/useAuthStore";
-import StatCard from "./statCard";
-import { CustomerSectionSkeleton } from "@/components/skeletons/admin/customerSectionSkeleton";
+import { useAuthStore } from "@/stores/useAuthStore";
 
-const CustomerSection = () => {
+import { StatCard } from "./statCard";
+import { CustomerSectionSkeleton } from "@/components/skeletons/admin/customerSectionSkeleton";
+import { ICustomerData } from "@/interfaces/dataInterfaces";
+
+export const CustomerSection = () => {
   const { isAuthLoading } = useAuthStore();
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<ICustomerData | null>(null);
 
   useEffect(() => {
     if (isAuthLoading) return;
@@ -33,17 +35,15 @@ const CustomerSection = () => {
       <div className="grid grid-cols-2 md:grid-cols-1 md:grid-rows-2 gap-2">
         <StatCard
           title="Total Pelanggan"
-          value={data.totalUsers}
+          value={data?.totalUsers as number}
           icon={<span>👥</span>}
         />
         <StatCard
           title="Pelanggan Baru (30 Hari)"
-          value={data.newUsers}
+          value={data?.newUsers as number}
           icon={<span>👋</span>}
         />
       </div>
     </section>
   );
 };
-
-export default CustomerSection;

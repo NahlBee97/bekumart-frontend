@@ -1,14 +1,16 @@
 "use client";
 
-import useAuthStore from "@/stores/useAuthStore";
-import { useState, useEffect } from "react";
 import api from "@/lib/axios";
-import { ProductSectionSkeleton } from "@/components/skeletons/admin/products/productSectionSkeleton";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useState, useEffect } from "react";
 
-const ProductSection = () => {
+import { ProductSectionSkeleton } from "@/components/skeletons/admin/products/productSectionSkeleton";
+import { IProductInsights } from "@/interfaces/dataInterfaces";
+
+export const ProductSection = () => {
   const { isAuthLoading } = useAuthStore();
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [data, setData] = useState<any | null>(null);
+  const [data, setData] = useState<IProductInsights | null>(null);
 
   useEffect(() => {
     if (isAuthLoading) return;
@@ -33,7 +35,7 @@ const ProductSection = () => {
         <div className="bg-white p-6 rounded-lg shadow-md">
           <h3 className="font-bold text-blue-500 mb-4">⭐ Produk Dengan Penjualan Terbaik</h3>
           <ul className="space-y-3">
-            {data.bestSellers.map(
+            {data?.bestSellers.map(
               (
                 product: { name: string; quantitySold: number },
                 index: number
@@ -54,7 +56,7 @@ const ProductSection = () => {
         <div className="bg-white p-6 rounded-lg shadow-md">
           <h3 className="text-blue-500 font-bold mb-4">⚠️ Produk Stok Rendah</h3>
           <ul className="space-y-3">
-            {data.lowStockProducts.map(
+            {data?.lowStockProducts.map(
               (product: { name: string; stock: number }, index: number) => (
                 <li
                   key={index}
@@ -73,5 +75,3 @@ const ProductSection = () => {
     </section>
   );
 };
-
-export default ProductSection;

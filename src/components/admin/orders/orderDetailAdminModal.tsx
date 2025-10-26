@@ -1,33 +1,34 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import StatusBadge from "../../statusBadge";
+import { StatusBadge } from "../../statusBadge";
 import { getOrderItems } from "@/lib/data";
 import { format } from "date-fns";
 import { IOrder, IOrderItem } from "@/interfaces/dataInterfaces";
 
-// --- MODAL COMPONENT ---
-const OrderDetailAdminModal: React.FC<{
+interface props {
   isOpen: boolean;
   order: IOrder | null;
   onClose: () => void;
-}> = ({ isOpen, order, onClose }) => {
+}
+
+// --- MODAL COMPONENT ---
+export const OrderDetailAdminModal = ({ isOpen, order, onClose }: props) => {
   const [orderItems, setOrderItems] = useState<IOrderItem[]>([]);
 
   useEffect(() => {
-      try {
-        setOrderItems([]);
-        if (!order) return;
-        const fetchOrderItems = async () => {
-          const orderItems = await getOrderItems(order.id)
-          setOrderItems(orderItems);
-        };
-        fetchOrderItems();
-      } catch (err) {
-        console.log("fail fetching order items" + err);
-      }
-    }, [order]);
-  
+    try {
+      setOrderItems([]);
+      if (!order) return;
+      const fetchOrderItems = async () => {
+        const orderItems = await getOrderItems(order.id);
+        setOrderItems(orderItems);
+      };
+      fetchOrderItems();
+    } catch (err) {
+      console.error("fail fetching order items" + err);
+    }
+  }, [order]);
 
   // Effect to handle Escape key press for closing the modal
   useEffect(() => {
@@ -193,5 +194,3 @@ const OrderDetailAdminModal: React.FC<{
     </div>
   );
 };
-
-export default OrderDetailAdminModal;

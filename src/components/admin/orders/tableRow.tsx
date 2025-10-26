@@ -3,30 +3,21 @@
 import { format } from "date-fns";
 import { IOrder } from "@/interfaces/dataInterfaces";
 import { OrderStatuses } from "@/interfaces/enums";
-import OrderStatusSelector from "./orderStatusSelector";
+import { OrderStatusSelector } from "./orderStatusSelector";
 
-interface StatusOption {
-  label: string;
-  value: string;
-}
-
-interface OrdersTableRowProps {
+interface props {
   order: IOrder;
-  statusOptions: StatusOption[];
-  statusColors: { [key: string]: string };
   updatingOrderIds: Set<string>;
   onStatusChange: (orderId: string, newStatus: OrderStatuses) => void;
   onRowClick: (order: IOrder) => void;
 }
 
-const OrdersTableRow: React.FC<OrdersTableRowProps> = ({
+export const OrdersTableRow = ({
   order,
-  statusOptions,
-  statusColors,
   updatingOrderIds,
   onStatusChange,
   onRowClick,
-}) => {
+}:props) => {
   return (
     <tr
       key={order.id}
@@ -45,8 +36,6 @@ const OrdersTableRow: React.FC<OrdersTableRowProps> = ({
       <td className="px-3 py-2 text-center">
         <OrderStatusSelector
           order={order}
-          statusOptions={statusOptions}
-          statusColors={statusColors}
           updatingOrderIds={updatingOrderIds}
           onStatusChange={onStatusChange}
         />
@@ -54,5 +43,3 @@ const OrdersTableRow: React.FC<OrdersTableRowProps> = ({
     </tr>
   );
 };
-
-export default OrdersTableRow;

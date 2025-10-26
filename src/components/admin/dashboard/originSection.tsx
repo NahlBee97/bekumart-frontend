@@ -1,14 +1,15 @@
 "use client";
 
+import api from "@/lib/axios";
 import { useState, useEffect, useMemo } from "react";
 import { PieChart, ResponsiveContainer, Pie, Tooltip, Cell } from "recharts";
-import api from "@/lib/axios";
-import useAuthStore from "@/stores/useAuthStore";
-import { generateHslColors } from "@/helper/generateHslColors";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { generateHslColors } from "@/helper/functions";
+
 import { OriginSectionSkeleton } from "@/components/skeletons/admin/originSectionSkeleton";
 import { useWindowSize } from "@/hooks/useWindowSize";
 
-const OriginSection = () => {
+export const OriginSection = () => {
   const { isAuthLoading } = useAuthStore();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [data, setData] = useState<{ location: string; count: number }[]>([]);
@@ -112,5 +113,3 @@ const OriginSection = () => {
     </section>
   );
 };
-
-export default OriginSection;

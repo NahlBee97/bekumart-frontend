@@ -5,12 +5,12 @@ import { X } from "lucide-react";
 import PhotoThumbnail from "./photoThumbnail";
 import AddPhotoButton from "./addPhotoButton";
 import api from "@/lib/axios";
-import useAuthStore from "@/stores/useAuthStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 import toast from "react-hot-toast";
-import ConfirmModal from "@/components/confirmModal";
+import { ConfirmModal } from "@/components/confirmModal";
 import { IProduct, IProductPhoto } from "@/interfaces/dataInterfaces";
 
-const ProductPhotoModal = ({
+export const ProductPhotoModal = ({
   isOpen,
   onSave,
   onClose,
@@ -21,7 +21,7 @@ const ProductPhotoModal = ({
   onClose: () => void;
   product: IProduct | null;
 }) => {
-  const { isLoading: isAuthLoading } = useAuthStore();
+  const { isAuthLoading } = useAuthStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [mainImage, setMainImage] = useState<IProductPhoto | null>(null);
@@ -262,5 +262,3 @@ const ProductPhotoModal = ({
     </div>
   );
 };
-
-export default ProductPhotoModal;

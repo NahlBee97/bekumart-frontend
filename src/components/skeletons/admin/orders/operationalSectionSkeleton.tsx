@@ -5,7 +5,7 @@ const StatusLine = () => (
   </div>
 );
 
-const OperationalSectionSkeleton = () => {
+export const OperationalSectionSkeleton = () => {
   return (
     <section>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -31,5 +31,3 @@ const OperationalSectionSkeleton = () => {
     </section>
   );
 };
-
-export default OperationalSectionSkeleton;

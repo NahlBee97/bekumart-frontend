@@ -1,6 +1,6 @@
 "use client";
 
-interface ProductsTableStatusProps {
+interface props {
   loading: boolean;
   isEmpty: boolean;
   searchTerm: string;
@@ -44,11 +44,11 @@ const SkeletonRow = () => (
   </tr>
 );
 
-export default function ProductsTableSkeleton({
+export const ProductsTableSkeleton = ({
   loading,
   isEmpty,
   searchTerm,
-}: ProductsTableStatusProps) {
+}: props) => {
   if (loading) {
     return (
       <>

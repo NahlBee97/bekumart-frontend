@@ -1,29 +1,21 @@
 "use client";
 
+import { statusColors, statusOptions } from "@/helper/variable";
 import { IOrder } from "@/interfaces/dataInterfaces";
 import { OrderStatuses } from "@/interfaces/enums";
 import { ChevronDown } from "lucide-react";
 
-interface StatusOption {
-  label: string;
-  value: string;
-}
-
-interface OrderStatusSelectorProps {
+interface props {
   order: IOrder;
-  statusOptions: StatusOption[];
-  statusColors: { [key: string]: string };
   updatingOrderIds: Set<string>;
   onStatusChange: (orderId: string, newStatus: OrderStatuses) => void;
 }
 
-const OrderStatusSelector: React.FC<OrderStatusSelectorProps> = ({
+export const OrderStatusSelector = ({
   order,
-  statusOptions,
-  statusColors,
   updatingOrderIds,
   onStatusChange,
-}) => {
+}: props) => {
   return (
     <div className="relative inline-block">
       <select
@@ -55,5 +47,3 @@ const OrderStatusSelector: React.FC<OrderStatusSelectorProps> = ({
     </div>
   );
 };
-
-export default OrderStatusSelector;

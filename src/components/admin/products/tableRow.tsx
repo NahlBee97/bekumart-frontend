@@ -1,32 +1,25 @@
 "use client";
 
-import { CameraIcon, DeleteIcon, EditIcon } from "./icons";
 import { IProduct } from "../../../interfaces/dataInterfaces";
+import { formatCurrency } from "@/helper/functions";
+import { Camera, Edit3, Trash2 } from "lucide-react";
 
-interface ProductsTableRowProps {
+interface props {
   product: IProduct;
   onEdit: (product: IProduct) => void;
   onDelete: (product: IProduct) => void;
   onOpenImageModal: (product: IProduct) => void;
 }
 
-export default function ProductsTableRow({
+export const ProductsTableRow = ({
   product,
   onEdit,
   onDelete,
   onOpenImageModal,
-}: ProductsTableRowProps) {
+}: props) => {
   const defaultImage =
     product.productPhotos.find((photo) => photo.isDefault === true)?.imageUrl ||
     "https://placehold.co/40x40/e2e8f0/64748b?text=N/A";
-
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-      minimumFractionDigits: 0,
-    }).format(value);
-  };
 
   return (
     <tr className="bg-white border-b border-gray-200 hover:bg-gray-50 transition-colors">
@@ -48,7 +41,7 @@ export default function ProductsTableRow({
               className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white rounded-md opacity-0 group-hover:opacity-50 transition-opacity"
               aria-label="Change image"
             >
-              <CameraIcon />
+              <Camera className="h-5 w-5 text-gray-600" />
             </button>
           </div>
           <div>
@@ -71,21 +64,19 @@ export default function ProductsTableRow({
       <td className="px-3 py-2">
         <div className="flex items-center justify-center space-x-4">
           <button
+            className="p-1 text-gray-500 hover:text-blue-600"
             onClick={() => onEdit(product)}
-            className="group p-1 rounded-full hover:bg-blue-100 transition-colors"
-            aria-label="Edit product"
           >
-            <EditIcon />
+            <Edit3 className="h-4 w-4" />
           </button>
           <button
             onClick={() => onDelete(product)}
-            className="group p-1 rounded-full hover:bg-red-100 transition-colors"
-            aria-label="Delete product"
+            className="p-1 text-gray-500 hover:text-red-600"
           >
-            <DeleteIcon />
+            <Trash2 className="h-4 w-4" />
           </button>
         </div>
       </td>
     </tr>
   );
-}
+};

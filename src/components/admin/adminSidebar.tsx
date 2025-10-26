@@ -1,13 +1,14 @@
 "use client";
 
-import { FileText, LogOut, Package, User, LayoutDashboard } from "lucide-react";
-import { usePathname } from "next/navigation";
 import Link from "next/link";
-import useAuthStore from "@/stores/useAuthStore";
+import { FileText, LogOut, Package, User, LayoutDashboard } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function AdminSidebar() {
   const { logout } = useAuthStore();
   const pathname = usePathname();
+  const router = useRouter();
 
   const navItems = [
     { icon: LayoutDashboard, label: "Dashboard", link: "/admin" },
@@ -19,10 +20,7 @@ export default function AdminSidebar() {
   const handleLogOut = async () => {
     try {
       await logout();
-      // Clear any potential navigation history
-      window.history.replaceState(null, '', '/');
-      // Force a hard navigation to /
-      window.location.href = '/';
+      router.push('/');
     } catch (error) {
       console.error("Logout failed:", error);
     }

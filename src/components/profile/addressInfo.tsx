@@ -65,7 +65,7 @@ export default function AddressInfo() {
 
   const confirmSetDefault = async (address: IAddress) => {
     try {
-      await api.patch(`/api/addresses/${address?.id}`, { isDefault: true });
+      await api.patch(`/api/addresses/${address?.id}`, {});
       refreshAddresess();
       toast.success("Berhasil Mengatur Alamat Utama");
     } catch (error) {

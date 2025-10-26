@@ -1,16 +1,10 @@
 const ProductListItemSkeleton = () => (
   <li className="flex justify-between items-center py-1">
-    {/* Placeholder untuk nama produk */}
     <div className="h-4 bg-gray-200 rounded w-1/2 animate-pulse"></div>
-    {/* Placeholder untuk badge (terjual/stok) */}
     <div className="h-6 bg-gray-200 rounded w-1/4 animate-pulse"></div>
   </li>
 );
 
-/**
- * Komponen Skeleton utama untuk ProductSection.
- * Ini meniru tata letak untuk "Best Sellers" dan "Low Stock".
- */
 export const ProductSectionSkeleton = () => {
   return (
     <section>

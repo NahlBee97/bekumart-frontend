@@ -127,6 +127,11 @@ export interface ISalesSummary {
   }[];
 }
 
+export interface ICustomerData {
+  totalUsers: number;
+  newUsers: number;
+}
+
 export interface IProductInsights {
   bestSellers: { name: string; quantitySold: number }[];
   lowStockProducts: { name: string; stock: number }[];
@@ -137,6 +142,34 @@ export interface IReviewLike {
   userId: string;
   user: IUser;
   reviewId: string;
+}
+
+export interface IStatusCounts {
+  status: OrderStatuses;
+  _count: {
+    status: number;
+  };
+}
+
+export interface IRecentOrders {
+    totalAmount: number;
+    id: string;
+    status: OrderStatuses;
+    user: {
+      name: string;
+    };
+  }
+
+export interface ITotalOrders {
+    _count: {
+      id: true;
+    };
+  }
+
+export interface IOperationalSummary {
+  statusCounts: IStatusCounts[];
+  recentOrders: IRecentOrders[];
+  totalOrders: ITotalOrders;
 }
 
 export interface IOrderData {

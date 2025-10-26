@@ -1,40 +1,34 @@
 "use client";
 
-import { ICategory, IProduct } from "@/interfaces/dataInterfaces";
+import toast from "react-hot-toast";
 import api from "@/lib/axios";
-import { getCategories } from "@/lib/data";
 import { ProductSchema } from "@/schemas/productSchemas";
 import { useFormik } from "formik";
-import { FC, useEffect, useState } from "react";
-import toast from "react-hot-toast";
+
+import { TextInputField } from "@/components/formFields/textInputField";
+import { SelectField } from "@/components/formFields/selectField";
+import { NumberInputField } from "@/components/formFields/numberInputField";
+import { AreaInputField } from "@/components/formFields/areaInputField";
+import { TinyCommonButton } from "@/components/buttons/tinyCommonButton";
+import { SubmitButton } from "@/components/buttons/submitButton";
+import { ICategory, IProduct } from "@/interfaces/dataInterfaces";
 
 // --- PRODUCT FORM MODAL COMPONENT ---
-interface ProductFormModalProps {
+interface props {
+  categories: ICategory[];
   isOpen: boolean;
   onClose: () => void;
   onSave: () => void;
   productToEdit: IProduct | null;
 }
 
-const ProductFormModal: FC<ProductFormModalProps> = ({
+export const ProductFormModal = ({
+  categories,
   isOpen,
   onClose,
   onSave,
   productToEdit,
-}) => {
-  const [categories, setCategories] = useState<ICategory[]>([]);
-
-  useEffect(() => {
-    try {
-      const fetchCategories = async () => {
-        const categories = await getCategories();
-        setCategories(categories);
-      };
-      fetchCategories();
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  }, []);
+}: props) => {
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -70,162 +64,93 @@ const ProductFormModal: FC<ProductFormModalProps> = ({
     },
   });
 
-  if (!isOpen) return null;
+  const handleCategoryChange = (selectedName: string) => {
+    const category = categories.find((c) => c.name === selectedName);
+    formik.setFieldValue("category", category || { id: "", name: "" });
+  };
 
-  const modalTitle = productToEdit?.id
-    ? "Edit Product Details"
-    : "Add New Product";
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex justify-center items-center p-4">
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <form onSubmit={formik.handleSubmit}>
           <div className="p-6 border-b">
-            <h2 className="text-xl font-bold text-blue-500">{modalTitle}</h2>
+            <h2 className="text-xl font-bold text-blue-500">
+              {productToEdit?.id ? "Edit Product Details" : "Add New Product"}
+            </h2>
           </div>
           <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Name */}
             <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Product Name
-              </label>
-              <input
+              <TextInputField
+                formik={formik}
                 type="text"
-                name="name"
-                id="name"
-                value={formik.values.name || ""}
-                onChange={formik.handleChange}
-                required
-                className="form-input"
+                fieldName="name"
+                label="Product Name"
+                withLabel={true}
+                placeHolder=""
               />
             </div>
             {/* Category */}
             <div>
-              <label
-                htmlFor="category"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Category
-              </label>
-              <select
-                name="category"
-                id="category"
-                value={formik.values.category?.id || ""}
-                onChange={(e) => {
-                  const selectedId = e.target.value;
-                  const category = categories.find((c) => c.id === selectedId);
-                  console.log("Selected category:", category);
-                  formik.setFieldValue(
-                    "category",
-                    category || { id: "", name: "" }
-                  );
-                }}
-                required
-                className="form-input"
-              >
-                <option value="" disabled>
-                  Select a category
-                </option>
-                {categories.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
+              <SelectField
+                formik={formik}
+                items={categories}
+                fieldName="category"
+                label="Category"
+                onItemChange={handleCategoryChange}
+              />
             </div>
             {/* Price */}
             <div>
-              <label
-                htmlFor="price"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Price
-              </label>
-              <input
-                type="number"
-                name="price"
-                id="price"
-                value={formik.values.price || ""}
-                onChange={formik.handleChange}
-                required
-                min="0"
-                step="0.01"
-                className="form-input"
+              <NumberInputField
+                formik={formik}
+                fieldName="price"
+                label="Harga"
+                withLabel={true}
+                min={0}
+                placeHolder=""
               />
             </div>
             {/* Stock */}
             <div>
-              <label
-                htmlFor="stock"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Stock
-              </label>
-              <input
-                type="number"
-                name="stock"
-                id="stock"
-                value={formik.values.stock || ""}
-                onChange={formik.handleChange}
-                required
-                min="0"
-                className="form-input"
+              <NumberInputField
+                formik={formik}
+                fieldName="stock"
+                label="Stok"
+                withLabel={true}
+                min={0}
+                placeHolder=""
               />
             </div>
             {/* Weight */}
             <div className="md:col-span-2">
-              <label
-                htmlFor="weightInKg"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Weight (kg)
-              </label>
-              <input
-                type="number"
-                name="weightInKg"
-                id="weightInKg"
-                value={formik.values.weightInKg || ""}
-                onChange={formik.handleChange}
-                min="0"
-                step="0.01"
-                className="form-input"
+              <NumberInputField
+                formik={formik}
+                fieldName="weightInKg"
+                label="Berat (Kg)"
+                withLabel={true}
+                min={0}
+                placeHolder=""
               />
             </div>
             {/* Description */}
             <div className="md:col-span-2">
-              <label
-                htmlFor="description"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Description
-              </label>
-              <textarea
-                name="description"
-                id="description"
-                value={formik.values.description || ""}
-                onChange={formik.handleChange}
-                rows={4}
-                className="form-input"
-              ></textarea>
+              <AreaInputField
+                formik={formik}
+                fieldName="description"
+                label="Deskrpsi"
+              />
             </div>
           </div>
           <div className="p-6 bg-gray-50 flex justify-end items-center gap-4 rounded-b-xl">
-            <button
-              type="button"
+            <TinyCommonButton
+              isPositive={false}
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none"
-            >
-              Batal
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:outline-none"
-            >
-              {formik.isSubmitting ? "Menyimpan..." : "Simpan"}
-            </button>
+              buttonText="Batal"
+            />
+            <SubmitButton formik={formik} buttonText="Simpan" />
           </div>
         </form>
       </div>
@@ -236,5 +161,3 @@ const ProductFormModal: FC<ProductFormModalProps> = ({
     </div>
   );
 };
-
-export default ProductFormModal;

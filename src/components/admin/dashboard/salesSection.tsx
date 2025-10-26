@@ -10,18 +10,21 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import StatCard from "./statCard";
 import api from "@/lib/axios";
-import useAuthStore from "@/stores/useAuthStore";
-import FilterDropdown from "./filterDropdown";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { useSearchParams } from "next/navigation";
-import { SalesSectionSkeleton } from "@/components/skeletons/admin/salesSectionSkeleton";
 
-const SalesSection = () => {
+import { StatCard } from "./statCard";
+import { FilterDropdown } from "./filterDropdown";
+import { SalesSectionSkeleton } from "@/components/skeletons/admin/salesSectionSkeleton";
+import { ISalesSummary } from "@/interfaces/dataInterfaces";
+
+export const SalesSection = () => {
   const filter = useSearchParams().get("value");
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const { isAuthLoading } = useAuthStore();
-  const [data, setData] = useState<any | null>(null);
+
+  const [data, setData] = useState<ISalesSummary | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Fetch data on component mount
   useEffect(() => {
@@ -50,18 +53,18 @@ const SalesSection = () => {
         <div className="col-span-2 md:col-span-1">
           <StatCard
             title="Total Pendapatan"
-            value={`Rp ${data.totalRevenue.toLocaleString("id-ID")}`}
+            value={`Rp ${data?.totalRevenue.toLocaleString("id-ID")}`}
             icon={<span>💰</span>}
           />
         </div>
         <StatCard
           title="Total Pesanan"
-          value={data.totalOrders}
+          value={data?.totalOrders as number}
           icon={<span>📦</span>}
         />
         <StatCard
           title="Rata-Rata"
-          value={`Rp ${Math.round(data.averageOrderValue).toLocaleString(
+          value={`Rp ${Math.round(data?.averageOrderValue as number).toLocaleString(
             "id-ID"
           )}`}
           icon={<span>🛒</span>}
@@ -73,7 +76,7 @@ const SalesSection = () => {
           <FilterDropdown />
         </div>
         <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={data.chartData}>
+          <LineChart data={data?.chartData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" fontSize={12} />
             <YAxis
@@ -97,5 +100,3 @@ const SalesSection = () => {
     </section>
   );
 };
-
-export default SalesSection;
