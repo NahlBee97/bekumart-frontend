@@ -65,7 +65,7 @@ export const AddressCheckoutModal = ({
     const fetchProvinces = async () => {
       try {
         const response = await api.get(`/api/provinces`);
-        setProvinces(response.data.data);
+        setProvinces(response.data.provinces);
       } catch (error) {
         console.error("Error fetching provinces:", error);
       }
@@ -79,7 +79,7 @@ export const AddressCheckoutModal = ({
       const fetchCities = async () => {
         try {
           const response = await api.get(`/api/cities/${selectedProvince}`);
-          setCities(response.data.data);
+          setCities(response.data.cities);
         } catch (error) {
           console.error("Error fetching cities:", error);
         }
@@ -96,7 +96,7 @@ export const AddressCheckoutModal = ({
           const response = await api.get(
             `/api/districts?province=${selectedProvince}&city=${selectedCity}`
           );
-          setDistricts(response.data.data);
+          setDistricts(response.data.districts);
         } catch (error) {
           console.error("Error fetching districts:", error);
         }
@@ -113,7 +113,7 @@ export const AddressCheckoutModal = ({
           const response = await api.get(
             `/api/sub-districts?province=${selectedProvince}&city=${selectedCity}&district=${selectedDistrict}`
           );
-          setSubDistricts(response.data.data);
+          setSubDistricts(response.data.subDistricts);
         } catch (error) {
           console.error("Error fetching subdistricts:", error);
         }
@@ -143,14 +143,14 @@ export const AddressCheckoutModal = ({
             `/api/addresses/${address.id}`,
             values
           );
-          onSelect(response.data.data);
+          onSelect(response.data.updatedAddress);
           toast.success("Alamat berhasil diedit!");
         } else {
           const response = await api.post(`/api/addresses`, {
             ...values,
             userId: user.id,
           });
-          onSelect(response.data.data);
+          onSelect(response.data.newAddress);
           toast.success("Alamat baru berhasil ditambahkan!");
         }
 

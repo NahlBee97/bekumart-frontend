@@ -47,7 +47,7 @@ export const useCartStore = create<CartState>((set) => ({
 
       const response = await api.get(`/api/carts/${userId}`);
 
-      set({ cart: response.data.data });
+      set({ cart: response.data.cart });
     } catch (error) {
       console.log("Failed to add item to cart:", error);
     }
@@ -64,7 +64,7 @@ export const useCartStore = create<CartState>((set) => ({
       // Fetch the updated cart after changing the quantity
       const response = await api.get(`/api/carts/${userId}`);
 
-      set({ cart: response.data.data });
+      set({ cart: response.data.cart });
     } catch (error) {
       console.log("Failed to update item quantity:", error);
     }
@@ -77,7 +77,7 @@ export const useCartStore = create<CartState>((set) => ({
       // Fetch the updated cart after deleting the item
       const response = await api.get(`/api/carts/${userId}`);
 
-      set({ cart: response.data.data });
+      set({ cart: response.data.cart });
     } catch (error) {
       console.log("Failed to delete item from cart:", error);
     }

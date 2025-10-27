@@ -32,7 +32,7 @@ export default async function ShopPage({
   let products;
   if (search || minPrice || maxPrice || rating) {
     const response = await api.get(urlToHit.toString());
-    products = response.data.data;
+    products = response.data.products;
   } else {
     products = await getProducts();
   }

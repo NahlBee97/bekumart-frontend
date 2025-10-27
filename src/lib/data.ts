@@ -74,7 +74,7 @@ export async function getCategories() {
 export async function getProductById(id: string) {
   try {
     const response = await api.get(`/api/products/${id}`);
-    return response.data.products;
+    return response.data.product;
   } catch (error) {
     console.error("Error fetching product:", error);
     throw new Error("Gagal memuat product. Coba lagi nanti.");
