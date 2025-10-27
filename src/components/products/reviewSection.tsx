@@ -17,6 +17,7 @@ export function ReviewSection({ reviews, isLoading }: props) {
   const [filterReviews, setFilterReviews] = useState<IReview[]>([]);
   const [averageRating, setAverageRating] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [selectedRating, setSelectedRating] = useState<number | null>(null);
 
   useEffect(() => {
     if (reviews) {
@@ -26,18 +27,32 @@ export function ReviewSection({ reviews, isLoading }: props) {
       }, 0);
 
       setAverageRating(sumOfRatings / reviewCount);
-    }
-  }, [reviews]);
 
-  const { currentItems, totalPages } = getTotalPages(
+      if (selectedRating) {
+        setFilterReviews(
+          reviews.filter((review) => review.rating === selectedRating)
+        );
+      } else {
+        setFilterReviews([]);
+      }
+    }
+  }, [reviews, selectedRating]);
+
+  const { totalPages } = getTotalPages(
     filterReviews,
     currentPage,
     10
   );
 
   const handleFilter = (rating: number) => {
-    const filterReviews = reviews.filter((review) => review.rating >= rating);
-    setFilterReviews(filterReviews);
+    setCurrentPage(1);
+    if (rating === 0) {
+      setSelectedRating(null);
+      setFilterReviews([]);
+    } else {
+      setSelectedRating(rating);
+      setFilterReviews(reviews.filter((review) => review.rating === rating));
+    }
   };
 
   if (isLoading) return <ReviewSectionSkeleton />;
@@ -59,7 +74,7 @@ export function ReviewSection({ reviews, isLoading }: props) {
         </div>
       ) : (
         <div className="border-t border-gray-200 py-4 space-y-2">
-          {(filterReviews.length === 0 ? reviews : currentItems).map(
+          {(filterReviews.length === 0 ? reviews : filterReviews).map(
             (review: IReview) => (
               <ReviewCard key={review.id} review={review} />
             )
