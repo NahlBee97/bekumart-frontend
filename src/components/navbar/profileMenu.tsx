@@ -50,7 +50,7 @@ export const ProfileMenu = () => {
   const handleLogOut = async () => {
     try {
       await logout();
-      router.push(pathname);
+      router.push('/');
     } catch (error) {
       console.error("Logout failed:", error);
     }
