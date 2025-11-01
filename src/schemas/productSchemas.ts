@@ -12,7 +12,7 @@ export const ProductSchema = Yup.object().shape({
     .min(0, "Stok tidak boleh negatif")
     .required("Stok wajib diisi"),
   weightInKg: Yup.number()
-    .min(0, "Berat tidak boleh negatif")
+    .min(0.1, "Berat tidak boleh negatif")
     .required("Berat wajib diisi"),
   category: Yup.object()
     .shape({

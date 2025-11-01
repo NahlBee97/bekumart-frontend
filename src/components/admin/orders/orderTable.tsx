@@ -41,7 +41,7 @@ export const OrderTable = () => {
         response = await api.get(`/api/orders`);
       }
 
-      setOrders(response.data.data);
+      setOrders(response.data.orders);
     } catch (error) {
       console.error("Error fetching orders:", error);
       throw error;
