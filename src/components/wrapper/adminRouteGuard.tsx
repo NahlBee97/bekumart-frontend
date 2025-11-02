@@ -10,10 +10,10 @@ export function AdminRouteGuard({ children }: { children: React.ReactNode }) {
   const { user, isAuthLoading } = useAuthStore();
 
   useEffect(() => {
-    if (user?.role !== "ADMIN") {
+    if (user?.role !== "ADMIN" && !isAuthLoading) {
       router.push("/login");
     }
-  }, [router, user]);
+  }, [router, user, isAuthLoading]);
 
   if (isAuthLoading) {
     return <Loading />;

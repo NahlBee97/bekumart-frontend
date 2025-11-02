@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { StatusBadge } from "../../statusBadge";
 import { getOrderItems } from "@/lib/data";
-import { format } from "date-fns";
 import { IOrder, IOrderItem } from "@/interfaces/dataInterfaces";
+import { X } from "lucide-react";
+import { OrderSummary } from "@/components/profile/orders/orderSummary";
+import { OrderItemList } from "@/components/profile/orders/orderItemList";
 
 interface props {
   isOpen: boolean;
@@ -43,16 +44,6 @@ export const OrderDetailAdminModal = ({ isOpen, order, onClose }: props) => {
     };
   }, [onClose]);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemPerPage = 5;
-
-  // Pagination logic
-  const indexOfLastItems = currentPage * itemPerPage;
-  const indexOfFirstReviews = indexOfLastItems - itemPerPage;
-  const currentItems = orderItems.slice(indexOfFirstReviews, indexOfLastItems);
-
-  const totalPages = Math.ceil(orderItems.length / itemPerPage);
-
   // Return null if no order is selected to render nothing
   if (!isOpen || !order) return null;
 
@@ -69,126 +60,24 @@ export const OrderDetailAdminModal = ({ isOpen, order, onClose }: props) => {
         <div className="flex items-start justify-between rounded-t border-b p-4">
           <div>
             <h3 className="text-xl font-semibold text-gray-900">
-              Order Details
+              Detail Pesanan
             </h3>
-            <p className="text-sm text-gray-500">Order #{order.id}</p>
+            <p className="text-sm text-gray-500">Nomor Pesanan: {order.id}</p>
           </div>
           <button
             type="button"
             className="ml-auto inline-flex h-8 w-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900"
             onClick={onClose}
           >
-            <svg
-              className="h-3 w-3"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 14 14"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-              />
-            </svg>
+            <X />
             <span className="sr-only">Close modal</span>
           </button>
         </div>
 
         {/* Modal Body */}
         <div className="max-h-[60vh] space-y-6 overflow-y-auto p-6">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div>
-              <p className="text-sm font-medium text-gray-500">Order Date</p>
-              <p className="text-base text-gray-800">
-                {format(order.createdAt, "dd MMMM yyy")}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-500">Status</p>
-              <StatusBadge status={order.status} />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-500">Total</p>
-              <p className="text-base font-semibold text-gray-800">
-                Rp {order.totalAmount.toLocaleString()}
-              </p>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <h4 className="font-semibold text-gray-800">Items in this order</h4>
-            <div className="flow-root">
-              <ul className="-my-4 divide-y divide-gray-200">
-                {currentItems.map((item) => (
-                  <li
-                    key={item.id}
-                    className="flex items-center space-x-4 py-4"
-                  >
-                    {/* eslint-disable-next-line */}
-                    <img
-                      src={
-                        item.product?.productPhotos?.find(
-                          (photo) => photo.isDefault === true
-                        )?.imageUrl
-                      }
-                      alt={item.product?.name}
-                      className="h-16 w-16 flex-shrink-0 rounded-md object-cover"
-                    />
-                    <div className="flex-1">
-                      <p className="font-medium text-gray-900">
-                        {item.product?.name}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        Qty: {item.quantity}
-                      </p>
-                    </div>
-                    <p className="font-medium text-gray-900">
-                      Rp {order.totalAmount.toLocaleString()}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="mt-4 flex items-center justify-between">
-            <button
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-              className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-            >
-              Sebelumnya
-            </button>
-            <span className="text-sm text-slate-700 dark:text-slate-400">
-              Halaman {currentPage} dari {totalPages}
-            </span>
-            <button
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
-              disabled={currentPage === totalPages}
-              className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-            >
-              Berikutnya
-            </button>
-          </div>
-        )}
-
-        {/* Modal Footer */}
-        <div className="flex items-center justify-end space-x-2 rounded-b border-t border-gray-200 p-4">
-          <button
-            onClick={onClose}
-            type="button"
-            className="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-800 shadow-sm hover:bg-gray-100 focus:z-10 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          >
-            Close
-          </button>
+          <OrderSummary order={order} />
+          <OrderItemList items={orderItems} orderStatus={order.status} />
         </div>
       </div>
     </div>

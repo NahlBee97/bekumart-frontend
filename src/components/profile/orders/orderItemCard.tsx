@@ -1,6 +1,7 @@
 import { StarRatingDetail } from "@/components/products/starRating";
 import { IOrderItem, IProductPhoto, IReview } from "@/interfaces/dataInterfaces";
 import { OrderStatuses } from "@/interfaces/enums";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 interface props {
   item: IOrderItem;
@@ -10,6 +11,7 @@ interface props {
 }
 
 export const OrderItemCard = ({ item, reviews, status, onClickRate }: props) => {
+  const { user } = useAuthStore();
   return (
     <>
       {/* eslint-disable-next-line */}
@@ -30,7 +32,7 @@ export const OrderItemCard = ({ item, reviews, status, onClickRate }: props) => 
         Rp {(item.product.price * item.quantity).toLocaleString()}
       </p>
       {!reviews.some((review) => review.productId === item.productId) &&
-      status === "COMPLETED" ? (
+      status === "COMPLETED" && user.role === "CUSTOMER" ? (
         <button
           className="w-40 flex items-center justify-center rounded-md border border-transparent bg-yellow-500 px-1 py-2 text-sm font-semibold text-white shadow-sm transition-transform hover:scale-105 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 focus:ring-offset-gray-50 disabled:bg-gray-300"
           onClick={onClickRate}
