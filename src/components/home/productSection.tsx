@@ -15,7 +15,7 @@ export const ProductSection = ({
 }) => {
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
 
-  if (products.length === 0) return <NoProduct onFilterClick={() => setIsFilterOpen(true)} />;
+  if (products.length === 0) return <NoProduct />;
 
   return (
     <section className="w-full bg-white  border border-slate-200  rounded-lg p-4 sm:p-6 shadow-sm">
