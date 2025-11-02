@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Work_Sans } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import Footer from "@/components/footer";
-import AuthWrapper from "@/components/authWrapper";
+import AuthWrapper from "@/components/wrapper/authWrapper";
 
 const workSans = Work_Sans({
   variable: "--font-work-sans",
@@ -22,12 +22,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${workSans.className} antialiased`}
-      >
+      <body className={`${workSans.className} antialiased`}>
         <AuthWrapper>{children}</AuthWrapper>
         <Toaster position="top-right" />
-        <Footer/>
+        <Footer />
       </body>
     </html>
   );

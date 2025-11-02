@@ -1,8 +1,17 @@
 import CartPageClient from "@/components/cart/cartPageClient";
+import { UserRouteGuard } from "@/components/wrapper/userRouteGuard";
 
 // This is now a Server Component
-export default async function CartPage({ searchParams }: { searchParams: Promise<{ callbackUrl: string }> }) {
+export default async function CartPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ callbackUrl: string }>;
+}) {
   const { callbackUrl } = await searchParams;
 
-  return <CartPageClient callbackUrl={callbackUrl} />;
+  return (
+    <UserRouteGuard>
+      <CartPageClient callbackUrl={callbackUrl} />
+    </UserRouteGuard>
+  );
 }

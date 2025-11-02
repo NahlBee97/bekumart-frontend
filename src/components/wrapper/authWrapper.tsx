@@ -1,10 +1,9 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useEffect, useState } from "react";
-import AdminNavbar from "./navbar/adminNavbar";
-import ClientNavbar from "./navbar/clientNavbar";
+import AdminNavbar from "../navbar/adminNavbar";
+import ClientNavbar from "../navbar/clientNavbar";
 import api from "@/lib/axios";
 import { useCartStore } from "@/stores/useCartStore";
 
@@ -13,11 +12,18 @@ export default function AuthWrapper({
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
   const { user, checkAuth } = useAuthStore();
   const { checkCart } = useCartStore();
 
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+
+  useEffect(() => {
+    const checkIsLoggedIn = async () => {
+      const response = await api.get("/api/auth/check");
+      setIsLoggedIn(response.data.status.isLoggedIn);
+    };
+    checkIsLoggedIn();
+  }, []);
 
   useEffect(() => {
     if (!isLoggedIn) checkAuth();
@@ -28,21 +34,10 @@ export default function AuthWrapper({
     checkCart(user.id);
   }, [user.id, user.role, checkCart]);
 
-  useEffect(() => {
-    const checkIsLoggedIn = async () => {
-      const response = await api.get("/api/auth/check");
-      setIsLoggedIn(response.data.status.isLoggedIn);
-    };
-    checkIsLoggedIn();
-  }, []);
-
-  // ❗️Mendeteksi halaman admin
-  const isAdminRoute = pathname.startsWith("/admin");
-
   return (
     <>
-      {/* ✅ Tampilkan Navbar jika BUKAN halaman admin */}
-      {!isAdminRoute ? <ClientNavbar /> : <AdminNavbar />}
+      {/* ✅ Tampilkan Navbar jika admin */}
+      {user.role !== "ADMIN" ? <ClientNavbar /> : <AdminNavbar />}
 
       {/* ✅ Tampilkan konten utama */}
       {children}
