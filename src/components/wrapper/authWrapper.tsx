@@ -1,17 +1,20 @@
 "use client";
 
+import api from "@/lib/axios";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useEffect, useState } from "react";
+import { useCartStore } from "@/stores/useCartStore";
+import { useRouter } from "next/navigation";
+
 import AdminNavbar from "../navbar/adminNavbar";
 import ClientNavbar from "../navbar/clientNavbar";
-import api from "@/lib/axios";
-import { useCartStore } from "@/stores/useCartStore";
 
 export default function AuthWrapper({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
   const { user, checkAuth } = useAuthStore();
   const { checkCart } = useCartStore();
 
@@ -33,6 +36,10 @@ export default function AuthWrapper({
     if (!user.id && user.role !== "CUSTOMER") return;
     checkCart(user.id);
   }, [user.id, user.role, checkCart]);
+
+  useEffect(() => {
+     if (user.role === "ADMIN") router.push("/admin");
+  }, [router, user.role])
 
   return (
     <>

@@ -2,7 +2,6 @@
 
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useCartStore } from "@/stores/useCartStore";
-import { MessageSquareIcon } from "lucide-react";
 import { useState } from "react";
 import { StickyAddToCartSkeleton } from "../skeletons/products/stickyAddToCartSkeleton";
 import toast from "react-hot-toast";
@@ -58,10 +57,6 @@ export const StickyAddToCart = ({ product }: { product: IProduct }) => {
         <div className="flex items-center justify-between h-18">
           {/* Actions */}
           <div className="flex items-center space-x-2">
-            <div className="flex p-2 items-center border border-gray-300 text-gray-500 rounded-md">
-              <MessageSquareIcon className="w-6 h-6" />
-            </div>
-
             {/* Quantity Selector */}
             <QuantitySelector
               isDisable={isLoading}
