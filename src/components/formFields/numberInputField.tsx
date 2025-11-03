@@ -33,7 +33,12 @@ export const NumberInputField = ({
         placeholder={placeHolder}
         required
         min={min}
-        className="form-input"
+        className={`w-full px-4 py-2 border rounded-md outline-none focus:ring focus:ring-blue-500 
+                      ${
+                        formik.touched.fieldName && formik.errors.fieldName
+                          ? "border-red-500"
+                          : "border-gray-300"
+                      }`}
       />
     </>
   );

@@ -54,17 +54,17 @@ export const StickyAddToCart = ({ product }: { product: IProduct }) => {
   return (
     <div className="md:hidden fixed bottom-0 left-0 right-0 w-full bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.1)] z-50">
       <div className="container mx-auto px-3 sm:px-4 lg:px-6">
-        <div className="flex items-center justify-between h-18">
-          {/* Actions */}
-          <div className="flex items-center space-x-2">
-            {/* Quantity Selector */}
+        <div className="pt-2 grid grid-cols-3 h-16">
+          <div>
             <QuantitySelector
               isDisable={isLoading}
               quantity={quantity}
               onIncrease={incrementQuantity}
               onDecrease={decrementQuantity}
             />
-            {/* Add to Cart Button */}
+          </div>
+
+          <div className="w-full col-span-2">
             <AddToCartButton
               isLoading={isLoading}
               onAdd={handleAddToCart}

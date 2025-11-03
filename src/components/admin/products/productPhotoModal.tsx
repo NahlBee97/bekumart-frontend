@@ -43,10 +43,10 @@ export const ProductPhotoModal = ({
     setIsLoading(true);
     try {
       const { data } = await api.get(`/api/product-photos/${product?.id}`);
-      const mainPhoto = data.data.find(
+      const mainPhoto = data.photos.find(
         (photo: IProductPhoto) => photo.isDefault === true
       );
-      setPhotos(data.data);
+      setPhotos(data.photos);
       setMainImage(mainPhoto);
     } catch (error) {
       console.error("Error fetching product photos:", error);
@@ -204,7 +204,7 @@ export const ProductPhotoModal = ({
           {/* Photo Gallery */}
           <div className="flex flex-col space-y-4">
             <h3 className="font-semibold text-gray-700">
-              Galeri Foto ({photos.length}/8)
+              Galeri Foto ({photos.length > 0 ? photos.length : 0}/8)
             </h3>
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
               {photos.map((photo) => (
