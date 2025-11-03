@@ -26,3 +26,28 @@ This is the complete frontend for BekuMart, a full-stack e-commerce platform for
 * **Styling:** Tailwind CSS
 * **State Management:** Zustand
 * **Deployment:** Vercel
+
+1.  **Clone the repository:**
+    ```bash
+    git clone <this repo url>
+    cd frontend
+    ```
+
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+
+3.  **Set up environment variables:**
+    Create a `.env.local` file in the root and add the required variables.
+    ```env
+    NEXT_PUBLIC_API_URL=http://localhost:5000 # (or your deployed backend URL)
+    NEXT_PUBLIC_MIDTRANS_CLIENT_KEY=your_sandbox_client_key
+    ```
+
+4.  **Run the development server:**
+    ```bash
+    npm run dev
+    ```
+
+The application will be available at `http://localhost:3000`.
