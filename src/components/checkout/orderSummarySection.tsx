@@ -59,9 +59,9 @@ export const OrderSummary = ({
         <button
           type="button"
           onClick={onConfirmOrder}
-          disabled={isConfirmDisabled}
+          disabled={isConfirmDisabled || isCalculating}
           className={`w-full flex items-center justify-center rounded-md border border-transparent px-4 py-3 text-base font-semibold text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-            isConfirmDisabled
+            isConfirmDisabled || isCalculating
               ? "bg-gray-400 cursor-not-allowed"
               : "bg-blue-500 hover:bg-blue-600"
           }`}

@@ -1,10 +1,9 @@
 "use client";
 
-import { IUser } from "@/interfaces/dataInterfaces";
 import api from "@/lib/axios";
-import { getCookie } from "cookies-next";
-import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { IUser } from "@/interfaces/dataInterfaces";
+import { useEffect, useState } from "react";
 
 // --- IMAGE UPLOAD MODAL ---
 interface props {
@@ -19,7 +18,7 @@ export const ProfileImageUploadModal = ({
   onClose,
   onSave,
   user,
-}:props) => {
+}: props) => {
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -61,22 +60,23 @@ export const ProfileImageUploadModal = ({
   };
 
   const handleSave = async () => {
-    setLoading(true);
-    const token = getCookie("token") as string;
-    if (!token) return;
     try {
+      setLoading(true);
       if (!file) throw new Error("No file selected");
 
       const formData = new FormData();
       formData.append("file", file);
+
       await api.patch(`/api/users/${user.id}`, formData);
       toast.success("Berhasil Upload Photo");
-      setLoading(false);
+
       onSave();
       onClose();
     } catch (error) {
       toast.error("Gagal Upload Photo");
       console.error("Error uploading image:", error);
+    } finally {
+      setLoading(false);
     }
   };
 

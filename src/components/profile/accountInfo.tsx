@@ -96,7 +96,7 @@ export default function AccountInfo() {
               className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 inline-flex items-center gap-2 rounded-md bg-white px-3.5 py-2 text-sm font-semibold text-gray-900 opacity-0 shadow-sm ring-1 ring-inset ring-gray-300 transition-opacity duration-300 hover:bg-gray-50 group-hover:opacity-100"
             >
               <Camera className="h-5 w-5 text-gray-600" />
-              <span className="hidden md:block">Change</span>
+              <span className="hidden md:block">Ganti</span>
             </button>
           </div>
 
