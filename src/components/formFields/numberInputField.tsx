@@ -17,7 +17,7 @@ export const NumberInputField = ({
   min,
 }: props) => {
   return (
-    <>
+    <div className="mb-4">
       <label
         htmlFor={fieldName}
         className={`${
@@ -31,15 +31,22 @@ export const NumberInputField = ({
         id={fieldName}
         {...formik.getFieldProps(fieldName)}
         placeholder={placeHolder}
-        required
         min={min}
+        aria-describedby={
+          formik.errors[fieldName] ? `${fieldName}-error` : undefined
+        }
         className={`w-full px-4 py-2 border rounded-md outline-none focus:ring focus:ring-blue-500 
-                      ${
-                        formik.touched.fieldName && formik.errors.fieldName
-                          ? "border-red-500"
-                          : "border-gray-300"
-                      }`}
+                  ${
+                    formik.touched[fieldName] && formik.errors[fieldName]
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  }`}
       />
-    </>
+      {formik.touched[fieldName] && formik.errors[fieldName] && (
+        <p className="mt-1 text-sm text-red-500" id={`${fieldName}-error`}>
+          {formik.errors[fieldName]}
+        </p>
+      )}
+    </div>
   );
 };

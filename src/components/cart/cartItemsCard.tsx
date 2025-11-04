@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import { QuantitySelector } from "../products/quantitySelector";
+import { ConfirmModal } from "../confirmModal";
 
 export const CartItemCard = ({ item }: { item: ICartItem }) => {
   const router = useRouter();
@@ -16,6 +17,7 @@ export const CartItemCard = ({ item }: { item: ICartItem }) => {
   const { updateItemQuantity, deleteItem } = useCartStore();
   const [localQuantity, setLocalQuantity] = useState(item.quantity);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isConfirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
 
   // Sync local state with prop when item quantity changes
   useEffect(() => {
@@ -54,6 +56,10 @@ export const CartItemCard = ({ item }: { item: ICartItem }) => {
   const handleIncrement = () => {
     setLocalQuantity((prev) => prev + 1);
   };
+
+  const handleDelete = () => {
+    deleteItem(user.id, item.id)
+  }
 
   return (
     <div className="flex w-full gap-4">
@@ -96,7 +102,7 @@ export const CartItemCard = ({ item }: { item: ICartItem }) => {
                 {localQuantity === 1 && (
                   <button
                     type="button"
-                    onClick={() => deleteItem(user.id, item.id)}
+                    onClick={() => setConfirmModalOpen(true) }
                     className="p-2 font-medium text-red-600 hover:text-red-500"
                     disabled={item.quantity > 1}
                   >
@@ -115,6 +121,7 @@ export const CartItemCard = ({ item }: { item: ICartItem }) => {
           </div>
         </div>
       </div>
+      <ConfirmModal isOpen={isConfirmModalOpen} onClose={() => setConfirmModalOpen(false)} title={`Hapus ${item.product.name}?`} confirmText="Hapus" onConfirm={handleDelete} />
     </div>
   );
 };

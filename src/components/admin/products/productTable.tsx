@@ -15,6 +15,7 @@ import { ProductsTableSkeleton } from "@/components/skeletons/admin/products/tab
 import { TablePagination } from "@/components/admin/products/tablePagination";
 import { getTotalPages } from "@/helper/functions";
 import { useRouter } from "next/navigation";
+import { LoadingModal } from "@/components/loadingModal";
 
 interface props {products:IProduct[]; isLoading: boolean; categories:ICategory[] }
 
@@ -32,18 +33,21 @@ const router = useRouter();
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false);
   const [productForImage, setProductForImage] = useState<IProduct | null>(null);
   const [productToDelete, setProductToDelete] = useState<IProduct | null>(null);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
   // --- API HANDLERS ---
   const confirmDeleteProduct = async (product: IProduct) => {
     if (!product) return;
-
     try {
+      setIsDeleting(true);
       await api.delete(`/api/products/${product.id}`);
       toast.success("Berhasil Menghapus Product");
       router.refresh();
     } catch (error) {
       console.error("Error deleting product:", error);
       toast.error("Gagal Menghapus Product");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -174,7 +178,7 @@ const router = useRouter();
       </div>
       {/* Modals remain here, controlled by the container state */}
       <ProductFormModal
-      categories={categories}
+        categories={categories}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSave={handleProductSave}
@@ -190,9 +194,10 @@ const router = useRouter();
         isOpen={isConfirmModalOpen}
         onClose={() => setIsConfirmModalOpen(false)}
         onConfirm={() => confirmDeleteProduct(productToDelete as IProduct)}
-        title="Hapus Product?"
+        title={`Hapus ${productToDelete?.name}?`}
         confirmText="Hapus"
       />
+      <LoadingModal isOpen={isDeleting} title="Menghapus Product" />
     </main>
   );
 }

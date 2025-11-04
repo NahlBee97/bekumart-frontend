@@ -12,6 +12,7 @@ import { ConfirmModal } from "../confirmModal";
 import { AddressInfoSkeleton } from "../skeletons/profile/addressInfoSkeleton";
 import { IAddress } from "@/interfaces/dataInterfaces";
 import { AddressCard } from "./addressCard";
+import { LoadingModal } from "../loadingModal";
 
 // --- Main Component ---
 export default function AddressInfo() {
@@ -25,6 +26,7 @@ export default function AddressInfo() {
   const [addressToEdit, setAddressToEdit] = useState<IAddress | null>(null);
   const [addressToDelete, setAddressToDelete] = useState<IAddress | null>(null);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
   const refreshAddresess = useCallback(async () => {
     if (isAuthLoading || !accessToken) return;
@@ -47,6 +49,7 @@ export default function AddressInfo() {
   // --- Event Handlers ---
   const confirmDeleteAddress = async (address: IAddress) => {
     try {
+      setIsProcessing(true);
       if (address.isDefault === true) {
         toast.error("Tidak dapat menghapus alamat utama.");
         return;
@@ -59,12 +62,14 @@ export default function AddressInfo() {
       console.error(error);
     } finally {
       setAddressToDelete(null);
+      setIsProcessing(false);
       setIsDeleting(false);
     }
   };
 
   const confirmSetDefault = async (address: IAddress) => {
     try {
+      setIsProcessing(true);
       await api.patch(`/api/addresses/${address?.id}`, {});
       refreshAddresess();
       toast.success("Berhasil Mengatur Alamat Utama");
@@ -72,6 +77,7 @@ export default function AddressInfo() {
       toast.error("Gagal Mengatur Alamat Utama");
       console.error(error);
     } finally {
+      setIsProcessing(false);
       setAddressToDelete(null);
     }
   };
@@ -115,8 +121,8 @@ export default function AddressInfo() {
                     setIsModalOpen(true);
                   }}
                   onClickDelete={() => {
-                    setAddressToDelete(address);
                     setIsDeleting(true);
+                    setAddressToDelete(address);
                     setIsConfirmModalOpen(true);
                   }}
                 />
@@ -142,6 +148,7 @@ export default function AddressInfo() {
         title={isDeleting ? "Hapus Alamat?" : "Atur Sebagai Alamat Utama"}
         confirmText={isDeleting ? "Hapus" : "Konfirmasi"}
       />
+      <LoadingModal isOpen={isProcessing} title={isDeleting ? "Sedang Menghapus" : "Sedang Mengatur Alamat Utama"}/>
     </div>
   );
 }

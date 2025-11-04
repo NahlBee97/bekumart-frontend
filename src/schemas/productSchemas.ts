@@ -19,5 +19,5 @@ export const ProductSchema = Yup.object().shape({
       id: Yup.string().required("Silakan pilih kategori"),
     })
     .required("Silakan pilih kategori"),
-  description: Yup.string().max(500, "Deskripsi terlalu panjang"),
+  description: Yup.string().min(10, "Minimal 10 Karakter").max(500, "Deskripsi terlalu panjang"),
 });

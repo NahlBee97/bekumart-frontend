@@ -8,7 +8,6 @@ import { useFormik } from "formik";
 import { TextInputField } from "@/components/formFields/textInputField";
 import { NumberInputField } from "@/components/formFields/numberInputField";
 import { AreaInputField } from "@/components/formFields/areaInputField";
-import { TinyCommonButton } from "@/components/buttons/tinyCommonButton";
 import { SubmitButton } from "@/components/buttons/submitButton";
 import { ICategory, IProduct } from "@/interfaces/dataInterfaces";
 import { useEffect, useState } from "react";
@@ -33,14 +32,14 @@ export const ProductFormModal = ({
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-      if (isOpen) {
-        // Use a tiny timeout to allow the component to mount before starting the transition
-        const timer = setTimeout(() => setShow(true), 10);
-        return () => clearTimeout(timer);
-      } else {
-        setShow(false);
-      }
-    }, [isOpen]);
+    if (isOpen) {
+      // Use a tiny timeout to allow the component to mount before starting the transition
+      const timer = setTimeout(() => setShow(true), 10);
+      return () => clearTimeout(timer);
+    } else {
+      setShow(false);
+    }
+  }, [isOpen]);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -55,14 +54,16 @@ export const ProductFormModal = ({
     validationSchema: ProductSchema,
     onSubmit: async (values) => {
       try {
-        // Create a new payload object for the API
         const payload = {
-          ...values,
-          categoryId: values.category?.id, // Extract the category ID
+          name: values.name,
+          description: values.description,
+          price: values.price,
+          stock: values.stock,
+          weightInKg: values.weightInKg,
+          categoryId: values.category?.id,
         };
 
         if (productToEdit?.id) {
-          // Update existing product
           await api.put(`/api/products/${productToEdit.id}`, payload);
         } else {
           await api.post(`/api/products`, payload);
@@ -191,11 +192,6 @@ export const ProductFormModal = ({
               </div>
             </div>
             <div className="mt-6 flex justify-end gap-3">
-              <TinyCommonButton
-                onClick={() => onClose()}
-                buttonText="Batal"
-                isPositive={false}
-              />
               <SubmitButton formik={formik} buttonText="Simpan" />
             </div>
           </form>

@@ -11,7 +11,6 @@ import { useEffect, useState } from "react";
 
 import { TextInputField } from "../formFields/textInputField";
 import { SelectField } from "../formFields/selectField";
-import { TinyCommonButton } from "../buttons/tinyCommonButton";
 import { SubmitButton } from "../buttons/submitButton";
 
 export const AddressCheckoutModal = ({
@@ -295,11 +294,6 @@ export const AddressCheckoutModal = ({
               </div>
             </div>
             <div className="mt-6 flex justify-end gap-3">
-              <TinyCommonButton
-                onClick={() => onClose()}
-                buttonText="Batal"
-                isPositive={false}
-              />
               {address ? (
                 <SubmitButton formik={formik} buttonText="Ubah Alamat" />
               ) : (
@@ -312,4 +306,3 @@ export const AddressCheckoutModal = ({
     </div>
   );
 };
-

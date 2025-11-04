@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import Link from "next/link";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -14,6 +14,8 @@ export const ProfileMenu = () => {
 
   const { user, logout } = useAuthStore();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false);
+
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const [activeLink, setActiveLink] = useState("");
@@ -49,15 +51,20 @@ export const ProfileMenu = () => {
   }, []);
 
   const protectedPages = ["/admin", "/profile", "/cart", "/checkout"];
-  const isProtectedPage = protectedPages.some((page) => pathname.startsWith(page));
-  
+  const isProtectedPage = protectedPages.some((page) =>
+    pathname.startsWith(page)
+  );
+
   const handleLogOut = async () => {
     try {
+      setIsLoggingOut(true);
       await logout();
-      if (isProtectedPage) router.push('/');
+      if (isProtectedPage) router.push("/");
     } catch (error) {
       toast.error("Logout failed");
       console.error("Logout failed: " + error);
+    } finally {
+      setIsLoggingOut(false);
     }
   };
 
@@ -85,7 +92,7 @@ export const ProfileMenu = () => {
 
       {/* Dropdown Menu */}
       <div
-        className={`origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-slate-800 ring-1 ring-black ring-opacity-5 dark:ring-white/10 focus:outline-none transition ease-out duration-100 z-200 ${
+        className={`origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-slate-800 ring-1 ring-black ring-opacity-5 dark:ring-white/10 focus:outline-none transition ease-out duration-100 z-50 ${
           isOpen
             ? "transform opacity-100 scale-100"
             : "transform opacity-0 scale-95 pointer-events-none"
@@ -121,8 +128,9 @@ export const ProfileMenu = () => {
             onClick={handleLogOut}
             className="flex items-center gap-2 w-full text-left px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-red-500 hover:text-white dark:hover:bg-red-600 dark:hover:text-white transition-colors duration-200"
           >
-            <LogOut className="w-4 h-4" />
-            <span>Keluar</span>
+            <LogOut className="w-4 h-4" /> 
+            
+            <span>{isLoggingOut ? "Memproses..." : "Keluar"}</span>
           </button>
         </div>
       </div>

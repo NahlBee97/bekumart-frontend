@@ -2,7 +2,6 @@
 
 import api from "@/lib/axios";
 import toast from "react-hot-toast";
-import axios from "axios";
 import { useFormik } from "formik";
 import { useState, useCallback } from "react";
 import { Camera } from "lucide-react";
@@ -54,13 +53,9 @@ export default function AccountInfo() {
         setIsEditMode(false);
 
         toast.success("edit profile berhasil");
-      } catch (err) {
-        if (axios.isAxiosError(err) && err.response) {
-          const errorMessage = err.response.data.message;
-          toast.error(`${errorMessage}`);
-        } else {
-          toast.error("An unexpected error occurred");
-        }
+      } catch (error) {
+        console.error("Error editing profile: " + error);
+        toast.error("Gagal edit profile");
       }
     },
   });
@@ -167,11 +162,14 @@ export default function AccountInfo() {
                 />
               )}
               {isEditMode ? (
-                <TinyCommonButton
+                <button
+                  type="button"
                   onClick={() => setIsEditMode(false)}
-                  isPositive={false}
-                  buttonText="Batal"
-                />
+                  disabled={formik.isSubmitting}
+                  className="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                >
+                  Batal
+                </button>
               ) : (
                 <TinyCommonButton
                   onClick={() => setIsPasswordModalOpen(true)}

@@ -17,7 +17,7 @@ export const TextInputField = ({
   withLabel,
 }: props) => {
   return (
-    <>
+    <div className="mb-4">
       <label
         htmlFor={fieldName}
         className={`${
@@ -29,24 +29,23 @@ export const TextInputField = ({
       <input
         type={type}
         id={fieldName}
-        value={formik.values.fieldName}
         placeholder={placeHolder}
         {...formik.getFieldProps(fieldName)}
         aria-describedby={
-          formik.errors.fieldName ? `${fieldName}-error` : undefined
+          formik.errors[fieldName] ? `${fieldName}-error` : undefined
         }
         className={`w-full px-4 py-2 border rounded-md outline-none focus:ring focus:ring-blue-500 
-                      ${
-                        formik.touched.fieldName && formik.errors.fieldName
-                          ? "border-red-500"
-                          : "border-gray-300"
-                      }`}
+                  ${
+                    formik.touched[fieldName] && formik.errors[fieldName]
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  }`}
       />
-      {formik.touched.fieldName && formik.errors.fieldName && (
+      {formik.touched[fieldName] && formik.errors[fieldName] && (
         <p className="mt-1 text-sm text-red-500" id={`${fieldName}-error`}>
-          {formik.errors.fieldName}
+          {formik.errors[fieldName]}
         </p>
       )}
-    </>
+    </div>
   );
 };

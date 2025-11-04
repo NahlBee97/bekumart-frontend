@@ -34,7 +34,7 @@ export default function ClientNavbar() {
     );
 
   return (
-    <header className="px-2 md:px-0 sticky top-0 z-50 bg-background-light/80 backdrop-blur-sm border-b border-slate-200">
+    <header className="px-2 md:px-0 sticky top-0 z-25 bg-background-light/80 backdrop-blur-sm border-b border-slate-200">
       <div className="container mx-auto">
         <div className="flex items-center justify-between gap-2 md:gap-0 h-16">
           {/* Left Section: Logo & Desktop Nav */}

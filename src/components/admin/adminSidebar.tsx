@@ -5,11 +5,14 @@ import { FileText, LogOut, Package, User, LayoutDashboard } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import toast from "react-hot-toast";
+import { useState } from "react";
 
 export default function AdminSidebar() {
   const { logout } = useAuthStore();
   const pathname = usePathname();
   const router = useRouter();
+
+  const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false);
 
   const navItems = [
     { icon: LayoutDashboard, label: "Dashboard", link: "/admin" },
@@ -18,18 +21,18 @@ export default function AdminSidebar() {
     { icon: User, label: "Profile", link: "/admin/profile" },
   ];
 
-  const protectedPages = ["/admin", "/profile", "/cart", "/checkout"];
-  const isProtectedPage = protectedPages.some((page) =>
-    pathname.startsWith(page)
-  );
+  const isProtectedPage = pathname.startsWith("/admin");
 
   const handleLogOut = async () => {
     try {
+      setIsLoggingOut(true);
       await logout();
       if (isProtectedPage) router.push("/");
     } catch (error) {
       toast.error("Logout failed");
       console.error("Logout failed: " + error);
+    } finally {
+      setIsLoggingOut(false);
     }
   };
 
@@ -66,7 +69,7 @@ export default function AdminSidebar() {
           onClick={handleLogOut}
         >
           <LogOut />
-          <span>Keluar</span>
+          <span>{isLoggingOut ? "Memproses..." : "Keluar"}</span>
         </button>
       </nav>
     </aside>

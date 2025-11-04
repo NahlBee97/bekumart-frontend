@@ -128,14 +128,15 @@ export const ProfileImageUploadModal = ({
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none"
+            disabled={loading}
+            className="px-4 py-2 text-sm font-medium text-white bg-red-500 border rounded-lg hover:bg-red-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
-            Cancel
+            Batal
           </button>
           <button
             onClick={handleSave}
             disabled={!file || loading}
-            className="w-40 flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:outline-none disabled:bg-gray-400 disabled:cursor-not-allowed"
+            className="w-40 flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             {loading ? (
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
