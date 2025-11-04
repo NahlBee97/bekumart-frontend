@@ -2,6 +2,7 @@ import { ProductSection } from "@/components/admin/dashboard/productSection";
 import { ProductsTable } from "@/components/admin/products/productTable";
 import { getCategories, getProducts } from "@/lib/data";
 import { FileText } from "lucide-react";
+export const dynamic = "force-dynamic";
 
 export default async function ProductsAdminPage() {
   let isLoading = true;
