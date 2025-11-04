@@ -4,7 +4,7 @@ import api from "@/lib/axios";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useEffect, useState } from "react";
 import { useCartStore } from "@/stores/useCartStore";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import AdminNavbar from "../navbar/adminNavbar";
 import ClientNavbar from "../navbar/clientNavbar";
@@ -15,7 +15,9 @@ export default function AuthWrapper({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const { user, checkAuth } = useAuthStore();
+  const pathname = usePathname();
+
+  const { user, checkAuth, isAuthLoading } = useAuthStore();
   const { checkCart } = useCartStore();
 
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -38,8 +40,30 @@ export default function AuthWrapper({
   }, [user.id, user.role, checkCart]);
 
   useEffect(() => {
-     if (user.role === "ADMIN") router.push("/admin");
-  }, [router, user.role])
+    if (isAuthLoading) {
+      return;
+    }
+
+    const isPathAdmin = pathname.startsWith("/admin");
+    const isPathAuth = pathname === "/login" || pathname === "/register";
+
+    const isPathGeneral = !isPathAdmin && !isPathAuth;
+
+    if (user) {
+      if (user.role === "ADMIN") {
+        if (isPathAdmin) {
+          return;
+        }
+
+        if (isPathGeneral || isPathAuth) {
+          router.push("/admin");
+          return;
+        }
+      }
+    }
+    
+    return;
+  }, [user, isAuthLoading, pathname, router]);
 
   return (
     <>

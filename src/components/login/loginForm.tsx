@@ -54,18 +54,18 @@ export default function LoginForm() {
         const userData = jwtDecode<IUser>(accessToken);
         login(userData);
 
-        if (userData.role === "ADMIN") {
-          router.push("/admin");
-        } else if (
+        let destinationUrl = "/";
+
+        const isSafeCallback =
           callbackUrl &&
           callbackUrl !== "/login" &&
-          callbackUrl !== "/register" &&
-          userData.role === "CUSTOMER"
-        ) {
-          router.push(callbackUrl);
-        } else {
-          router.push("/");
+          callbackUrl !== "/register";
+
+        if (userData.role === "CUSTOMER" && isSafeCallback) {
+          destinationUrl = callbackUrl;
         }
+
+        router.push(destinationUrl);
         toast.success("Berhasil Login");
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {

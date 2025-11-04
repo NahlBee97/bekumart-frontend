@@ -1,19 +1,20 @@
 "use client";
 
 import { useAuthStore } from "@/stores/useAuthStore";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Loading from "../loading";
 
 export function AdminRouteGuard({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
   const router = useRouter();
   const { user, isAuthLoading } = useAuthStore();
 
   useEffect(() => {
     if (user?.role !== "ADMIN" && !isAuthLoading) {
-      router.push("/login");
+      router.push(`/login?callbackUrl=${pathname}`);
     }
-  }, [router, user, isAuthLoading]);
+  }, [router, user, isAuthLoading, pathname]);
 
   if (isAuthLoading) {
     return <Loading />;
