@@ -40,8 +40,8 @@ export const OrderDetailModal = ({ order, onClose }: props) => {
         setOrderItems(orderItems);
       };
       fetchOrderItems();
-    } catch (err) {
-      console.log("fail fetching order items" + err);
+    } catch (error) {
+      console.log("fail fetching order items" + error);
     }
   }, [order]);
 
@@ -75,14 +75,20 @@ export const OrderDetailModal = ({ order, onClose }: props) => {
     setShow(false);
     setTimeout(() => {
       onClose();
-    }, 300); 
+    }, 300);
   };
 
   const handleProceedPayment = async () => {
     try {
       setIsPaymentLoading(true);
 
-      const response = await api.post(`/api/orders/payment-token`, order);
+      const orderData = {
+        id: order?.id,
+        userId: order?.userId,
+        totalAmount: order?.totalAmount,
+      };
+
+      const response = await api.post(`/api/orders/payment-token`, orderData);
       const { paymentToken } = response.data;
 
       window.snap?.pay(paymentToken);
@@ -125,7 +131,7 @@ export const OrderDetailModal = ({ order, onClose }: props) => {
             className="ml-auto inline-flex h-8 w-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900"
             onClick={onClose}
           >
-            <X/>
+            <X />
           </button>
         </div>
 

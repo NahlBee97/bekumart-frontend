@@ -15,7 +15,7 @@ export const ModalActions = ({ order, isPaymentLoading, onProceedPayment }: prop
     return (
       <button
         disabled={isPaymentLoading}
-        className="flex w-full text-sm items-center justify-center rounded-md border border-transparent bg-blue-500 px-4 py-2 font-semibold text-white shadow-sm transition-transform hover:scale-105 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-50 disabled:bg-gray-300 sm:w-auto"
+        className="flex min-w-44 text-sm items-center justify-center rounded-md border border-transparent bg-blue-500 px-4 py-2 font-semibold text-white shadow-sm transition-transform hover:scale-105 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-50 disabled:bg-gray-300 sm:w-auto"
         onClick={onProceedPayment}
       >
         {isPaymentLoading ? (

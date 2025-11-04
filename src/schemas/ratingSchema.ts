@@ -10,8 +10,7 @@ export const RatingSchema = Yup.object({
     .min(1, "Silakan pilih rating")
     .required("Rating wajib diisi"),
   desc: Yup.string()
-    .optional()
-    .max(1000, "Komentar tidak boleh lebih dari 1000 karakter"),
+    .min(10, "Minimal 10 Karakter").max(1000, "Komentar tidak boleh lebih dari 1000 karakter"),
   photos: Yup.array()
     .of(
       Yup.mixed<File>()
