@@ -1,15 +1,14 @@
-import { ICart } from "@/interfaces/dataInterfaces";
 import { CartSummarySectionSkeleton } from "../skeletons/cart/cartSummarySectionSkeleton";
 import { CommonButton } from "../buttons/commonButton";
+import { useCartStore } from "@/stores/useCartStore";
 
 interface props {
   isLoading: boolean;
-  isCartLoading: boolean;
-  cart: ICart | null;
   onCheckout: () => void;
 }
 
-export const CartSummarySection = ({ isLoading, isCartLoading, cart, onCheckout }: props) => {
+export const CartSummarySection = ({ isLoading, onCheckout }: props) => {
+  const { isCartUpdating, isCartLoading, cart } = useCartStore();
   if (isCartLoading) return <CartSummarySectionSkeleton/>
   return (
     <section
@@ -27,11 +26,10 @@ export const CartSummarySection = ({ isLoading, isCartLoading, cart, onCheckout 
             Rp {cart?.totalPrice?.toLocaleString("id-ID")}
           </dd>
         </div>
-        {/* Add more lines here for Shipping, Taxes, etc. */}
       </dl>
 
       <div className="mt-4">
-        <CommonButton isDisable={isLoading} onClick={onCheckout} buttonText="Checkout" />
+        <CommonButton isDisable={isLoading || isCartUpdating} onClick={onCheckout} buttonText="Checkout" />
       </div>
     </section>
   );

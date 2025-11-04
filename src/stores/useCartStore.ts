@@ -7,6 +7,7 @@ import { getCartData } from "@/lib/data";
 interface CartState {
   cart: ICart | null;
   isCartLoading: boolean;
+  isCartUpdating: boolean;
   checkCart: (userId: string) => Promise<void>;
   addToCart: (
     userId: string,
@@ -25,6 +26,7 @@ interface CartState {
 export const useCartStore = create<CartState>((set) => ({
   cart: null,
   isCartLoading: true,
+  isCartUpdating: false,
   checkCart: async (userId: string) => {
     try {
       const cart = await getCartData(userId);
@@ -59,12 +61,13 @@ export const useCartStore = create<CartState>((set) => ({
     quantity: number
   ) => {
     try {
+      set({isCartUpdating: true})
       await api.put(`/api/carts/items/${itemId}`, { quantity });
 
       // Fetch the updated cart after changing the quantity
       const response = await api.get(`/api/carts/${userId}`);
 
-      set({ cart: response.data.cart });
+      set({ cart: response.data.cart, isCartUpdating: false });
     } catch (error) {
       console.log("Failed to update item quantity:", error);
     }

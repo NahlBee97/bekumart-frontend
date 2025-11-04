@@ -56,8 +56,6 @@ export default function CartPageClient({
             {/* Order Summary */}
             <CartSummarySection
               isLoading={isLoading}
-              isCartLoading={isCartLoading}
-              cart={cart}
               onCheckout={handleCheckout}
             />
           </div>

@@ -56,7 +56,7 @@ export const CartItemCard = ({ item }: { item: ICartItem }) => {
   };
 
   return (
-    <div className="flex w-full items-center gap-2">
+    <div className="flex w-full gap-4">
       <div className="flex-shrink-0">
         {/* eslint-disable-next-line */}
         <img
@@ -70,30 +70,34 @@ export const CartItemCard = ({ item }: { item: ICartItem }) => {
         />
       </div>
 
-      <div className="flex-1 flex flex-col justify-between sm:ml-6">
-        <div className="relative flex justify-between sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
+      <div className="flex-1 flex flex-col md:flex-row justify-between">
+        <div className="relative ">
           <h3
             className="text-base font-medium line-clamp-2 text-gray-800"
             onClick={() => router.push(`/products/${item.product?.id}`)}
           >
             {item.product?.name}
           </h3>
-        </div>
-
-        <div className="mt-4 flex items-end justify-between text-sm">
+          <p
+          >
+            Berat: {item.product?.weightInKg} Kg
+          </p>
           <p className="font-medium text-blue-500">
             Rp {item.product?.price.toLocaleString("id-ID")}
           </p>
-          <div className="mt-4 sm:mt-0 sm:pr-9">
+        </div>
+
+        <div className="flex items-start justify-between text-sm">
+          <div className="block md:flex gap-2 items-center mt-2 sm:mt-0">
             {isLoading ? (
               <div className="h-9 w-35 animate-pulse rounded-md bg-gray-200"></div>
             ) : (
-              <div className="flex items-center border border-gray-300 rounded-md w-fit">
+              <div className="flex items-center border border-gray-300 rounded-md">
                 {localQuantity === 1 && (
                   <button
                     type="button"
                     onClick={() => deleteItem(user.id, item.id)}
-                    className="p-2 font-medium text-red-600 hover:text-red-500 flex items-center gap-1"
+                    className="p-2 font-medium text-red-600 hover:text-red-500"
                     disabled={item.quantity > 1}
                   >
                     <Trash2 className="h-4 w-4" />
@@ -107,6 +111,7 @@ export const CartItemCard = ({ item }: { item: ICartItem }) => {
                 />
               </div>
             )}
+            <p>Tersisa: {item.product.stock}</p>
           </div>
         </div>
       </div>
