@@ -6,20 +6,21 @@ import { useState } from "react";
 import { StickyAddToCartSkeleton } from "../skeletons/products/stickyAddToCartSkeleton";
 import toast from "react-hot-toast";
 import { ConfirmModal } from "../confirmModal";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { IProduct } from "@/interfaces/dataInterfaces";
 import { QuantitySelector } from "./quantitySelector";
 import { AddToCartButton } from "./addToCartButton";
 
 export const StickyAddToCart = ({ product }: { product: IProduct }) => {
   const router = useRouter();
+  const pathname = usePathname();
+
   const { user, isLoggedIn } = useAuthStore();
   const { addToCart } = useCartStore();
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isShowConfirmModal, setIsShowConfirmModal] = useState<boolean>(false);
 
-  // Show skeleton if isLoading is true or product is not available yet
   if (isLoading) {
     return <StickyAddToCartSkeleton />;
   }
@@ -54,7 +55,7 @@ export const StickyAddToCart = ({ product }: { product: IProduct }) => {
   return (
     <div className="md:hidden fixed bottom-0 left-0 right-0 w-full bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.1)] z-50">
       <div className="container mx-auto px-3 sm:px-4 lg:px-6">
-        <div className="pt-2 grid grid-cols-3 h-16">
+        <div className="pt-2 grid grid-cols-4 h-16">
           <div>
             <QuantitySelector
               isDisable={isLoading}
@@ -63,8 +64,8 @@ export const StickyAddToCart = ({ product }: { product: IProduct }) => {
               onDecrease={decrementQuantity}
             />
           </div>
-
-          <div className="w-full col-span-2">
+          <div></div>
+          <div className="col-span-2">
             <AddToCartButton
               isLoading={isLoading}
               onAdd={handleAddToCart}
@@ -78,7 +79,7 @@ export const StickyAddToCart = ({ product }: { product: IProduct }) => {
         onClose={() => setIsShowConfirmModal(false)}
         title="Tidak bisa menambahkan kedalam keranjang"
         confirmText="Login"
-        onConfirm={() => router.push("/login")}
+        onConfirm={() => router.push(`/login?callbackUrl=${pathname}`)}
       />
     </div>
   );
