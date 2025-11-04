@@ -4,6 +4,7 @@ import Link from "next/link";
 import { FileText, LogOut, Package, User, LayoutDashboard } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
+import toast from "react-hot-toast";
 
 export default function AdminSidebar() {
   const { logout } = useAuthStore();
@@ -17,12 +18,18 @@ export default function AdminSidebar() {
     { icon: User, label: "Profile", link: "/admin/profile" },
   ];
 
+  const protectedPages = ["/admin", "/profile", "/cart", "/checkout"];
+  const isProtectedPage = protectedPages.some((page) =>
+    pathname.startsWith(page)
+  );
+
   const handleLogOut = async () => {
     try {
       await logout();
-      router.push('/');
+      if (isProtectedPage) router.push("/");
     } catch (error) {
-      console.error("Logout failed:", error);
+      toast.error("Logout failed");
+      console.error("Logout failed: " + error);
     }
   };
 

@@ -1,12 +1,14 @@
 import { useAuthStore } from "@/stores/useAuthStore";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { LogOut, Snowflake } from "lucide-react";
 
 import { BurgerMenu } from "./burgerMenu";
+import toast from "react-hot-toast";
 
 export default function AdminNavbar() {
   const { logout } = useAuthStore();
   const router = useRouter();
+  const pathname = usePathname();
 
   const links = [
     { name: "Dashboard", link: "/admin" },
@@ -15,12 +17,18 @@ export default function AdminNavbar() {
     { name: "Profile", link: "/admin/profile" },
   ];
 
+  const protectedPages = ["/admin", "/profile", "/cart", "/checkout"];
+  const isProtectedPage = protectedPages.some((page) =>
+    pathname.startsWith(page)
+  );
+
   const handleLogOut = async () => {
     try {
       await logout();
-      router.push("/");
+      if (isProtectedPage) router.push("/");
     } catch (error) {
-      console.error("Logout failed:", error);
+      toast.error("Logout failed");
+      console.error("Logout failed: " + error);
     }
   };
 

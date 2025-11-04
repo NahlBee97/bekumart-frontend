@@ -6,6 +6,7 @@ import { LogOut, User } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
+import toast from "react-hot-toast";
 
 export const ProfileMenu = () => {
   const pathname = usePathname();
@@ -47,12 +48,16 @@ export const ProfileMenu = () => {
     };
   }, []);
 
+  const protectedPages = ["/admin", "/profile", "/cart", "/checkout"];
+  const isProtectedPage = protectedPages.some((page) => pathname.startsWith(page));
+  
   const handleLogOut = async () => {
     try {
       await logout();
-      router.push('/');
+      if (isProtectedPage) router.push('/');
     } catch (error) {
-      console.error("Logout failed:", error);
+      toast.error("Logout failed");
+      console.error("Logout failed: " + error);
     }
   };
 
