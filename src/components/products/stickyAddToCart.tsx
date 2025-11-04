@@ -55,7 +55,7 @@ export const StickyAddToCart = ({ product }: { product: IProduct }) => {
   return (
     <div className="md:hidden fixed bottom-0 left-0 right-0 w-full bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.1)] z-50">
       <div className="container mx-auto px-3 sm:px-4 lg:px-6">
-        <div className="pt-2 grid grid-cols-4 h-16">
+        <div className="pt-2 flex justify-between h-16">
           <div>
             <QuantitySelector
               isDisable={isLoading}

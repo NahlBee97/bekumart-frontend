@@ -16,7 +16,7 @@ export const QuantitySelector = ({
       <button
         onClick={onDecrease}
         disabled={isDisable}
-        className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-l-md transition duration-200 focus:outline-none"
+        className="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-l-md transition duration-200 focus:outline-none"
         aria-label="Decrement quantity"
       >
         -
@@ -26,7 +26,7 @@ export const QuantitySelector = ({
       </span>
       <button
         onClick={onIncrease}
-        className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-r-md transition duration-200 focus:outline-none"
+        className="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-r-md transition duration-200 focus:outline-none"
         aria-label="Increment quantity"
       >
         +
