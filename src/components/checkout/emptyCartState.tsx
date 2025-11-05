@@ -2,7 +2,7 @@ import { ShoppingCart } from "lucide-react";
 import { CommonButton } from "../buttons/commonButton";
 import { useRouter } from "next/navigation";
 
-export const CartEmptyState = () => {
+export const EmptyCartState = () => {
   const router = useRouter();
   return (
     <div className="bg-white min-h-[80vh] flex flex-col items-center justify-center text-center p-4">
