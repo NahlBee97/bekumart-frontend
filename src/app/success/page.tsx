@@ -7,9 +7,9 @@ import Link from "next/link";
 import { useEffect } from "react";
 
 export default function Success() {
-  const { accessToken } = useAuthStore();
+  const { isAuthLoading } = useAuthStore();
   useEffect(() => {
-    if (!accessToken) return;
+    if (isAuthLoading) return;
     try {
       const urlParams = new URLSearchParams(window.location.search);
       const orderId = urlParams.get("order_id");
@@ -25,7 +25,7 @@ export default function Success() {
     } catch (error) {
       console.error("Error updating order status:", error);
     }
-  }, [accessToken]);
+  }, [isAuthLoading]);
 
   return (
     <div className="bg-gray-50 min-h-screen flex items-center justify-center p-4 font-sans">

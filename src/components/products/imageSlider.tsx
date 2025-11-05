@@ -1,12 +1,22 @@
 "use client";
 
 import { IProductPhoto } from "@/interfaces/dataInterfaces";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const ImageSlider: React.FC<{ photos: IProductPhoto[] }> = ({
   photos,
 }) => {
-  const [activeImage, setActiveImage] = useState(photos[0].imageUrl);
+  const [activeImage, setActiveImage] = useState<string>(
+    "https://placehold.co/400x400/e2e8f0/64748b?text=N/A"
+  );
+
+  useEffect(() => {
+    const mainImage = photos.find(
+      (photo) => photo.isDefault === true
+    )?.imageUrl;
+    setActiveImage(mainImage as string);
+  }, [photos]);
+
   return (
     <div>
       <div className="border border-gray-200">

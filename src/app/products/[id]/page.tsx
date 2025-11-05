@@ -8,15 +8,13 @@ export default async function ProductDetailPage({
 }) {
   const { id } = await params;
 
-  const dataPromises = Promise.all([
+  let isLoading = true
+
+  const [product, photos, reviews] = await Promise.all([
     getProductById(id),
     getProductPhotos(id),
     getProductReviews(id),
   ]);
-
-  let isLoading = true
-
-  const [product, photos, reviews] = await dataPromises;
 
   isLoading = false;
 

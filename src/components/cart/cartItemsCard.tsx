@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 
 import { QuantitySelector } from "../products/quantitySelector";
 import { ConfirmModal } from "../confirmModal";
+import { LoadingModal } from "../loadingModal";
 
 export const CartItemCard = ({ item }: { item: ICartItem }) => {
   const router = useRouter();
@@ -17,7 +18,8 @@ export const CartItemCard = ({ item }: { item: ICartItem }) => {
   const { updateItemQuantity, deleteItem } = useCartStore();
   const [localQuantity, setLocalQuantity] = useState(item.quantity);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isConfirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
   // Sync local state with prop when item quantity changes
   useEffect(() => {
@@ -58,7 +60,16 @@ export const CartItemCard = ({ item }: { item: ICartItem }) => {
   };
 
   const handleDelete = () => {
-    deleteItem(user.id, item.id)
+    try {
+      setIsDeleting(true);
+      deleteItem(user.id, item.id)
+      toast.success("Berhasil Menghapus");
+    } catch (error) {
+      console.error("Gagal Menghapus: " + error);
+      toast.error("Gagal Menghapus");
+    } finally {
+      setIsDeleting(false);
+    }
   }
 
   return (
@@ -102,7 +113,7 @@ export const CartItemCard = ({ item }: { item: ICartItem }) => {
                 {localQuantity === 1 && (
                   <button
                     type="button"
-                    onClick={() => setConfirmModalOpen(true) }
+                    onClick={() => setIsConfirmModalOpen(true) }
                     className="p-2 font-medium text-red-600 hover:text-red-500"
                     disabled={item.quantity > 1}
                   >
@@ -121,7 +132,8 @@ export const CartItemCard = ({ item }: { item: ICartItem }) => {
           </div>
         </div>
       </div>
-      <ConfirmModal isOpen={isConfirmModalOpen} onClose={() => setConfirmModalOpen(false)} title={`Hapus ${item.product.name}?`} confirmText="Hapus" onConfirm={handleDelete} />
+      <ConfirmModal isOpen={isConfirmModalOpen} onClose={() => setIsConfirmModalOpen(false)} title={`Hapus ${item.product.name}?`} confirmText="Hapus" onConfirm={handleDelete} />
+        <LoadingModal isOpen={isDeleting} title={`Menghapus ${item.product.name}`}/>
     </div>
   );
 };

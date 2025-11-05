@@ -1,18 +1,25 @@
-import Link from "next/link";
+import { ShoppingCart } from "lucide-react";
+import { CommonButton } from "../buttons/commonButton";
+import { useRouter } from "next/navigation";
 
-// Sub-components for better organization
-export const EmptyCartState = () => (
-  <div className="flex h-screen items-center justify-center bg-gray-50">
-    <div className="flex flex-col gap-4 justify-center items-center">
-      <h2 className="text-xl font-semibold text-gray-700">
-        Tidak ada produk untuk checkout
-      </h2>
-      <Link
-        href="/"
-        className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-300"
-      >
-        Lanjut Belanja
-      </Link>
+export const CartEmptyState = () => {
+  const router = useRouter();
+  return (
+    <div className="bg-white min-h-[80vh] flex flex-col items-center justify-center text-center p-4">
+      <ShoppingCart className="w-24 h-24 text-gray-300 mb-6" strokeWidth={1} />
+      <h1 className="text-3xl font-bold text-gray-800 mb-2">
+        Halaman Checkout Kosong
+      </h1>
+      <p className="text-gray-500 mb-6">
+        Sepertinya kamu belum menambahkan sesuatu, mari belanja!
+      </p>
+      <div className="w-40">
+        <CommonButton
+          onClick={() => router.push("/shop")}
+          isDisable={false}
+          buttonText="Lanjut Belanja"
+        />
+      </div>
     </div>
-  </div>
-);
+  );
+};
