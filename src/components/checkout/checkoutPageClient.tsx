@@ -93,11 +93,13 @@ export default function CheckoutPageClient() {
 
     if (deliveryMethod === "PICKUP") {
       setShippingCost(0);
+      setIsCalculating(false);
       return;
     }
 
     if (!selectedAddress?.id) {
       setShippingCost(0);
+      setIsCalculating(false);
       return;
     }
 
