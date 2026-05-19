@@ -8,9 +8,9 @@ export default function ProfileLayout({
 }) {
   return (
     <UserRouteGuard>
-      <div className="min-h-screen">
-        <main className="bg-slate-50 mx-auto p-4 lg:px-10">
-          <div className="flex flex-col lg:flex-row gap-8">
+      <div className="min-h-screen bg-slate-50">
+        <main className="container mx-auto p-2">
+          <div className="flex flex-col lg:flex-row">
             {/* Sidebar */}
             <div className="hidden md:block w-full lg:w-auto">
               <Sidebar />

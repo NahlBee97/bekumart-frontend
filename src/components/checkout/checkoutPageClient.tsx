@@ -218,6 +218,7 @@ export default function CheckoutPageClient() {
   return (
     <>
       <div className="min-h-screen bg-slate-50 text-gray-800">
+        <div className="container mx-auto">
         <div className="flex items-center gap-2 p-2 md:px-8 md:py-4">
           <ArrowLeft
             className="md:hidden h-6 w-6 text-blue-500"
@@ -227,7 +228,7 @@ export default function CheckoutPageClient() {
             Checkout
           </h1>
         </div>
-        <main className="mx-auto max-w-7xl pb-4 pt-2">
+        <main className="p-2">
           <div className="mx-auto max-w-2xl lg:max-w-none">
             <div className=" lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
               {/* Left Column - Delivery & Address */}
@@ -281,6 +282,7 @@ export default function CheckoutPageClient() {
             </div>
           </div>
         </main>
+      </div>
       </div>
 
       {/* Modals */}

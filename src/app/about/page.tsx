@@ -12,7 +12,7 @@ export default function AboutPage() {
         />
       </Head>
 
-      <div className=" min-h-screen">
+      <div className="min-h-screen">
         {/* Hero Section */}
         <section className="bg-blue-500 text-white text-center py-20">
           <div className="container flex flex-col items-center mx-auto px-6">

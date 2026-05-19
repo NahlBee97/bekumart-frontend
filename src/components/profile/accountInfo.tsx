@@ -68,12 +68,9 @@ export default function AccountInfo() {
         <h2 className="text-base md:text-xl font-semibold text-blue-500">
           Informasi Akun
         </h2>
-        <p className="mt-1 text-xs md:text-sm text-gray-500">
-          Perbaharui informasi akunmu.
-        </p>
 
-        <div className="flex flex-col md:flex-row items-center justify-center gap-5 md:gap-20">
-          <div className="group relative mt-6 flex cursor-pointer items-center justify-center gap-5">
+        <div className="flex flex-col md:flex-row gap-5 mt-4">
+          <div className="group relative flex cursor-pointer items-center justify-center gap-5">
             {/* eslint-disable-next-line */}
             <img
               src={

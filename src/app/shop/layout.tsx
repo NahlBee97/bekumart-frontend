@@ -8,8 +8,8 @@ export default async function shopLayout({
 }) {
   const categories = await getCategories();
   return (
-    <div className="min-h-screen">
-      <main className="bg-slate-50 mx-auto p-4 lg:px-10">
+    <div className="min-h-screen bg-slate-50">
+      <div className="container mx-auto p-2">
         <div className=" flex flex-col lg:flex-row gap-4">
           {/* Sidebar */}
           <div className="hidden md:block w-full lg:w-auto">
@@ -19,7 +19,7 @@ export default async function shopLayout({
           {/* Main Content */}
           <div className="flex-1">{children}</div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

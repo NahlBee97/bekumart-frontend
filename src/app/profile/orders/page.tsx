@@ -3,7 +3,7 @@ import OrderHistoryClient from "@/components/profile/orders/orderHistoryClient";
 export default async function OrderHistoryPage() {
   return (
     <div className="min-h-screen">
-      <div className="container mx-auto max-w-5xl px-4">
+      <div className="px-4">
         <header className="mb-6">
           <h1 className="text-xl md:text-3xl font-bold tracking-tight text-blue-500 sm:text-4xl">
             Riwayat Pesanan

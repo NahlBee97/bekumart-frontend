@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${workSans.className} antialiased`}>
-        <AuthWrapper>{children}</AuthWrapper>
+          <AuthWrapper>{children}</AuthWrapper>
         <Toaster position="top-right" />
         <Footer />
       </body>
