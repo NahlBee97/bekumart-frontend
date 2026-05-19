@@ -47,7 +47,7 @@ export const BurgerMenu = ({
         <button
           type="button"
           onClick={toggleMenu}
-          className="inline-flex justify-center items-center rounded-lg p-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
+          className="inline-flex justify-center items-center rounded-lg p-2 text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500"
           aria-haspopup="true"
           aria-expanded={isOpen}
         >
@@ -92,7 +92,7 @@ export const BurgerMenu = ({
                 className={`block w-full text-left px-4 py-2 text-sm font-medium transition-colors duration-200 ${
                   activeLink === link.link
                     ? "bg-blue-600 text-white"
-                    : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
+                    : "text-slate-700  hover:bg-slate-100 "
                 }`}
                 aria-current={activeLink === link.link ? "page" : undefined}
               >

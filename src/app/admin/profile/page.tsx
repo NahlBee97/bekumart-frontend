@@ -4,7 +4,7 @@ import AddressInfo from "@/components/profile/addressInfo";
 export default function AdminPage() {
   return (
     <div className="min-h-screen antialiased">
-      <main className="max-w-4xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+      <main className="caontainer mx-auto">
         <div className="mb-4">
           <h1 className="text-xl md:text-2xl font-bold tracking-tight text-blue-500">
             Pengaturan Akun

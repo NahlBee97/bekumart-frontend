@@ -9,7 +9,7 @@ export default function AdminLayout({
   return (
     <AdminRouteGuard>
       <div className="min-h-screen bg-slate-50">
-        <main className="mx-auto p-4 lg:p-8">
+        <div className="container mx-auto p-2">
           <div className=" flex flex-col lg:flex-row gap-8">
             {/* Sidebar */}
             <div className="hidden md:block w-full lg:w-auto">
@@ -19,7 +19,7 @@ export default function AdminLayout({
             {/* Main Content */}
             <div className="flex-1">{children}</div>
           </div>
-        </main>
+        </div>
       </div>
     </AdminRouteGuard>
   );

@@ -4,7 +4,7 @@ import AddressInfo from "@/components/profile/addressInfo";
 export default function ProfilePage() {
   
   return (
-      <main className="mx-auto py-4 px-4 sm:px-6 lg:px-8">
+      <main className="px-4">
         <div className="mb-4">
           <h1 className="text-xl md:text-3xl font-bold tracking-tight text-blue-500">
             Pengaturan Akun

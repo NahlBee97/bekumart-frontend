@@ -32,7 +32,7 @@ export default function AddressInfo() {
     if (isAuthLoading || !accessToken) return;
 
     try {
-      const addresses = await getUserAddresses(user.id);
+      const addresses = await getUserAddresses(user?.id as string);
       setAddresses(addresses);
     } catch (error) {
       console.error("Error fetching addresses:", error);
@@ -90,10 +90,10 @@ export default function AddressInfo() {
         <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
           <div>
             <h2 className="md:text-xl font-semibold text-blue-500">
-              {user.role === "CUSTOMER" ? "Alamat Pengiriman" : "Alamat Toko"}
+              {user?.role === "CUSTOMER" ? "Alamat Pengiriman" : "Alamat Toko"}
             </h2>
           </div>
-          {user.role === "CUSTOMER" && (
+          {user?.role === "CUSTOMER" && (
             <button
               onClick={() => {
                 setAddressToEdit(null);

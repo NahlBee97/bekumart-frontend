@@ -34,7 +34,7 @@ export default function ClientNavbar() {
     );
 
   return (
-    <header className="px-2 md:px-0 sticky top-0 z-25 bg-background-light/80 backdrop-blur-sm border-b border-slate-200 bg-black">
+    <header className="px-2 md:px-0 sticky top-0 z-25 border-b border-slate-200 bg-black">
       <div className="container mx-auto">
         <div className="flex items-center justify-between gap-2 md:gap-0 h-16">
           {/* Left Section: Logo & Desktop Nav */}
@@ -99,7 +99,7 @@ export default function ClientNavbar() {
             {isLoggedIn ? (
               <ProfileMenu />
             ) : (
-              <div className="sm:flex items-center gap-2">
+              <div className="sm:flex items-center gap-3">
                 <Link
                   href={`/login?callbackUrl=${pathname}`}
                   className="px-4 py-2 text-sm text-center text-blue-500 font-semibold rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors"

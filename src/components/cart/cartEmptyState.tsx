@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 export const CartEmptyState = () => {
   const router = useRouter();
   return (
-    <div className="bg-white min-h-[80vh] flex flex-col items-center justify-center text-center p-4">
+    <div className="bg-white min-h-screen flex flex-col items-center justify-center text-center p-4">
       <ShoppingCart className="w-24 h-24 text-gray-300 mb-6" strokeWidth={1} />
       <h1 className="text-3xl font-bold text-gray-800 mb-2">
         Keranjang Belanja Kosong

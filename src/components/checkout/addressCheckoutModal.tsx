@@ -147,7 +147,7 @@ export const AddressCheckoutModal = ({
         } else {
           const response = await api.post(`/api/addresses`, {
             ...values,
-            userId: user.id,
+            userId: user?.id as string,
           });
           onSelect(response.data.newAddress);
           toast.success("Alamat baru berhasil ditambahkan!");

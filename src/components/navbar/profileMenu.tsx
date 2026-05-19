@@ -78,7 +78,7 @@ export const ProfileMenu = () => {
         aria-haspopup="true"
         aria-expanded={isOpen}
       >
-        {!user.imageUrl ? (
+        {!user?.imageUrl ? (
           <User className="cursor-pointer" />
         ) : (
           // eslint-disable-next-line
