@@ -32,7 +32,7 @@ export const OrderItemList = ({ items, orderStatus }: props) => {
 
   const refreshUserReviews = useCallback(async () => {
     if (isAuthLoading) return;
-    const reviews = await getProductReviewsByUserId(user.id);
+    const reviews = await getProductReviewsByUserId(user?.id as string);
     setUserReviews(reviews);
   }, [user, isAuthLoading]);
 

@@ -31,7 +31,7 @@ export default function OrderHistoryClient() {
     if (isAuthLoading || !accessToken) return;
     try {
       const fetchOrders = async () => {
-        const orders = await getUserOrders(user.id);
+        const orders = await getUserOrders(user?.id as string);
         setOrders(orders);
       };
 

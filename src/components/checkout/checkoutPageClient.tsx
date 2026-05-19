@@ -178,7 +178,7 @@ export default function CheckoutPageClient() {
       }
 
       const orderData: IOrderData = {
-        userId: user.id,
+        userId: user?.id as string,
         fullfillmentType: deliveryMethod,
         paymentMethod,
         addressId:

@@ -138,7 +138,7 @@ export const AddressModal = ({ isOpen, onSave, onClose, address }: props) => {
           await api.put(`/api/addresses/${address.id}`, values);
           toast.success("Alamat berhasil diedit!");
         } else {
-          await api.post(`/api/addresses`, { ...values, userId: user.id });
+          await api.post(`/api/addresses`, { ...values, userId: user?.id });
           toast.success("Alamat baru berhasil ditambahkan!");
         }
 

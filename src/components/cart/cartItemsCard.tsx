@@ -35,13 +35,13 @@ export const CartItemCard = ({ item }: { item: ICartItem }) => {
     const handler = setTimeout(async () => {
       try {
         setIsLoading(true);
-        await updateItemQuantity(user.id, item.id, localQuantity);
+        await updateItemQuantity(user?.id as string, item.id, localQuantity);
         setIsLoading(false);
         toast.success("Berhasil merubah jumlah");
       } catch (error) {
         // Revert to item quantity on error
         setLocalQuantity(item.quantity);
-        toast.error("Berhasil merubah jumlah");
+        toast.error("Gagal merubah jumlah");
         console.error("Failed to update quantity:", error);
       }
     }, 1000);
@@ -59,10 +59,10 @@ export const CartItemCard = ({ item }: { item: ICartItem }) => {
     setLocalQuantity((prev) => prev + 1);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     try {
       setIsDeleting(true);
-      deleteItem(user.id, item.id)
+      await deleteItem(user?.id as string, item.id);
       toast.success("Berhasil Menghapus");
     } catch (error) {
       console.error("Gagal Menghapus: " + error);
