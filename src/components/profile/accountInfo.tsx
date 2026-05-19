@@ -26,7 +26,7 @@ export default function AccountInfo() {
 
   const refreshUser = useCallback(async () => {
     try {
-      if (isAuthLoading) return;
+      if (isAuthLoading || !user?.id) return;
 
       const userData = await getUserData(user?.id);
 
@@ -74,7 +74,7 @@ export default function AccountInfo() {
             {/* eslint-disable-next-line */}
             <img
               src={
-                user.imageUrl
+                user?.imageUrl
                   ? user.imageUrl
                   : "https://placehold.co/400x400/e2e8f0/64748b?text=N/A"
               }

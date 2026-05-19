@@ -1,7 +1,6 @@
 import api from "@/lib/axios";
 import { create } from "zustand";
 import { IUser } from "@/interfaces/dataInterfaces";
-import { jwtAccessSecret } from "@/config";
 import { jwtDecode } from "jwt-decode";
 
 interface AuthState {
