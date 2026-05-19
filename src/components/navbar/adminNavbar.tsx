@@ -33,7 +33,7 @@ export default function AdminNavbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm border-b border-slate-200 ">
+    <header className="px-2 md:px-0 sticky top-0 z-25 border-b border-slate-200 bg-black">
       <div className="container mx-auto px-3 md:px-0">
         <div className="flex items-center justify-between h-16">
           {/* Left Section: Logo & Desktop Nav */}
@@ -44,13 +44,13 @@ export default function AdminNavbar() {
             </p>
           </div>
           {/* right section */}
-          <div className="flex items-center justify-end md:justify-end md:gap-4 gap-1 md:w-auto md:mt-0">
-            <div className="md:hidden">
+          <div className="md:hidden flex items-center justify-end md:justify-end md:gap-4 gap-2 md:w-auto md:mt-0">
+            <div>
               <BurgerMenu links={links} />
             </div>
             <button
               onClick={handleLogOut}
-              className="md:hidden font-medium transition-colors duration-200 hover:text-red-500"
+              className="inline-flex justify-center items-center rounded-lg p-2 text-white hover:text-red-500 bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500"
             >
               <LogOut className="w-5 h-5" />
             </button>

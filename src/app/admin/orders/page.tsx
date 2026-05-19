@@ -8,20 +8,20 @@ export default function OrderPage() {
       <div className="container mx-auto">
         <header className="mb-2">
           <div className="flex items-center space-x-3">
-            <Package className="h-6 w-6 text-blue-500 dark:text-gray-200" />
-            <h1 className="text-2xl font-bold text-blue-500 dark:text-white">
+            <Package className="h-6 w-6 text-blue-500" />
+            <h1 className="text-2xl font-bold text-blue-500">
               Order Management
             </h1>
           </div>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+          <p className="mt-2 text-sm text-gray-600 ">
             Melihat, mengatur, dan update pesanan customer.
           </p>
         </header>
 
         <OperationalSection />
 
-        <OrderTable/>
+        <OrderTable />
       </div>
     </div>
   );
-};
+}

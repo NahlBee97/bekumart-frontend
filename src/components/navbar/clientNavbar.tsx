@@ -99,7 +99,7 @@ export default function ClientNavbar() {
             {isLoggedIn ? (
               <ProfileMenu />
             ) : (
-              <div className="sm:flex items-center gap-2">
+              <div className="sm:flex items-center gap-3">
                 <Link
                   href={`/login?callbackUrl=${pathname}`}
                   className="px-4 py-2 text-sm text-center text-blue-500 font-semibold rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors"
