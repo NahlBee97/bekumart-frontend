@@ -33,11 +33,11 @@ export default function AuthWrapper({
   useEffect(() => {
     if (!isLoggedIn) checkAuth();
   }, [isLoggedIn, checkAuth]);
-
+  
   useEffect(() => {
-    if (!user.id && user.role !== "CUSTOMER") return;
+    if (!user?.id || user.role !== "CUSTOMER") return;
     checkCart(user.id);
-  }, [user.id, user.role, checkCart]);
+  }, [user?.id, user?.role, checkCart]);
 
   useEffect(() => {
     if (isAuthLoading) {
@@ -68,7 +68,7 @@ export default function AuthWrapper({
   return (
     <>
       {/* ✅ Tampilkan Navbar jika admin */}
-      {user.role !== "ADMIN" ? <ClientNavbar /> : <AdminNavbar />}
+      {user?.role !== "ADMIN" ? <ClientNavbar /> : <AdminNavbar />}
 
       {/* ✅ Tampilkan konten utama */}
       {children}

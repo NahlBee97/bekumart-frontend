@@ -1,12 +1,12 @@
 import api from "@/lib/axios";
-import { jwtAccessSecret } from "@/config";
-import { jwtVerify } from "jose";
 import { create } from "zustand";
 import { IUser } from "@/interfaces/dataInterfaces";
+import { jwtAccessSecret } from "@/config";
+import { jwtDecode } from "jwt-decode";
 
 interface AuthState {
   accessToken: string | null;
-  user: IUser;
+  user: IUser | null;
   isLoggedIn: boolean;
   isAuthLoading: boolean;
   checkAuth: () => Promise<void>;
@@ -17,7 +17,7 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>((set) => ({
   accessToken: null,
-  user: {} as IUser,
+  user: null,
   isLoggedIn: false,
   isAuthLoading: true,
   checkAuth: async () => {
@@ -25,8 +25,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       const response = await api.get("/api/auth/refresh-token");
       const { accessToken } = response.data;
 
-      const secret = new TextEncoder().encode(jwtAccessSecret);
-      const { payload } = await jwtVerify<IUser>(accessToken, secret);
+      const payload = jwtDecode<IUser>(accessToken);
 
       set({
         user: payload,
@@ -34,9 +33,10 @@ export const useAuthStore = create<AuthState>((set) => ({
         accessToken: accessToken,
         isAuthLoading: false
       });
+
     } catch (error) {
       // If refresh fails, it means no valid session, so we clear the state
-      set({ user: {} as IUser, isLoggedIn: false, accessToken: null });
+      set({ user: null, isLoggedIn: false, accessToken: null });
       console.log("No active session found:", error);
     } finally {
       set({ isAuthLoading: false})
@@ -46,7 +46,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   login: (user: IUser) => set({ user, isLoggedIn: true }),
   logout: async () => {
     await api.post("api/auth/logout", {});
-    set({ user: {} as IUser, isLoggedIn: false, accessToken: null });
+    set({ user: null, isLoggedIn: false, accessToken: null });
   },
 }));
 
