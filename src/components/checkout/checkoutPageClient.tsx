@@ -193,13 +193,32 @@ export default function CheckoutPageClient() {
 
       // Handle different payment flows
       if (paymentMethod === "ONLINE") {
-        window.snap?.pay(paymentToken);
+        // Only clear the cart once Midtrans actually confirms the payment -
+        // clearing it immediately would empty the cart even if the user
+        // cancels or the payment fails.
+        window.snap?.pay(paymentToken, {
+          onSuccess: () => {
+            clearCart();
+            toast.success("Pembayaran Berhasil");
+            router.push(`/success?order_id=${orderId}`);
+          },
+          onPending: () => {
+            clearCart();
+            toast("Menunggu pembayaran Anda");
+            router.push(`/success?order_id=${orderId}`);
+          },
+          onError: () => {
+            toast.error("Pembayaran Gagal");
+          },
+          onClose: () => {
+            toast("Anda menutup jendela pembayaran sebelum selesai");
+          },
+        });
       } else if (paymentMethod === "INSTORE" && deliveryMethod === "PICKUP") {
+        clearCart();
+        toast.success("Pesanan Berhasil Dibuat");
         router.push(`/success?order_id=${orderId}`);
       }
-
-      clearCart();
-      toast.success("Pesanan Berhasil Dibuat");
     } catch (error) {
       console.error("Error checking out:", error);
       toast.error("Error checking out");

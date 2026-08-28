@@ -83,23 +83,12 @@ export default function LoginForm() {
   const googleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       try {
-        const userInfoResponse = await axios.get(
-          "https://www.googleapis.com/oauth2/v3/userinfo",
-          {
-            headers: {
-              Authorization: `Bearer ${tokenResponse.access_token}`,
-            },
-          }
-        );
-
-        const { name, email } = userInfoResponse.data;
-
-        const values = {
-          name,
-          email,
-        };
-
-        const response = await api.post(`/api/auth/google-login`, values);
+        // Send the raw Google access token to the backend and let it
+        // verify the account with Google itself - never trust profile
+        // data resolved on the client for authentication.
+        const response = await api.post(`/api/auth/google-login`, {
+          accessToken: tokenResponse.access_token,
+        });
 
         // set token to cookie
         const { accessToken } = response.data;

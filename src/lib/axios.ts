@@ -87,7 +87,12 @@ api.interceptors.response.use(
 
         const newToken = response.data.accessToken;
 
-        if(!newToken) return;
+        if (!newToken) {
+          const noSessionError = new Error("Session expired. Please log in again");
+          processQueue(noSessionError, null);
+          useAuthStore.getState().logout();
+          return Promise.reject(noSessionError);
+        }
 
         // Update store and axios defaults
         useAuthStore.getState().setAccessToken(newToken);

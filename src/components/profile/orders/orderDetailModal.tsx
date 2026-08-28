@@ -82,13 +82,9 @@ export const OrderDetailModal = ({ order, onClose }: props) => {
     try {
       setIsPaymentLoading(true);
 
-      const orderData = {
-        id: order?.id,
-        userId: order?.userId,
-        totalAmount: order?.totalAmount,
-      };
-
-      const response = await api.post(`/api/orders/payment-token`, orderData);
+      const response = await api.post(`/api/orders/payment-token`, {
+        orderId: order?.id,
+      });
       const { paymentToken } = response.data;
 
       window.snap?.pay(paymentToken);
