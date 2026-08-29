@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { CategoryCard } from "./categoryCard";
 import { ICategory } from "@/interfaces/dataInterfaces";
+import { Reveal } from "@/components/reveal";
 
 const CategorySection = ({ categories }: { categories: ICategory[] }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -53,8 +54,11 @@ const CategorySection = ({ categories }: { categories: ICategory[] }) => {
   };
 
   return (
-    <section className="w-full bg-white border border-slate-200 rounded-lg px-2 py-4 md:p-6 shadow-sm">
-      <h2 className="text-base font-semibold text-blue-500 mb-2 uppercase tracking-wider">
+    <Reveal
+      as="section"
+      className="w-full bg-white rounded-2xl px-3 py-5 md:p-6 shadow-sm shadow-ink/5"
+    >
+      <h2 className="font-display text-sm font-semibold text-ink mb-3 uppercase tracking-wider">
         Kategori
       </h2>
       <div className="relative">
@@ -63,11 +67,11 @@ const CategorySection = ({ categories }: { categories: ICategory[] }) => {
           <button
             onClick={() => scroll("left")}
             aria-label="Scroll Left"
-            className={`absolute top-1/2 -left-4 -translate-y-1/2 z-10 bg-white dark:bg-slate-700 w-9 h-9 rounded-full flex items-center justify-center shadow-md border border-slate-200 dark:border-slate-600 transition-opacity duration-300 hover:bg-slate-100 dark:hover:bg-slate-600 ${
+            className={`absolute top-1/2 -left-4 -translate-y-1/2 z-10 bg-white w-9 h-9 rounded-full flex items-center justify-center shadow-md border border-slate-100 transition-all duration-300 hover:bg-frost-light active:scale-90 ${
               showLeftArrow ? "opacity-100" : "opacity-0 pointer-events-none"
             }`}
           >
-            <ChevronLeft className="w-5 h-5 text-slate-600 dark:text-slate-300" />
+            <ChevronLeft className="w-5 h-5 text-frost-deep" />
           </button>
         )}
 
@@ -79,8 +83,14 @@ const CategorySection = ({ categories }: { categories: ICategory[] }) => {
           style={{ scrollSnapType: "x mandatory" }}
         >
           <div className="flex items-center gap-1">
-            {categories.map((category) => (
-              <CategoryCard key={category.id} category={category} />
+            {categories.map((category, i) => (
+              <div
+                key={category.id}
+                className="animate-fade-up"
+                style={{ animationDelay: `${Math.min(i, 8) * 40}ms` }}
+              >
+                <CategoryCard category={category} />
+              </div>
             ))}
           </div>
         </div>
@@ -90,15 +100,15 @@ const CategorySection = ({ categories }: { categories: ICategory[] }) => {
           <button
             onClick={() => scroll("right")}
             aria-label="Scroll Right"
-            className={`absolute top-1/2 -right-4 -translate-y-1/2 z-10 bg-white dark:bg-slate-700 w-9 h-9 rounded-full flex items-center justify-center shadow-md border border-slate-200 dark:border-slate-600 transition-opacity duration-300 hover:bg-slate-100 dark:hover:bg-slate-600 ${
+            className={`absolute top-1/2 -right-4 -translate-y-1/2 z-10 bg-white w-9 h-9 rounded-full flex items-center justify-center shadow-md border border-slate-100 transition-all duration-300 hover:bg-frost-light active:scale-90 ${
               showRightArrow ? "opacity-100" : "opacity-0 pointer-events-none"
             }`}
           >
-            <ChevronRight className="w-5 h-5 text-slate-600 dark:text-slate-300" />
+            <ChevronRight className="w-5 h-5 text-frost-deep" />
           </button>
         )}
       </div>
-    </section>
+    </Reveal>
   );
 };
 

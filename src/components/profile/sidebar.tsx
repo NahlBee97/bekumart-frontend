@@ -13,8 +13,8 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="w-full lg:w-64 bg-white p-4 rounded-lg shadow-sm">
-      <h2 className="text-lg text-blue-500 font-bold mb-4">Navigation</h2>
+    <aside className="w-full lg:w-64 bg-white p-4 rounded-2xl shadow-sm shadow-ink/5">
+      <h2 className="font-display text-sm uppercase tracking-wider text-fog font-semibold mb-4">Navigation</h2>
       <nav>
         <ul>
           {navItems.map((item) => {
@@ -24,11 +24,11 @@ export default function Sidebar() {
               <li key={item.label}>
                 <Link
                   href={item.link}
-                  className={`flex items-center p-3 my-1 rounded-lg transition-colors
+                  className={`flex items-center p-3 my-1 rounded-xl transition-all duration-200
                     ${
                       isActive
-                        ? "bg-blue-500 text-white font-semibold"
-                        : "hover:bg-gray-600 hover:text-white hover:font-semibold"
+                        ? "bg-frost text-white font-semibold shadow-sm shadow-frost/30"
+                        : "text-ink/70 hover:bg-frost-light/60 hover:text-frost-deep"
                     }
                   `}
                   aria-label={item.label}

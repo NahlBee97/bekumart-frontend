@@ -5,7 +5,7 @@ export default async function OrderHistoryPage() {
     <div className="min-h-screen">
       <div className="px-4">
         <header className="mb-6">
-          <h1 className="text-xl md:text-3xl font-bold tracking-tight text-blue-500 sm:text-4xl">
+          <h1 className="text-xl md:text-3xl font-bold tracking-tight text-frost sm:text-4xl">
             Riwayat Pesanan
           </h1>
           <p className="mt-2 text-sm text-gray-500">

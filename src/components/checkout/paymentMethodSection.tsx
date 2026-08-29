@@ -12,7 +12,7 @@ export const PaymentMethodSection = ({
   onPaymentMethodChange,
 }: props) => (
   <div>
-    <h3 className="text-lg font-semibold text-gray-900">Metode Pembayaran</h3>
+    <h3 className="font-display text-lg font-semibold text-ink">Metode Pembayaran</h3>
     <div className="mt-4 grid gap-4 grid-cols-2">
       <PaymentOption
         id="online"

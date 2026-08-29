@@ -27,7 +27,7 @@ export const RatingFilter = ({onApply}: {onApply: () => void}) => {
 
   return (
     <div className="md:w-50 max-w-sm border-t pt-2">
-      <h2 className="text-base font-semibold text-blue-500 mb-1">Penilaian</h2>
+      <h2 className="text-base font-semibold text-frost mb-1">Penilaian</h2>
       <div className="space-y-1">
         {[5, 4, 3, 2, 1].map((rating) => {
           return (
@@ -35,7 +35,7 @@ export const RatingFilter = ({onApply}: {onApply: () => void}) => {
               key={rating}
               onClick={() => handleClick(rating)}
               className={`flex p-1 items-center space-x-2 cursor-pointer rounded-sm ${
-                active === rating && "bg-blue-300"
+                active === rating && "bg-frost"
               }`}
             >
               {renderStars(rating)}

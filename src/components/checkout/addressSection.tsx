@@ -28,18 +28,18 @@ export const AddressSection = ({
   return (
     <div>
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-blue-500">
+        <h3 className="font-display text-lg font-semibold text-ink">
           Alamat Pengiriman
         </h3>
         <button
           onClick={onEditAddress}
-          className="flex-shrink-0 flex items-center gap-2 bg-blue-500 text-white text-sm font-semibold py-1 px-4 rounded-lg shadow-md hover:bg-blue-600"
+          className="flex-shrink-0 flex items-center gap-2 bg-frost text-white text-sm font-semibold py-1 px-4 rounded-full shadow-sm hover:bg-frost-deep hover:shadow-md active:scale-95 transition-all"
         >
           Ganti
         </button>
       </div>
       {selectedAddress ? (
-        <div className="mt-4 rounded-md border border-gray-200 p-4 text-sm text-gray-600">
+        <div className="mt-4 rounded-xl bg-mist p-4 text-sm text-fog">
           <div>
             <p className="text-base font-semibold">
               {selectedAddress.receiver}
@@ -59,7 +59,7 @@ export const AddressSection = ({
           </div>
         </div>
       ) : (
-        <div className="mt-4 rounded-md border border-gray-200 p-4 text-sm text-gray-600">
+        <div className="mt-4 rounded-xl bg-mist p-4 text-sm text-fog">
           <p>Pilih Alamat Pengiriman.</p>
         </div>
       )}

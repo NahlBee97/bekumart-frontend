@@ -19,7 +19,7 @@ export const DeliveryMethodSection = ({
 
   return (
     <div>
-      <h3 className="text-lg font-semibold text-blue-500">Metode Pelayanan</h3>
+      <h3 className="font-display text-lg font-semibold text-ink">Metode Pelayanan</h3>
       <div className="mt-4 grid gap-4 grid-cols-2">
         <DeliveryOption
           id="delivery"

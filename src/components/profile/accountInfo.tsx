@@ -63,9 +63,9 @@ export default function AccountInfo() {
   if (isAuthLoading) return <AccountInfoSkeleton />;
 
   return (
-    <div className="bg-white shadow-md sm:rounded-lg overflow-hidden">
+    <div className="bg-white shadow-sm shadow-ink/5 rounded-2xl overflow-hidden">
       <div className="p-6">
-        <h2 className="text-base md:text-xl font-semibold text-blue-500">
+        <h2 className="font-display text-base md:text-xl font-semibold text-ink">
           Informasi Akun
         </h2>
 
@@ -79,15 +79,15 @@ export default function AccountInfo() {
                   : "https://placehold.co/400x400/e2e8f0/64748b?text=N/A"
               }
               alt="Profile picture"
-              className="h-32 w-32 rounded-xl border border-gray-300 object-cover shadow-sm transition-all duration-300 group-hover:brightness-75 md:h-44 md:w-44 bg-gray-200"
+              className="h-32 w-32 rounded-2xl object-cover shadow-sm transition-all duration-300 group-hover:brightness-75 md:h-44 md:w-44 bg-mist"
             />
 
             <button
               type="button"
               onClick={() => setIsImageModalOpen(true)}
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 inline-flex items-center gap-2 rounded-md bg-white px-3.5 py-2 text-sm font-semibold text-gray-900 opacity-0 shadow-sm ring-1 ring-inset ring-gray-300 transition-opacity duration-300 hover:bg-gray-50 group-hover:opacity-100"
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-2 text-sm font-semibold text-ink opacity-0 shadow-md transition-opacity duration-300 hover:bg-slate-50 group-hover:opacity-100"
             >
-              <Camera className="h-5 w-5 text-gray-600" />
+              <Camera className="h-5 w-5 text-frost-deep" />
               <span className="hidden md:block">Ganti</span>
             </button>
           </div>
@@ -100,7 +100,7 @@ export default function AccountInfo() {
             <div className="sm:col-span-2">
               <label
                 htmlFor="name"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-fog mb-1"
               >
                 Nama
               </label>
@@ -117,7 +117,7 @@ export default function AccountInfo() {
                 </>
               ) : (
                 <div className="w-full px-3 py-2">
-                  <p>{user?.name}</p>
+                  <p className="text-ink">{user?.name}</p>
                 </div>
               )}
             </div>
@@ -125,7 +125,7 @@ export default function AccountInfo() {
             <div className="sm:col-span-2">
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-fog mb-1"
               >
                 Email
               </label>
@@ -142,7 +142,7 @@ export default function AccountInfo() {
                 </>
               ) : (
                 <div className="w-full px-3 py-2">
-                  <p>{user?.email}</p>
+                  <p className="text-ink">{user?.email}</p>
                 </div>
               )}
             </div>
@@ -163,7 +163,7 @@ export default function AccountInfo() {
                   type="button"
                   onClick={() => setIsEditMode(false)}
                   disabled={formik.isSubmitting}
-                  className="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                  className="px-4 py-1.5 text-sm font-medium text-white bg-red-500 rounded-full shadow-sm hover:bg-red-600 active:scale-95 transition-all disabled:bg-gray-300 disabled:cursor-not-allowed"
                 >
                   Batal
                 </button>

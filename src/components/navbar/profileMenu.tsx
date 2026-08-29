@@ -85,7 +85,7 @@ export const ProfileMenu = () => {
           <img
             src={user?.imageUrl}
             alt="profile-picture"
-            className="rounded-full w-6 h-6 md:w-10 md:h-10 object-cover border border-slate-400 dark:border-slate-500 hover:border-blue-500 dark:hover:border-blue-500 transition-all"
+            className="rounded-full w-6 h-6 md:w-10 md:h-10 object-cover border border-slate-400 dark:border-slate-500 hover:border-frost dark:hover:border-frost transition-all"
           />
         )}
       </button>
@@ -112,7 +112,7 @@ export const ProfileMenu = () => {
               }}
               className={`block w-full text-left px-4 py-2 text-sm font-medium transition-colors duration-200 ${
                 activeLink === link.link
-                  ? "bg-blue-600 text-white"
+                  ? "bg-frost-deep text-white"
                   : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
               }`}
               aria-current={activeLink === link.link ? "page" : undefined}

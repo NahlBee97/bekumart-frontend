@@ -33,7 +33,7 @@ export const ProductSection = () => {
     <section>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="font-bold text-blue-500 mb-4">⭐ Produk Dengan Penjualan Terbaik</h3>
+          <h3 className="font-bold text-frost mb-4">⭐ Produk Dengan Penjualan Terbaik</h3>
           <ul className="space-y-3">
             {data?.bestSellers.map(
               (
@@ -54,7 +54,7 @@ export const ProductSection = () => {
           </ul>
         </div>
         <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-blue-500 font-bold mb-4">⚠️ Produk Stok Rendah</h3>
+          <h3 className="text-frost font-bold mb-4">⚠️ Produk Stok Rendah</h3>
           <ul className="space-y-3">
             {data?.lowStockProducts.map(
               (product: { name: string; stock: number }, index: number) => (

@@ -20,7 +20,7 @@ export const OrdersTableRow = ({
       onClick={() => onRowClick(order)}
       className="bg-white border-b border-gray-200 hover:bg-gray-50 transition-colors cursor-pointer"
     >
-      <td className="px-2 py-4 text-blue-500 font-semibold whitespace-nowrap ">
+      <td className="px-2 py-4 text-frost font-semibold whitespace-nowrap ">
         {order.id}
       </td>
       <td className="px-2 py-4">{format(order.createdAt, "dd MMMM yyy")}</td>

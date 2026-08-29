@@ -33,14 +33,14 @@ export default function AdminNavbar() {
   };
 
   return (
-    <header className="px-2 md:px-0 sticky top-0 z-25 border-b border-slate-200 bg-black">
+    <header className="px-2 md:px-0 sticky top-0 z-25 border-b border-white/10 bg-ink">
       <div className="container mx-auto px-3 md:px-0">
         <div className="flex items-center justify-between h-16">
           {/* Left Section: Logo & Desktop Nav */}
           <div className="flex items-center gap-2 md:w-auto">
-            <Snowflake className="w-6 h-6 md:w-8 md:h-8 text-blue-400" />
-            <p className="font-semibold text-base md:text-2xl text-blue-500">
-              BekuMart Dashboard
+            <Snowflake className="w-6 h-6 md:w-8 md:h-8 text-frost" />
+            <p className="font-display font-semibold text-base md:text-2xl text-white">
+              BekuMart <span className="text-frost">Dashboard</span>
             </p>
           </div>
           {/* right section */}
@@ -50,7 +50,7 @@ export default function AdminNavbar() {
             </div>
             <button
               onClick={handleLogOut}
-              className="inline-flex justify-center items-center rounded-lg p-2 text-white hover:text-red-500 bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500"
+              className="inline-flex justify-center items-center rounded-full p-2 text-white bg-frost hover:bg-frost-deep active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-ink focus-visible:ring-frost"
             >
               <LogOut className="w-5 h-5" />
             </button>

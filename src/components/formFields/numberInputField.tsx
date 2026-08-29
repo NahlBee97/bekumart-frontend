@@ -35,7 +35,7 @@ export const NumberInputField = ({
         aria-describedby={
           formik.errors[fieldName] ? `${fieldName}-error` : undefined
         }
-        className={`w-full px-4 py-2 border rounded-md outline-none focus:ring focus:ring-blue-500 
+        className={`w-full px-4 py-2 border rounded-md outline-none focus:ring focus:ring-frost 
                   ${
                     formik.touched[fieldName] && formik.errors[fieldName]
                       ? "border-red-500"

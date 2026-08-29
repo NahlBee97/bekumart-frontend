@@ -28,7 +28,7 @@ export const SelectField = ({
         id={fieldName}
         {...formik.getFieldProps(fieldName)}
         onChange={(e) => onItemChange(e.target.value)}
-        className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm outline-none focus:ring focus:ring-blue-500 "
+        className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm outline-none focus:ring focus:ring-frost "
       >
         <option value="">Pilih {label}</option>
         {items.map((p) => (

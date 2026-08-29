@@ -15,7 +15,7 @@ export const OrderBreakdown = ({
   total,
   isCalculating,
 }:props) => (
-  <dl className="mt-6 space-y-4 border-t border-gray-200 pt-6">
+  <dl className="mt-6 space-y-4 border-t border-slate-100 pt-6">
     <SummaryRow
       label="Subtotal"
       value={`Rp ${subtotal.toLocaleString("id-ID")}`}
@@ -24,7 +24,7 @@ export const OrderBreakdown = ({
       label="Pengiriman"
       value={
         isCalculating ? (
-          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
+          <div className="animate-spin rounded-full h-4 w-4 border-2 border-frost-light border-t-frost"></div>
         ) : shippingCost > 0 ? (
           `Rp ${shippingCost.toLocaleString("id-ID")}`
         ) : (
@@ -33,9 +33,9 @@ export const OrderBreakdown = ({
       }
     />
     <SummaryRow label="PPN 11%" value={`Rp ${tax.toLocaleString("id-ID")}`} />
-    <div className="flex items-center justify-between border-t border-gray-200 pt-4">
-      <dt className="text-base font-semibold text-gray-900">Total Belanja</dt>
-      <dd className="text-xl font-semibold text-blue-500">
+    <div className="flex items-center justify-between border-t border-slate-100 pt-4">
+      <dt className="font-display text-base font-semibold text-ink">Total Belanja</dt>
+      <dd className="font-mono text-xl font-semibold text-berry">
         Rp {total.toLocaleString("id-ID", { minimumFractionDigits: 0 })}
       </dd>
     </div>

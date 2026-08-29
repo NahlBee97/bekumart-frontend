@@ -37,14 +37,14 @@ export const SearchBar = () => {
             value={searchTerm}
             onChange={handleChange}
             // Adjusted padding and removed default browser search icon appearance
-            className="w-full appearance-none bg-transparent px-2 py-1 md:px-4 md:py-2 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+            className="w-full appearance-none bg-transparent px-2 py-1 md:px-4 md:py-2 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-frost"
             aria-label="Search products"
             autoComplete="off"
           />
         </div>
         <button
           type="submit"
-          className="border-l border-slate-300 bg-blue-500 px-2 py-2 md:px-4 md:py-3 text-white transition-colors hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+          className="border-l border-slate-300 bg-frost px-2 py-2 md:px-4 md:py-3 text-white transition-colors hover:bg-frost-deep focus:outline-none focus:ring-2 focus:ring-inset focus:ring-frost"
           aria-label="Submit search"
         >
           <Search className="h-5 w-5" />

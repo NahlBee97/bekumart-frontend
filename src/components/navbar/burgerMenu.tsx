@@ -47,7 +47,7 @@ export const BurgerMenu = ({
         <button
           type="button"
           onClick={toggleMenu}
-          className="inline-flex justify-center items-center rounded-lg p-2 text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500"
+          className="inline-flex justify-center items-center rounded-lg p-2 text-sm font-medium text-white bg-frost hover:bg-frost-deep focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-frost"
           aria-haspopup="true"
           aria-expanded={isOpen}
         >
@@ -70,16 +70,16 @@ export const BurgerMenu = ({
 
       {/* Dropdown Menu */}
       <div
-        className={`origin-top-right absolute right-0 mt-2 w-52 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5  focus:outline-none transition ease-out duration-100 z-200 ${
+        className={`origin-top-right absolute right-0 mt-2 w-52 rounded-xl shadow-xl bg-white ring-1 ring-black/5 focus:outline-none transition-all duration-200 ease-out z-200 ${
           isOpen
-            ? "transform opacity-100 scale-100"
-            : "transform opacity-0 scale-95 pointer-events-none"
+            ? "transform opacity-100 scale-100 translate-y-0"
+            : "transform opacity-0 scale-95 -translate-y-1 pointer-events-none"
         }`}
         role="menu"
         aria-orientation="vertical"
         aria-labelledby="burger-button"
       >
-        <div className="py-1" role="none">
+        <div className="py-1.5 px-1" role="none">
           {links.map((link) => {
             return (
               <Link
@@ -89,10 +89,10 @@ export const BurgerMenu = ({
                   setActiveLink(link.link);
                   setIsOpen(false);
                 }}
-                className={`block w-full text-left px-4 py-2 text-sm font-medium transition-colors duration-200 ${
+                className={`block w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
                   activeLink === link.link
-                    ? "bg-blue-600 text-white"
-                    : "text-slate-700  hover:bg-slate-100 "
+                    ? "bg-frost-deep text-white"
+                    : "text-slate-700 hover:bg-frost-light/60"
                 }`}
                 aria-current={activeLink === link.link ? "page" : undefined}
               >

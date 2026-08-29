@@ -73,7 +73,7 @@ export default function ResetPassword({ params }: Props) {
                 className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 ${
                   formik.touched.newPassword && formik.errors.newPassword
                     ? "border-red-500 focus:ring-red-500"
-                    : "border-gray-300 focus:ring-blue-500"
+                    : "border-gray-300 focus:ring-frost"
                 }`}
               />
             </div>
@@ -95,7 +95,7 @@ export default function ResetPassword({ params }: Props) {
                   formik.touched.confirmPassword &&
                   formik.errors.confirmPassword
                     ? "border-red-500 focus:ring-red-500"
-                    : "border-gray-300 focus:ring-blue-500"
+                    : "border-gray-300 focus:ring-frost"
                 }`}
               />
             </div>
@@ -117,7 +117,7 @@ export default function ResetPassword({ params }: Props) {
           <button
             type="submit"
             disabled={!formik.isValid || !formik.dirty || formik.isSubmitting}
-            className="w-full flex items-center justify-center py-3 mt-4 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center py-3 mt-4 px-4 bg-frost-deep text-white font-semibold rounded-lg hover:bg-frost-deep focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-frost transition-colors duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             {formik.isSubmitting ? (
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>

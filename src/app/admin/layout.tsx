@@ -8,7 +8,7 @@ export default function AdminLayout({
 }) {
   return (
     <AdminRouteGuard>
-      <div className="min-h-screen bg-slate-50">
+      <div className="min-h-screen bg-mist">
         <div className="container mx-auto p-2">
           <div className=" flex flex-col lg:flex-row gap-8">
             {/* Sidebar */}

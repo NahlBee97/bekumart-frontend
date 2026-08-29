@@ -17,10 +17,10 @@ export const PaymentOption = ({
 }:props) => (
   <label
     htmlFor={id}
-    className={`relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm ring-2 focus:outline-none ${
+    className={`relative flex cursor-pointer rounded-xl border bg-white p-4 shadow-sm transition-all duration-200 ${
       isSelected
-        ? "ring-blue-500 border-blue-500"
-        : "ring-transparent border-gray-300"
+        ? "ring-2 ring-frost border-frost bg-frost-light/30"
+        : "ring-0 border-slate-200 hover:border-frost/50"
     }`}
   >
     <input
@@ -34,7 +34,7 @@ export const PaymentOption = ({
     />
     <div className="flex flex-1">
       <div className="flex flex-col">
-        <span className="block text-sm font-medium text-gray-900">{label}</span>
+        <span className="block text-sm font-medium text-ink">{label}</span>
       </div>
     </div>
   </label>

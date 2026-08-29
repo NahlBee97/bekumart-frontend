@@ -18,7 +18,7 @@ if (!isOpen) return;
             className="flex items-center cursor-pointer"
             onClick={() => onClose()}
           >
-            <ArrowLeft className="w-6 h-6 text-blue-400" />
+            <ArrowLeft className="w-6 h-6 text-frost" />
           </div>
 
           <div>

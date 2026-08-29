@@ -8,7 +8,7 @@ export const RecentOrder = ({
 }) => {
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
-      <h3 className="font-bold text-blue-500 mb-4">Pesanan Terbaru</h3>
+      <h3 className="font-bold text-frost mb-4">Pesanan Terbaru</h3>
       <ul className="space-y-4">
         {recentOrders.map((order) => (
           <li

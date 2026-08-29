@@ -37,8 +37,8 @@ export default function AdminSidebar() {
   };
 
   return (
-    <aside className="w-full lg:w-64 bg-white p-4 rounded-lg shadow-sm">
-      <h2 className="text-lg text-blue-500 font-bold mb-4">Navigasi</h2>
+    <aside className="w-full lg:w-64 bg-white p-4 rounded-2xl shadow-sm shadow-ink/5">
+      <h2 className="font-display text-sm uppercase tracking-wider text-fog font-semibold mb-4">Navigasi</h2>
       <nav>
         <ul>
           {navItems.map((item) => {
@@ -48,11 +48,11 @@ export default function AdminSidebar() {
               <li key={item.label}>
                 <Link
                   href={item.link}
-                  className={`flex items-center py-3 px-2 my-1 rounded-lg transition-colors
+                  className={`flex items-center py-3 px-3 my-1 rounded-xl transition-all duration-200
                     ${
                       isActive
-                        ? "bg-blue-500 text-white font-semibold"
-                        : "hover:bg-gray-600 hover:text-white hover:font-semibold"
+                        ? "bg-frost text-white font-semibold shadow-sm shadow-frost/30"
+                        : "text-ink/70 hover:bg-frost-light/60 hover:text-frost-deep"
                     }
                   `}
                   aria-label={item.label}
@@ -65,10 +65,10 @@ export default function AdminSidebar() {
           })}
         </ul>
         <button
-          className="flex w-full gap-2 items-center p-3 my-1 rounded-lg transition-colors hover:bg-red-500 hover:text-white hover:font-semibold"
+          className="flex w-full gap-2 items-center p-3 my-1 rounded-xl transition-all duration-200 text-ink/70 hover:bg-red-50 hover:text-red-600 hover:font-semibold"
           onClick={handleLogOut}
         >
-          <LogOut />
+          <LogOut className="w-5 h-5" />
           <span>{isLoggingOut ? "Memproses..." : "Keluar"}</span>
         </button>
       </nav>

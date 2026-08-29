@@ -8,8 +8,8 @@ export default function OrderPage() {
       <div className="container mx-auto">
         <header className="mb-2">
           <div className="flex items-center space-x-3">
-            <Package className="h-6 w-6 text-blue-500" />
-            <h1 className="text-2xl font-bold text-blue-500">
+            <Package className="h-6 w-6 text-frost" />
+            <h1 className="text-2xl font-bold text-frost">
               Order Management
             </h1>
           </div>

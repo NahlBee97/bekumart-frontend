@@ -74,7 +74,7 @@ export const ChangePasswordModal = ({
         }`}
       >
         <div className="flex justify-between items-center p-5 border-b border-gray-200 rounded-t-lg">
-          <h2 className="text-xl font-semibold text-blue-500">
+          <h2 className="text-xl font-semibold text-frost">
             Mengganti Password
           </h2>
           <button
@@ -114,7 +114,7 @@ export const ChangePasswordModal = ({
                   className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 ${
                     formik.touched.newPassword && formik.errors.newPassword
                       ? "border-red-500 focus:ring-red-500"
-                      : "border-gray-300 focus:ring-blue-500"
+                      : "border-gray-300 focus:ring-frost"
                   }`}
                 />
               </div>
@@ -141,7 +141,7 @@ export const ChangePasswordModal = ({
                     formik.touched.confirmPassword &&
                     formik.errors.confirmPassword
                       ? "border-red-500 focus:ring-red-500"
-                      : "border-gray-300 focus:ring-blue-500"
+                      : "border-gray-300 focus:ring-frost"
                   }`}
                 />
               </div>

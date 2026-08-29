@@ -10,7 +10,7 @@ export const NoProduct = () => {
         className="md:hidden w-10 h-10 border border-gray-300 text-gray-400 p-1 mb-4 rounded-xs shadow-xs hover:bg-slate-50 cursor-pointer"
         onClick={() => setIsFilterOpen(true)}
       />
-      <h2 className="text-base font-semibold text-blue-500 mb-4 uppercase tracking-wider">
+      <h2 className="text-base font-semibold text-frost mb-4 uppercase tracking-wider">
         Produk Tidak Tersedia
       </h2>
 

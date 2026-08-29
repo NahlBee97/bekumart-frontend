@@ -20,7 +20,7 @@ export const MainSection = ({ product, photos }: props) => {
   const [isShowConfirmModal, setIsShowConfirmModal] = useState<boolean>(false);
   
   return (
-    <section className="w-full bg-white border-slate-200 rounded-lg p-4 sm:p-6 shadow-sm">
+    <section className="w-full bg-white rounded-2xl p-4 sm:p-6 shadow-sm shadow-ink/5">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
         {/* Left Column: Image Slider */}
         <ImageSlider photos={photos} />

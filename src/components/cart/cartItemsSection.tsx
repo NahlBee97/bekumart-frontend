@@ -12,9 +12,9 @@ export const CartItemsSection = ({ cart, isCartLoading }: props) => {
   return (
     <section
       aria-labelledby="?-heading"
-      className="w-full bg-white border-slate-200 rounded-lg p-4 md:px-6 shadow-sm"
+      className="w-full bg-white rounded-2xl p-4 md:px-6 shadow-sm shadow-ink/5"
     >
-      <h2 className="text-lg font-semibold text-blue-500 mb-2">
+      <h2 className="font-display text-lg font-semibold text-ink mb-2">
         Daftar Belanja
       </h2>
       <ul role="list">

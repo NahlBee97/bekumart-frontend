@@ -106,13 +106,13 @@ const router = useRouter();
   return (
     <main className="flex flex-col gap-4 py-6">
       <div className="flex items-center gap-2">
-        <FileText className="w-6 md:w-8 text-blue-500" />
-        <h2 className="text-xl md:text-2xl text-blue-500 font-bold">
+        <FileText className="w-6 md:w-8 text-frost" />
+        <h2 className="font-display text-xl md:text-2xl text-ink font-semibold">
           Daftar Produk
         </h2>
       </div>
 
-      <div className=" bg-white rounded-xl shadow-lg overflow-hidden">
+      <div className=" bg-white rounded-2xl shadow-sm shadow-ink/5 overflow-hidden">
         {/* Component for Search and Add Button */}
         <ProductsTableHeader
           searchTerm={searchTerm}
@@ -123,7 +123,7 @@ const router = useRouter();
         {/* Table Container */}
         <div className="overflow-x-auto">
           <table className="w-full text-sm text-left">
-            <thead className="bg-gray-50 border-b border-gray-200 text-xs text-blue-500 font-semibold uppercase ">
+            <thead className="bg-mist border-b border-slate-100 text-xs text-frost-deep font-semibold uppercase ">
               <tr>
                 <th scope="col" className="px-3 py-2">
                   Produk

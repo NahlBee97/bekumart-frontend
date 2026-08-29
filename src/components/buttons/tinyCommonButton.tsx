@@ -13,11 +13,11 @@ export const TinyCommonButton = ({
     <button
       type="button"
       onClick={onClick}
-      className={`rounded-md px-4 py-1 text-sm text-white  ${
+      className={`rounded-full px-4 py-1.5 text-sm font-medium text-white shadow-sm active:scale-95 transition-all duration-200 ${
         isPositive
-          ? "hover:bg-blue-600 bg-blue-500"
-          : "bg-red-500 hover:bg-red-600"
-      } `}
+          ? "bg-frost hover:bg-frost-deep hover:shadow-md"
+          : "bg-red-500 hover:bg-red-600 hover:shadow-md"
+      }`}
     >
       {buttonText}
     </button>

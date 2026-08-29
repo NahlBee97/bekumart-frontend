@@ -72,7 +72,7 @@ export const SalesSection = () => {
       </div>
       <div className="bg-white p-6 rounded-lg shadow-md">
         <div className="flex justify-between">
-          <h3 className="font-bold text-blue-500 mb-4">Pendapatan</h3>
+          <h3 className="font-bold text-frost mb-4">Pendapatan</h3>
           <FilterDropdown />
         </div>
         <ResponsiveContainer width="100%" height={300}>

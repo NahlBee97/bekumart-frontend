@@ -44,7 +44,7 @@ export const PriceRangeFilter = ({onApply}: {onApply: () => void}) => {
   return (
     <div className="md:w-50 max-w-sm border-t pt-2">
       {/* Component Title */}
-      <h2 className="text-base font-semibold text-blue-500 mb-1">
+      <h2 className="text-base font-semibold text-frost mb-1">
         Batas Harga
       </h2>
 
@@ -57,7 +57,7 @@ export const PriceRangeFilter = ({onApply}: {onApply: () => void}) => {
             value={minPrice}
             placeholder="MIN"
             onChange={(e) => handlePriceChange(e, setMinPrice)}
-            className="border border-gray-300 p-1 text-sm w-full focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition rounded-md"
+            className="border border-gray-300 p-1 text-sm w-full focus:ring-2 focus:ring-frost focus:border-transparent outline-none transition rounded-md"
             aria-label="Minimum Price"
             inputMode="numeric"
           />
@@ -73,7 +73,7 @@ export const PriceRangeFilter = ({onApply}: {onApply: () => void}) => {
             value={maxPrice}
             placeholder="MAX"
             onChange={(e) => handlePriceChange(e, setMaxPrice)}
-            className="border border-gray-300 p-1 text-sm w-full focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition rounded-md"
+            className="border border-gray-300 p-1 text-sm w-full focus:ring-2 focus:ring-frost focus:border-transparent outline-none transition rounded-md"
             aria-label="Maximum Price"
             inputMode="numeric"
           />

@@ -168,7 +168,7 @@ export const RatingModal = ({
               type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={formik.values.photos.length >= maxPhotos}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-gray-400 disabled:cursor-not-allowed"
+              className="bg-frost hover:bg-frost-deep text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
               Pilih Gambar
             </button>

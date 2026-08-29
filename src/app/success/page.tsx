@@ -39,7 +39,7 @@ export default function Success() {
         <div className="mt-10">
           <Link
             href="/shop"
-            className="inline-block w-full sm:w-auto px-8 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition-colors duration-300"
+            className="inline-block w-full sm:w-auto px-8 py-3 bg-frost text-white font-semibold rounded-lg shadow-md hover:bg-frost-deep transition-colors duration-300"
           >
             Lanjut Belanja
           </Link>

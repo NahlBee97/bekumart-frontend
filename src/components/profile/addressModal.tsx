@@ -189,7 +189,7 @@ export const AddressModal = ({ isOpen, onSave, onClose, address }: props) => {
           }`}
         >
           <div className="p-4 border-b flex justify-between items-center">
-            <h2 className="text-xl text-blue-500 font-semibold">
+            <h2 className="text-xl text-frost font-semibold">
               {address ? "Edit Alamat" : "Tambah Alamat Baru"}
             </h2>
             <button

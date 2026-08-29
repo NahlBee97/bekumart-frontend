@@ -101,16 +101,16 @@ export const OrderTable = () => {
   return (
     <main className="flex flex-col gap-4 py-6">
       <div className="flex items-center gap-2">
-        <FileText className="w-6 md:w-8 text-blue-500" />
-        <h2 className="text-xl md:text-2xl text-blue-500 font-bold">
+        <FileText className="w-6 md:w-8 text-frost" />
+        <h2 className="font-display text-xl md:text-2xl text-ink font-semibold">
           Daftar Pesanan
         </h2>
       </div>
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-sm shadow-ink/5 overflow-hidden">
         <div className="overflow-x-auto">
           <div className="w-full h-2"></div>
           <table className="w-full text-sm text-left">
-            <thead className="bg-gray-50 border-y border-gray-200 text-xs text-blue-500 font-semibold uppercase ">
+            <thead className="bg-mist border-y border-slate-100 text-xs text-frost-deep font-semibold uppercase ">
               <tr>
                 <th scope="col" className="px-3 py-4">
                   Cutomer
@@ -135,10 +135,10 @@ export const OrderTable = () => {
               ) : currentItems.length === 0 ? (
                 <tr className="bg-white">
                   <td colSpan={5} className="text-center py-12">
-                    <h3 className="text-lg font-medium text-gray-700">
+                    <h3 className="text-lg font-medium text-ink/80">
                       Tidak Ada Pesanan
                     </h3>
-                    <p className="mt-1 text-gray-500">
+                    <p className="mt-1 text-fog">
                       Tidak ada pesanan yang ditemukan.
                     </p>
                   </td>

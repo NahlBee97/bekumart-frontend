@@ -42,24 +42,24 @@ export const ReviewCard = ({ review }: { review: IReview }) => {
   return (
     <div
       key={review.id}
-      className="flex items-start space-x-4 border-t border-gray-200 py-2"
+      className="flex items-start space-x-4 border-t border-slate-100 py-4"
     >
       {/* eslint-disable-next-line */}
       <img
         src={review.user?.imageUrl as string}
         alt={review.user?.name}
-        className="rounded-full w-10 h-10 object-cover"
+        className="rounded-full w-10 h-10 object-cover bg-mist"
       />
       <div className="flex-1">
-        <p className="font-semibold text-sm">{review.user?.name}</p>
+        <p className="font-semibold text-sm text-ink">{review.user?.name}</p>
         <div className="my-1">
           <StarRatingDetail rating={review.rating} />
         </div>
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-fog">
           {format(review.createdAt, "dd MMMM yyy")}
         </p>
 
-        <p className="mt-4 text-sm text-gray-800 leading-relaxed">
+        <p className="mt-4 text-sm text-ink/80 leading-relaxed">
           {review.desc}
         </p>
 
@@ -71,14 +71,14 @@ export const ReviewCard = ({ review }: { review: IReview }) => {
                 <img
                   src={photo.imageUrl}
                   alt={`Review image ${index + 1}`}
-                  className="absolute w-20 object-cover rounded-md"
+                  className="absolute w-20 object-cover rounded-xl"
                 />
               </div>
             ))}
           </div>
         )}
 
-        <div className="mt-4 flex items-center text-gray-500 gap-1">
+        <div className="mt-4 flex items-center text-fog gap-1">
           <LikeButton hasLiked={isReviewLiked} onClick={handleLikeToggle} />
           <span className="text-sm font-medium">
             {formatNumberCompact(likeCount)}

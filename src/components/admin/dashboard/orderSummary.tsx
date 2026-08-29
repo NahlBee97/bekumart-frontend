@@ -13,7 +13,7 @@ export const OrderSummary = ({ totalOrders, statusCounts }: props) => {
   const keyword = useSearchParams().get("status");
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
-      <h3 className="font-bold text-blue-500 mb-4">Rangkuman Pesanan</h3>
+      <h3 className="font-bold text-frost mb-4">Rangkuman Pesanan</h3>
       <div className="space-y-3">
         <div
           className={`flex py-1 px-2 rounded-md justify-between items-center cursor-pointer hover:bg-gray-300 ${

@@ -12,6 +12,7 @@ import { useGoogleLogin } from "@react-oauth/google";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { jwtDecode } from "jwt-decode";
 import { IUser } from "@/interfaces/dataInterfaces";
+import { Snowflake } from "lucide-react";
 
 import { TextInputField } from "../formFields/textInputField";
 import { CheckBox } from "../formFields/checkBox";
@@ -50,23 +51,12 @@ export default function RegisterForm() {
   const googleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       try {
-        const userInfoResponse = await axios.get(
-          "https://www.googleapis.com/oauth2/v3/userinfo",
-          {
-            headers: {
-              Authorization: `Bearer ${tokenResponse.access_token}`,
-            },
-          }
-        );
-
-        const { name, email } = userInfoResponse.data;
-
-        const values = {
-          name,
-          email,
-        };
-
-        const response = await api.post(`/api/auth/google-login`, values);
+        // Send the raw Google access token to the backend and let it
+        // verify the account with Google itself - never trust profile
+        // data resolved on the client for authentication.
+        const response = await api.post(`/api/auth/google-login`, {
+          accessToken: tokenResponse.access_token,
+        });
 
         // set token to cookie
         const { accessToken } = response.data;
@@ -94,11 +84,17 @@ export default function RegisterForm() {
   });
 
   return (
-    <div className="bg-gray-100 flex items-center justify-center min-h-screen font-sans py-4 px-4">
-      <div className="bg-white p-10 rounded-2xl shadow-lg w-full max-w-md">
-        <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
-          Buat Akun
-        </h1>
+    <div className="bg-mist flex items-center justify-center min-h-screen font-sans py-8 px-4">
+      <div className="animate-fade-up bg-white p-8 sm:p-10 rounded-2xl shadow-xl shadow-ink/5 w-full max-w-md">
+        <div className="flex flex-col items-center mb-6">
+          <div className="frost-shimmer bg-gradient-to-br from-frost to-frost-deep rounded-2xl p-3 mb-3">
+            <Snowflake className="w-7 h-7 text-white" />
+          </div>
+          <h1 className="font-display text-2xl font-semibold text-center text-ink">
+            Buat Akun BekuMart
+          </h1>
+          <p className="text-sm text-fog mt-1">Gabung dan mulai belanja frozen food</p>
+        </div>
         <form onSubmit={formik.handleSubmit} className="space-y-2" noValidate>
           {/* Name Field */}
           <TextInputField
@@ -139,9 +135,9 @@ export default function RegisterForm() {
 
           {/* --- OR Separator --- */}
           <div className="my-6 flex items-center">
-            <div className="flex-grow border-t border-gray-300"></div>
-            <span className="flex-shrink mx-4 text-gray-400 text-sm">Atau</span>
-            <div className="flex-grow border-t border-gray-300"></div>
+            <div className="flex-grow border-t border-slate-200"></div>
+            <span className="flex-shrink mx-4 text-fog text-sm">Atau</span>
+            <div className="flex-grow border-t border-slate-200"></div>
           </div>
 
           {/* --- Google Login Button --- */}
@@ -151,11 +147,11 @@ export default function RegisterForm() {
           />
         </form>
 
-        <p className="text-center text-sm text-gray-600 mt-8">
+        <p className="text-center text-sm text-fog mt-8">
           Apakah kamu sudah punya akun?
           <Link
             href="/login"
-            className="font-bold text-blue-600 hover:underline ml-1"
+            className="font-semibold text-frost-deep hover:underline ml-1"
           >
             Login
           </Link>
