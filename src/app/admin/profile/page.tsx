@@ -6,7 +6,7 @@ export default function AdminPage() {
     <div className="min-h-screen antialiased">
       <main className="caontainer mx-auto">
         <div className="mb-4">
-          <h1 className="text-xl md:text-2xl font-bold tracking-tight text-blue-500">
+          <h1 className="text-xl md:text-2xl font-bold tracking-tight text-frost">
             Pengaturan Akun
           </h1>
         </div>

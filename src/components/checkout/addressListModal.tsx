@@ -52,7 +52,7 @@ export const AddressListModal = ({
         >
           <XIcon />
         </button>
-        <h3 className="mb-6 text-xl text-blue-500 font-semibold">
+        <h3 className="mb-6 text-xl text-frost font-semibold">
           Pilih Alamat Pengiriman
         </h3>
         <div className="space-y-4 max-h-96 overflow-y-auto">

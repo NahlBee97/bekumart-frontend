@@ -85,11 +85,11 @@ export default function AddressInfo() {
   if (isLoading) return <AddressInfoSkeleton />;
 
   return (
-    <div className="bg-white shadow-md sm:rounded-lg overflow-hidden">
+    <div className="bg-white shadow-sm shadow-ink/5 rounded-2xl overflow-hidden">
       <div className="p-6">
         <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
           <div>
-            <h2 className="md:text-xl font-semibold text-blue-500">
+            <h2 className="font-display md:text-xl font-semibold text-ink">
               {user?.role === "CUSTOMER" ? "Alamat Pengiriman" : "Alamat Toko"}
             </h2>
           </div>
@@ -99,7 +99,7 @@ export default function AddressInfo() {
                 setAddressToEdit(null);
                 setIsModalOpen(true);
               }}
-              className="inline-flex items-center justify-center gap-2 rounded-md border border-transparent bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-frost px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-frost-deep hover:shadow-md active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-frost focus-visible:ring-offset-2"
             >
               <PlusCircle className="h-5 w-5" />
               Tambahkan Alamat Baru
@@ -107,7 +107,7 @@ export default function AddressInfo() {
           )}
         </div>
         <div className="mt-6 flow-root">
-          <ul role="list" className="-my-5 divide-y divide-gray-200">
+          <ul role="list" className="-my-5 divide-y divide-slate-100">
             {addresses.map((address) => (
               <li key={address.id} className="py-5">
                 <AddressCard

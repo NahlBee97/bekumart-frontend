@@ -117,7 +117,7 @@ export const OrderDetailModal = ({ order, onClose }: props) => {
         {/* Modal Header */}
         <div className="flex items-start justify-between rounded-t border-b p-4">
           <div>
-            <h3 className="md:text-xl font-semibold text-blue-500">
+            <h3 className="md:text-xl font-semibold text-frost">
               Detail Pesanan
             </h3>
             <p className="text-sm text-gray-500">Nomor Pesanan: {order.id}</p>

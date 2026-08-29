@@ -12,6 +12,7 @@ import { jwtDecode } from "jwt-decode";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { IUser } from "@/interfaces/dataInterfaces";
 import { useGoogleLogin } from "@react-oauth/google";
+import { Snowflake } from "lucide-react";
 
 import { TextInputField } from "../formFields/textInputField";
 import { SubmitButton } from "../buttons/submitButton";
@@ -131,11 +132,17 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="bg-gray-100 flex items-center justify-center min-h-screen px-4">
-      <div className="bg-white p-10 rounded-2xl shadow-lg w-full max-w-md">
-        <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
-          Login Akun
-        </h1>
+    <div className="bg-mist flex items-center justify-center min-h-screen px-4">
+      <div className="animate-fade-up bg-white p-8 sm:p-10 rounded-2xl shadow-xl shadow-ink/5 w-full max-w-md">
+        <div className="flex flex-col items-center mb-6">
+          <div className="frost-shimmer bg-gradient-to-br from-frost to-frost-deep rounded-2xl p-3 mb-3">
+            <Snowflake className="w-7 h-7 text-white" />
+          </div>
+          <h1 className="font-display text-2xl font-semibold text-center text-ink">
+            Masuk ke BekuMart
+          </h1>
+          <p className="text-sm text-fog mt-1">Belanja frozen food jadi lebih mudah</p>
+        </div>
         <form onSubmit={formik.handleSubmit} className="space-y-2" noValidate>
           {/* Email Field */}
           <TextInputField
@@ -151,7 +158,7 @@ export default function LoginForm() {
           <>
             {!isCorrectPassword && (
               <div
-                className="text-xs text-red-500 mb-2 cursor-pointer hover:text-blue-500"
+                className="text-xs text-red-500 mb-2 cursor-pointer hover:text-frost-deep transition-colors"
                 onClick={handleResetPassword}
               >
                 Lupa Password?
@@ -179,9 +186,9 @@ export default function LoginForm() {
 
           {/* --- OR Separator --- */}
           <div className="my-6 flex items-center">
-            <div className="flex-grow border-t border-gray-300"></div>
-            <span className="flex-shrink mx-4 text-gray-400 text-sm">Atau</span>
-            <div className="flex-grow border-t border-gray-300"></div>
+            <div className="flex-grow border-t border-slate-200"></div>
+            <span className="flex-shrink mx-4 text-fog text-sm">Atau</span>
+            <div className="flex-grow border-t border-slate-200"></div>
           </div>
 
           {/* --- Google Login Button --- */}
@@ -191,11 +198,11 @@ export default function LoginForm() {
           />
         </form>
 
-        <p className="text-center text-sm text-gray-600 mt-8">
+        <p className="text-center text-sm text-fog mt-8">
           Belum punya akun?
           <Link
             href="/register"
-            className="font-bold text-blue-600 hover:underline ml-1"
+            className="font-semibold text-frost-deep hover:underline ml-1"
           >
             Daftar
           </Link>

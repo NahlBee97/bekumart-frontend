@@ -20,12 +20,12 @@ export const CategoryFilter = ({ categories }: { categories: ICategory[] }) => {
   };
   return (
     <div>
-      <h3 className="font-semibold mb-3 text-blue-500">Kategori</h3>
+      <h3 className="font-semibold mb-3 text-frost">Kategori</h3>
       <div className="space-y-2">
         <div
           className={`flex text-sm items-center gap-1 ${
-            !keyword && "text-blue-500 font-semibold "
-          } cursor-pointer hover:text-blue-500`}
+            !keyword && "text-frost font-semibold "
+          } cursor-pointer hover:text-frost`}
           onClick={() => {
             const params = new URLSearchParams(queryParams.toString());
             params.delete("search");
@@ -39,8 +39,8 @@ export const CategoryFilter = ({ categories }: { categories: ICategory[] }) => {
           return (
             <div
               className={`flex text-sm items-center gap-1 ${
-                isActive && "text-blue-500 font-semibold "
-              } cursor-pointer hover:text-blue-500`}
+                isActive && "text-frost font-semibold "
+              } cursor-pointer hover:text-frost`}
               key={c.id}
               onClick={() => handleClick(c.name)}
             >

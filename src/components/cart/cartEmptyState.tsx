@@ -5,20 +5,25 @@ import { useRouter } from "next/navigation";
 export const CartEmptyState = () => {
   const router = useRouter();
   return (
-    <div className="bg-white min-h-screen flex flex-col items-center justify-center text-center p-4">
-      <ShoppingCart className="w-24 h-24 text-gray-300 mb-6" strokeWidth={1} />
-      <h1 className="text-3xl font-bold text-gray-800 mb-2">
-        Keranjang Belanja Kosong
-      </h1>
-      <p className="text-gray-500 mb-6">
-        Sepertinya kamu belum menambahkan sesuatu, mari belanja!
-      </p>
-      <div className="w-40">
-        <CommonButton
-          onClick={() => router.push("/shop")}
-          isDisable={false}
-          buttonText="Lanjut Belanja"
-        />
+    <div className="bg-mist min-h-screen flex flex-col items-center justify-center text-center p-4">
+      <div className="animate-fade-up flex flex-col items-center">
+        <div className="relative mb-6">
+          <div className="absolute inset-0 bg-frost-light rounded-full blur-xl opacity-70"></div>
+          <ShoppingCart className="relative w-20 h-20 text-frost" strokeWidth={1.25} />
+        </div>
+        <h1 className="font-display text-2xl md:text-3xl font-semibold text-ink mb-2">
+          Keranjang Belanja Kosong
+        </h1>
+        <p className="text-fog mb-6">
+          Sepertinya kamu belum menambahkan sesuatu, mari belanja!
+        </p>
+        <div className="w-48">
+          <CommonButton
+            onClick={() => router.push("/shop")}
+            isDisable={false}
+            buttonText="Lanjut Belanja"
+          />
+        </div>
       </div>
     </div>
   );

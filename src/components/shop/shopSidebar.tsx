@@ -13,7 +13,7 @@ export const ShopSidebar = ({categories}: {categories: ICategory[]}) => {
   const router = useRouter();
 
   return (
-    <aside className="w-full bg-white border border-slate-200 rounded-lg p-4 sm:p-6 shadow-sm">
+    <aside className="w-full bg-white rounded-2xl p-4 sm:p-6 shadow-sm shadow-ink/5">
       <div className="space-y-6">
         <CategoryFilter categories={categories} />
         <PriceRangeFilter onApply={() => null} />

@@ -12,21 +12,21 @@ export const CartItem = ({ item }: { item: ICartItem }) => {
         <img
           src={defaultImage}
           alt={`Image of ${item.product.name}`}
-          className="h-24 w-24 rounded-md border border-gray-300 object-cover object-center sm:h-32 sm:w-32"
+          className="h-24 w-24 rounded-xl object-cover object-center sm:h-32 sm:w-32 bg-mist"
         />
       </div>
       <div className="ml-4 flex flex-1 flex-col justify-between">
         <div>
-          <h3 className="text-base font-medium text-gray-900">
+          <h3 className="text-base font-medium text-ink">
             {item.product.name}
           </h3>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-fog">
             Berat: {item.product.weightInKg} kg
           </p>
         </div>
         <div className="flex items-end justify-between text-sm">
-          <p className="text-gray-700">Jumlah {item.quantity}</p>
-          <p className="font-medium text-gray-900">
+          <p className="text-fog">Jumlah {item.quantity}</p>
+          <p className="font-mono font-medium text-ink">
             Rp {(item.product.price * item.quantity).toLocaleString("id-ID")}
           </p>
         </div>

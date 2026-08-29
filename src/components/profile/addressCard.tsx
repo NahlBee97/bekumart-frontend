@@ -12,11 +12,13 @@ export const AddressCard = ({address, onClickSetMain, onClickEdit, onClickDelete
   return (
     <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
       <div className="flex items-start gap-3">
-        <MapPin className="h-6 w-6 text-gray-400 mt-1 flex-shrink-0" />
+        <div className="bg-frost-light rounded-full p-2 flex-shrink-0">
+          <MapPin className="h-4 w-4 text-frost-deep" />
+        </div>
         <div className="text-sm">
-          <p className="font-medium text-gray-900">{address.receiver}</p>
-          <p className=" text-gray-500">{address.street}</p>
-          <p className="text-gray-500">
+          <p className="font-medium text-ink">{address.receiver}</p>
+          <p className="text-fog">{address.street}</p>
+          <p className="text-fog">
             {address.subdistrict}, {address.district}, {address.postalCode}
           </p>
         </div>
@@ -30,20 +32,20 @@ export const AddressCard = ({address, onClickSetMain, onClickEdit, onClickDelete
         {!address.isDefault && (
           <button
             onClick={onClickSetMain}
-            className="text-sm font-medium text-blue-600 hover:text-blue-500"
+            className="text-sm font-medium text-frost-deep hover:text-frost transition-colors"
           >
             Jadikan Alamat Utama
           </button>
         )}
         <button
-          className="p-1 text-gray-500 hover:text-blue-600"
+          className="p-1.5 rounded-full text-fog hover:text-frost-deep hover:bg-frost-light/60 transition-colors"
           onClick={onClickEdit}
         >
           <Edit3 className="h-4 w-4" />
         </button>
         <button
           onClick={onClickDelete}
-          className="p-1 text-gray-500 hover:text-red-600"
+          className="p-1.5 rounded-full text-fog hover:text-red-600 hover:bg-red-50 transition-colors"
         >
           <Trash2 className="h-4 w-4" />
         </button>

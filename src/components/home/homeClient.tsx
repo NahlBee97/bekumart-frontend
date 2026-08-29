@@ -15,8 +15,8 @@ export default function HomeClient({
   categories,
 }: ProductPageClientProps) {
   return (
-    <div className="bg-slate-50 ">
-      <div className="p-2 container mx-auto space-y-4" >
+    <div className="bg-mist">
+      <div className="p-2 container mx-auto space-y-4">
         <Hero />
         <CategorySection categories={categories} />
         <ProductSection title="Produk Terlaris" products={products} />

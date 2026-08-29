@@ -96,7 +96,7 @@ export const ProductFormModal = ({
         }`}
       >
         <div className="p-4 border-b flex justify-between items-center">
-          <h2 className="text-xl text-blue-500 font-semibold">
+          <h2 className="text-xl text-frost font-semibold">
             {productToEdit ? "Edit Produk" : "Tambah Produk Baru"}
           </h2>
           <button
@@ -132,7 +132,7 @@ export const ProductFormModal = ({
                 <select
                   id="category"
                   name="category"
-                  className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm outline-none focus:ring focus:ring-blue-500 "
+                  className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm outline-none focus:ring focus:ring-frost "
                   value={formik.values.category?.name || ""}
                   onChange={(e) => handleCategoryChange(e.target.value)}
                 >

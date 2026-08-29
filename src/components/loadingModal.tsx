@@ -17,17 +17,18 @@ export function LoadingModal({ isOpen, title }: ConfirmModalProps) {
       role="dialog"
       aria-modal="true"
     >
-      <div className="fixed inset-0 bg-black/50 z-10 w-screen overflow-y-auto">
+      <div className="fixed inset-0 bg-ink/50 backdrop-blur-sm z-10 w-screen overflow-y-auto">
         <div className="flex min-h-full items-center justify-center p-4 text-center">
-          <div className="flex flex-col items-center justify-center bg-white p-4 rounded-xl">
+          <div className="frost-glass-light flex flex-col items-center justify-center p-6 rounded-2xl animate-fade-up">
             {/* Icon */}
-            <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full">
-              <div className="animate-spin rounded-full h-10 w-10 border-b-4 border-blue-500"></div>
+            <div className="relative h-10 w-10">
+              <div className="absolute inset-0 rounded-full border-4 border-frost-light"></div>
+              <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-frost animate-spin"></div>
             </div>
             {/* Content */}
             <div className="mt-3 text-center">
               <h3
-                className="text-base font-semibold leading-6 text-gray-900"
+                className="text-base font-semibold leading-6 text-ink"
                 id="modal-title"
               >
                 {title}

@@ -23,8 +23,8 @@ export function ProductClient({
   if (!product) return notFound();
 
   return (
-    <div className="bg-slate-50 min-h-screen">
-      <div className="container mx-auto p-4">
+    <div className="bg-mist min-h-screen">
+      <div className="container mx-auto p-2 md:p-4 space-y-4">
         <MainSection product={product} photos={photos} />
         <ReviewSection reviews={reviews} isLoading={isLoading} />
         <StickyAddToCart product={product} />

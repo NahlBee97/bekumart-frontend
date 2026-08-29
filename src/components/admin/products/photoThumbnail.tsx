@@ -46,7 +46,7 @@ export const PhotoThumbnail = ({
       <button
         title="Ganti Foto"
         onClick={() => onUpdate(photo.id)}
-        className="p-2 bg-white rounded-full text-gray-700 hover:bg-blue-500 hover:text-white transform scale-0 group-hover:scale-100 transition-transform duration-200 delay-75"
+        className="p-2 bg-white rounded-full text-gray-700 hover:bg-frost hover:text-white transform scale-0 group-hover:scale-100 transition-transform duration-200 delay-75"
       >
         <UploadCloud className="h-5 w-5" />
       </button>

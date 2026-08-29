@@ -32,22 +32,22 @@ export function ConfirmModal({
       aria-modal="true"
     >
       {/* Modal Overlay */}
-      <div className="fixed inset-0 bg-black/50 transition-opacity" />
+      <div className="fixed inset-0 bg-ink/50 backdrop-blur-sm transition-opacity" onClick={onClose} />
 
       <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
         <div className="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
           {/* Modal Panel */}
           <div
             ref={modalRef}
-            className=" relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
+            className="animate-fade-up relative transform overflow-hidden rounded-2xl bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
           >
             <div className=" bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
               <div className="flex flex-col items-center gap-2">
                 {/* Icon */}
-                <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
+                <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-frost-light sm:mx-0 sm:h-10 sm:w-10">
                   {/* Inlined SVG to replace the imported Heroicon component */}
                   <svg
-                    className="h-6 w-6 text-blue-600"
+                    className="h-6 w-6 text-frost-deep"
                     fill="none"
                     viewBox="0 0 24 24"
                     strokeWidth="1.5"
@@ -64,7 +64,7 @@ export function ConfirmModal({
                 {/* Content */}
                 <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                   <h3
-                    className="text-base font-semibold leading-6 text-gray-900"
+                    className="text-base font-semibold leading-6 text-ink"
                     id="modal-title"
                   >
                     {title}
@@ -73,10 +73,10 @@ export function ConfirmModal({
               </div>
             </div>
             {/* Action Buttons */}
-            <div className="bg-gray-50 px-4 py-3 flex gap-4 flex-row-reverse justify-center">
+            <div className="bg-mist px-4 py-3 flex gap-3 flex-row-reverse justify-center">
               <button
                 type="button"
-                className="inline-flex w-full justify-center rounded-md bg-blue-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto disabled:bg-gray-400"
+                className="inline-flex w-full justify-center rounded-full bg-frost-deep px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-frost hover:shadow-md active:scale-95 transition-all sm:w-auto disabled:bg-gray-300"
                 onClick={() => {
                   onClose();
                   onConfirm();
@@ -86,7 +86,7 @@ export function ConfirmModal({
               </button>
               <button
                 type="button"
-                className="inline-flex w-full justify-center rounded-md bg-white px-5 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                className="inline-flex w-full justify-center rounded-full bg-white px-5 py-2 text-sm font-semibold text-ink shadow-sm ring-1 ring-inset ring-slate-200 hover:bg-slate-50 active:scale-95 transition-all sm:mt-0 sm:w-auto"
                 onClick={onClose}
               >
                 Batal

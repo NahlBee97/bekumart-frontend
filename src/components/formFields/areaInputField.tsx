@@ -22,7 +22,7 @@ export const AreaInputField = ({ formik, fieldName, label }: props) => {
           // PERBAIKAN DI SINI
           formik.errors[fieldName] ? `${fieldName}-error` : undefined
         }
-        className={`w-full px-4 py-2 border rounded-md shadow-sm outline-none focus:ring focus:ring-blue-500 
+        className={`w-full px-4 py-2 border rounded-md shadow-sm outline-none focus:ring focus:ring-frost 
                   ${
                     // PERBAIKAN DI SINI
                     formik.touched[fieldName] && formik.errors[fieldName]

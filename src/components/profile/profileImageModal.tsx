@@ -92,7 +92,7 @@ export const ProfileImageUploadModal = ({
         }`}
       >
         <div className="p-6 border-b">
-          <h2 className="text-xl font-bold text-blue-500">
+          <h2 className="text-xl font-bold text-frost">
             Mengganti Foto Profil
           </h2>
           <p className="text-sm text-gray-600">untuk {user.name}</p>
@@ -136,7 +136,7 @@ export const ProfileImageUploadModal = ({
           <button
             onClick={handleSave}
             disabled={!file || loading}
-            className="w-40 flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            className="w-40 flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-frost-deep border border-transparent rounded-lg hover:bg-frost-deep disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             {loading ? (
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>

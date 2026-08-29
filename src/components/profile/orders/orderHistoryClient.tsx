@@ -61,7 +61,7 @@ export default function OrderHistoryClient() {
           <div className="overflow-x-auto">
             <div className="w-full h-2"></div>
             <table className="w-full text-sm text-left">
-              <thead className="bg-gray-50 border-y border-gray-200 text-xs text-blue-500 font-semibold uppercase ">
+              <thead className="bg-gray-50 border-y border-gray-200 text-xs text-frost font-semibold uppercase ">
                 <tr>
                   <th scope="col" className="px-3 py-4">
                     Nomor

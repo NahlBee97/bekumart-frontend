@@ -1,9 +1,10 @@
 import Head from "next/head";
 import { Users, Target, Eye, Snowflake } from "lucide-react";
+import { Reveal } from "@/components/reveal";
 
 export default function AboutPage() {
   return (
-    <main className="bg-slate-50">
+    <main className="bg-mist">
       <Head>
         <title>BekuMart</title>
         <meta
@@ -14,13 +15,16 @@ export default function AboutPage() {
 
       <div className="min-h-screen">
         {/* Hero Section */}
-        <section className="bg-blue-500 text-white text-center py-20">
-          <div className="container flex flex-col items-center mx-auto px-6">
-            <Snowflake className="w-14 h-14" />
-            <h1 className="text-4xl md:text-5xl font-extrabold leading-tight mb-4">
+        <section className="relative bg-ink text-white text-center py-24 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-frost-deep/40 via-ink to-ink" />
+          <div className="relative container flex flex-col items-center mx-auto px-6 animate-fade-up">
+            <div className="frost-shimmer bg-white/10 rounded-2xl p-4 mb-4">
+              <Snowflake className="w-10 h-10 text-frost-light" />
+            </div>
+            <h1 className="font-display text-4xl md:text-5xl font-semibold leading-tight mb-4">
               BekuMart
             </h1>
-            <p className="text-lg md:text-xl max-w-3xl mx-auto">
+            <p className="text-lg md:text-xl max-w-3xl mx-auto text-white/75">
               Menyediakan kemudahan dan kelezatan makanan beku berkualitas
               tinggi langsung ke dapur Anda.
             </p>
@@ -28,30 +32,34 @@ export default function AboutPage() {
         </section>
 
         {/* Mission and Vision Section */}
-        <section className=" py-16 sm:py-24">
+        <Reveal as="section" className=" py-16 sm:py-24">
           <div className="container mx-auto px-6">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div className="space-y-8">
                 <div>
                   <div className="flex items-center gap-4 mb-3">
-                    <Eye className="h-8 w-8 text-blue-500" />
-                    <h2 className="text-3xl font-bold text-gray-800">
+                    <div className="bg-frost-light rounded-full p-2.5">
+                      <Eye className="h-6 w-6 text-frost-deep" />
+                    </div>
+                    <h2 className="font-display text-2xl md:text-3xl font-semibold text-ink">
                       Visi Kami
                     </h2>
                   </div>
-                  <p className="text-gray-600 leading-relaxed">
+                  <p className="text-fog leading-relaxed">
                     Menjadi pilihan utama keluarga Indonesia untuk solusi
                     makanan beku yang praktis, lezat, dan terpercaya.
                   </p>
                 </div>
                 <div>
                   <div className="flex items-center gap-4 mb-3">
-                    <Target className="h-8 w-8 text-blue-500" />
-                    <h2 className="text-3xl font-bold text-gray-800">
+                    <div className="bg-frost-light rounded-full p-2.5">
+                      <Target className="h-6 w-6 text-frost-deep" />
+                    </div>
+                    <h2 className="font-display text-2xl md:text-3xl font-semibold text-ink">
                       Misi Kami
                     </h2>
                   </div>
-                  <p className="text-gray-600 leading-relaxed">
+                  <p className="text-fog leading-relaxed">
                     Kami berkomitmen untuk memilih bahan baku terbaik, menjaga
                     standar kebersihan tertinggi, dan memberikan layanan
                     pelanggan yang ramah dan responsif untuk memastikan kepuasan
@@ -64,67 +72,51 @@ export default function AboutPage() {
                 <img
                   src="./frozen-food.jpg"
                   alt="Produk Frozen Food"
-                  className="rounded-lg shadow-xl mx-auto"
+                  className="rounded-2xl shadow-xl shadow-ink/10 mx-auto"
                 />
               </div>
             </div>
           </div>
-        </section>
+        </Reveal>
 
         {/* Team Section */}
-        <section className="py-16 sm:py-24">
+        <Reveal as="section" className="py-16 sm:py-24">
           <div className="container mx-auto px-6 text-center">
-            <Users className="h-12 w-12 mx-auto text-blue-500 mb-4" />
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+            <div className="inline-flex bg-frost-light rounded-full p-3 mb-4">
+              <Users className="h-8 w-8 text-frost-deep" />
+            </div>
+            <h2 className="font-display text-3xl md:text-4xl font-semibold text-ink mb-4">
               Tim Kami
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto mb-12">
+            <p className="text-fog max-w-2xl mx-auto mb-12">
               Kami adalah sekelompok pecinta kuliner yang bersemangat untuk
               memudahkan hidup Anda dengan makanan beku berkualitas.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-              {/* Team Member 1 */}
-              <div className="bg-white p-6 rounded-lg shadow-md">
-                {/* eslint-disable-next-line */}
-                <img
-                  src="https://placehold.co/150x150/6366f1/ffffff?text=CEO"
-                  alt="CEO"
-                  className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-white"
-                />
-                <h3 className="text-xl font-semibold text-gray-900">
-                  Nahalil
-                </h3>
-                <p className="text-blue-500">Founder & CEO</p>
-              </div>
-              {/* Team Member 2 */}
-              <div className="bg-white p-6 rounded-lg shadow-md">
-                {/* eslint-disable-next-line */}
-                <img
-                  src="https://placehold.co/150x150/ec4899/ffffff?text=COO"
-                  alt="COO"
-                  className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-white"
-                />
-                <h3 className="text-xl font-semibold text-gray-900">
-                  Nindhi Meyna S.
-                </h3>
-                <p className="text-blue-500">Head of Operations</p>
-              </div>
-              {/* Team Member 3 */}
-              <div className="bg-white p-6 rounded-lg shadow-md">
-                {/* eslint-disable-next-line */}
-                <img
-                  src="https://placehold.co/150x150/f59e0b/ffffff?text=CMO"
-                  alt="CMO"
-                  className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-white"
-                />
-                <h3 className="text-xl font-semibold text-gray-900">
-                  Nadienatul Syahirah
-                </h3>
-                <p className="text-blue-500">Marketing Manager</p>
-              </div>
+              {[
+                { name: "Nahalil", role: "Founder & CEO", img: "https://placehold.co/150x150/14b8c4/ffffff?text=CEO" },
+                { name: "Nindhi Meyna S.", role: "Head of Operations", img: "https://placehold.co/150x150/e63950/ffffff?text=COO" },
+                { name: "Nadienatul Syahirah", role: "Marketing Manager", img: "https://placehold.co/150x150/0b7285/ffffff?text=CMO" },
+              ].map((member) => (
+                <div
+                  key={member.name}
+                  className="bg-white p-6 rounded-2xl shadow-sm shadow-ink/5 hover:shadow-md hover:-translate-y-1 transition-all duration-300"
+                >
+                  {/* eslint-disable-next-line */}
+                  <img
+                    src={member.img}
+                    alt={member.role}
+                    className="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-frost-light"
+                  />
+                  <h3 className="font-display text-xl font-semibold text-ink">
+                    {member.name}
+                  </h3>
+                  <p className="text-frost-deep text-sm font-medium">{member.role}</p>
+                </div>
+              ))}
             </div>
           </div>
-        </section>
+        </Reveal>
       </div>
     </main>
   );

@@ -19,22 +19,22 @@ export const ImageSlider: React.FC<{ photos: IProductPhoto[] }> = ({
 
   return (
     <div>
-      <div className="border border-gray-200">
+      <div className="rounded-2xl overflow-hidden bg-mist">
         {/* eslint-disable-next-line */}
         <img
           src={activeImage}
           alt="Product Image"
-          className="w-full object-cover"
+          className="w-full object-cover transition-opacity duration-300"
         />
       </div>
-      <div className="flex space-x-2 mt-2">
+      <div className="flex space-x-2 mt-3">
         {photos.map((photo) => (
           <div
             key={photo.id}
-            className={`w-14 border-2 rounded-md cursor-pointer ${
+            className={`w-14 h-14 border-2 rounded-xl cursor-pointer overflow-hidden transition-all duration-200 ${
               activeImage === photo.imageUrl
-                ? "border-blue-500"
-                : "border-gray-200"
+                ? "border-frost shadow-sm shadow-frost/30"
+                : "border-slate-200 hover:border-frost/50"
             }`}
             onClick={() => setActiveImage(photo.imageUrl)}
           >

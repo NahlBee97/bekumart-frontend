@@ -16,7 +16,7 @@ export const OrderSummary = ({ order }: { order: IOrder }) => (
     </div>
     <div>
       <p className="text-sm font-medium text-gray-500">Total</p>
-      <p className="text-base font-semibold text-blue-500">
+      <p className="text-base font-semibold text-frost">
         Rp {order.totalAmount.toLocaleString()}
       </p>
     </div>

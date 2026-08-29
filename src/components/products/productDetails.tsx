@@ -50,32 +50,32 @@ export const ProductDetails = ({ product, openConfirmModal }: props) => {
   return (
     <div className="flex flex-col justify-between gap-4">
       <div className="md:flex flex-col gap-1">
-        <h1 className="text-xl font-semibold uppercase text-gray-800">
+        <h1 className="font-display text-xl font-semibold uppercase text-ink">
           {product.name}
         </h1>
-        <div className="flex text-sm gap-2">
+        <div className="flex text-sm gap-2 text-fog">
           <StarRatingDetail rating={product.rating} />
-          <p className="border-l-2 border-gray-500 pl-2">
+          <p className="border-l-2 border-slate-200 pl-2">
             {product.sale} Terjual
           </p>
         </div>
-        <div className="bg-gray-50 p-2 md:p-4 rounded-md">
-          <h2 className="text-2xl md:text-3xl font-bold text-blue-500">
+        <div className="bg-frost-light/40 p-2 md:p-4 rounded-xl mt-2">
+          <h2 className="font-mono text-2xl md:text-3xl font-semibold text-berry">
             Rp {product.price.toLocaleString()}
           </h2>
         </div>
-        <div className="space-y-2 mt-2">
-          <h2 className="md:text-lg font-semibold">Deskripsi Produk:</h2>
+        <div className="space-y-2 mt-2 text-ink/80">
+          <h2 className="md:text-lg font-display font-semibold text-ink">Deskripsi Produk:</h2>
           <p>
-            <span className="font-semibold">Berat bersih: </span>
+            <span className="font-semibold text-ink">Berat bersih: </span>
             {product.weightInKg * 1000} Gram
           </p>
           <p>{product.description}</p>
         </div>
       </div>
       <div className="hidden md:flex flex-col gap-6">
-        <p>
-          <span className="font-semibold">Berat bersih: </span>
+        <p className="text-ink/80">
+          <span className="font-semibold text-ink">Berat bersih: </span>
           {product.weightInKg * 1000} Gram
         </p>
         {/* Quantity Selector */}
@@ -86,7 +86,7 @@ export const ProductDetails = ({ product, openConfirmModal }: props) => {
             onDecrease={decrementQuantity}
             onIncrease={incrementQuantity}
           />
-          <p>Tersedia {product.stock}</p>
+          <p className="text-fog text-sm">Tersedia {product.stock}</p>
         </div>
         <AddToCartButton isLoading={isLoading} onAdd={handleAddToCart} name="Masukkan Keranjang" />
       </div>

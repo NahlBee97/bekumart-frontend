@@ -42,7 +42,7 @@ const OrderCard: React.FC<{
         {/* Total Price */}
         <div className="text-right md:text-left">
           <p className="font-medium text-gray-900">Total Harga</p>
-          <p className="font-semibold text-blue-500">
+          <p className="font-semibold text-frost">
             Rp {order.totalAmount.toLocaleString()}
           </p>
         </div>

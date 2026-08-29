@@ -37,14 +37,14 @@ export default function CartPageClient({
 
   return (
     <>
-      <div className="min-h-screen bg-slate-50 text-gray-800">
+      <div className="min-h-screen bg-mist text-ink">
         <div className="container mx-auto">
-          <div className="md:px-8 md:py-4 flex bg-slate-50 items-center gap-2 p-2">
+          <div className="md:px-8 md:py-4 flex items-center gap-2 p-3">
             <ArrowLeft
-              className="md:hidden h-6 w-6 text-blue-500"
+              className="md:hidden h-6 w-6 text-ink/70 cursor-pointer"
               onClick={handleArrowClicked}
             />
-            <h1 className="text-xl md:text-3xl font-bold tracking-tight text-blue-500">
+            <h1 className="font-display text-xl md:text-3xl font-semibold tracking-tight text-ink">
               Keranjang Belanja
             </h1>
           </div>

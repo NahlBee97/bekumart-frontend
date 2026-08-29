@@ -28,7 +28,7 @@ export const OrderItemCard = ({ item, reviews, status, onClickRate }: props) => 
         <p className="font-medium text-gray-900">{item.product.name}</p>
         <p className="text-sm text-gray-500">Jumlah: {item.quantity}</p>
       </div>
-      <p className="font-semibold text-blue-500">
+      <p className="font-semibold text-frost">
         Rp {(item.product.price * item.quantity).toLocaleString()}
       </p>
       {!reviews.some((review) => review.productId === item.productId) &&

@@ -73,7 +73,7 @@ export const CartItemCard = ({ item }: { item: ICartItem }) => {
   }
 
   return (
-    <div className="flex w-full gap-4">
+    <div className="flex w-full gap-4 bg-white rounded-2xl p-3 shadow-sm shadow-ink/5 hover:shadow-md transition-shadow duration-300">
       <div className="flex-shrink-0">
         {/* eslint-disable-next-line */}
         <img
@@ -83,23 +83,23 @@ export const CartItemCard = ({ item }: { item: ICartItem }) => {
             )?.imageUrl
           }
           alt="product image"
-          className="w-24 h-24 border border-gray-300 rounded-md object-cover sm:w-32 sm:h-32"
+          className="w-24 h-24 rounded-xl object-cover sm:w-32 sm:h-32 bg-mist"
         />
       </div>
 
       <div className="flex-1 flex flex-col md:flex-row justify-between">
         <div className="relative ">
           <h3
-            className="text-base font-medium line-clamp-2 text-gray-800"
+            className="text-base font-medium line-clamp-2 text-ink cursor-pointer hover:text-frost-deep transition-colors"
             onClick={() => router.push(`/products/${item.product?.id}`)}
           >
             {item.product?.name}
           </h3>
-          <p
+          <p className="text-sm text-fog"
           >
             Berat: {item.product?.weightInKg} Kg
           </p>
-          <p className="font-medium text-blue-500">
+          <p className="font-mono font-semibold text-berry">
             Rp {item.product?.price.toLocaleString("id-ID")}
           </p>
         </div>
@@ -107,14 +107,14 @@ export const CartItemCard = ({ item }: { item: ICartItem }) => {
         <div className="flex items-start justify-between text-sm">
           <div className="block md:flex gap-2 items-center mt-2 sm:mt-0">
             {isLoading ? (
-              <div className="h-9 w-35 animate-pulse rounded-md bg-gray-200"></div>
+              <div className="h-9 w-35 animate-pulse rounded-full bg-slate-200"></div>
             ) : (
-              <div className="flex items-center border border-gray-300 rounded-md">
+              <div className="flex items-center border border-slate-200 rounded-full overflow-hidden">
                 {localQuantity === 1 && (
                   <button
                     type="button"
                     onClick={() => setIsConfirmModalOpen(true) }
-                    className="p-2 font-medium text-red-600 hover:text-red-500"
+                    className="p-2 font-medium text-red-500 hover:text-red-600 hover:bg-red-50 transition-colors"
                     disabled={item.quantity > 1}
                   >
                     <Trash2 className="h-4 w-4" />
@@ -128,7 +128,7 @@ export const CartItemCard = ({ item }: { item: ICartItem }) => {
                 />
               </div>
             )}
-            <p>Tersisa: {item.product.stock}</p>
+            <p className="text-fog text-xs mt-1 md:mt-0">Tersisa: {item.product.stock}</p>
           </div>
         </div>
       </div>

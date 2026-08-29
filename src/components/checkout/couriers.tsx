@@ -10,7 +10,7 @@ export const Couriers = ({ couriers, onCourierChange }: props) => {
     <>
       <label
         htmlFor="district"
-        className="block text-sm font-semibold text-gray-700"
+        className="block text-sm font-medium text-fog"
       >
         Pilihan Kurir:
       </label>
@@ -20,7 +20,7 @@ export const Couriers = ({ couriers, onCourierChange }: props) => {
           const selectedCourier = couriers[parseInt(e.target.value)];
           onCourierChange(selectedCourier);
         }}
-        className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
+        className="mt-1 p-2 block w-full border border-slate-200 rounded-lg shadow-sm focus:ring-2 focus:ring-frost focus:border-frost outline-none disabled:bg-slate-100 transition-shadow"
       >
         {couriers.map((c, index) => (
           <option key={index} value={index}>

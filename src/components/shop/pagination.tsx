@@ -16,17 +16,17 @@ export const Pagination = ({
       <button
         onClick={onClickPrev}
         disabled={currentPage === 1}
-        className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+        className="px-4 py-2 text-sm font-medium text-ink/70 bg-white border border-slate-200 rounded-full shadow-sm hover:bg-frost-light hover:text-frost-deep active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100 transition-all cursor-pointer"
       >
         Kembali
       </button>
-      <span className="text-sm text-slate-700 dark:text-slate-400">
-        Hal {currentPage} dari {totalPages}
+      <span className="text-sm font-mono text-fog">
+        {currentPage} / {totalPages}
       </span>
       <button
         onClick={onClickNext}
         disabled={currentPage === totalPages}
-        className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+        className="px-4 py-2 text-sm font-medium text-ink/70 bg-white border border-slate-200 rounded-full shadow-sm hover:bg-frost-light hover:text-frost-deep active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100 transition-all cursor-pointer"
       >
         Lanjut
       </button>

@@ -8,12 +8,12 @@ export const CheckBox = ({ isChecked, onChecked, label }: props) => {
   return (
     <>
       <input
-        className="mt-2 h-2"
+        className="mt-2 h-3.5 w-3.5 accent-frost cursor-pointer"
         type="checkbox"
         checked={isChecked}
         onChange={onChecked}
       />{" "}
-      <label className="text-gray-600 text-xs">{label}</label>
+      <label className="text-fog text-xs">{label}</label>
     </>
   );
 };

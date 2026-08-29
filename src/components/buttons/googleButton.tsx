@@ -10,7 +10,7 @@ export const GoogleButton = ({onLogin, buttonText}: props) => {
     <button
       type="button"
       onClick={onLogin}
-      className="w-full flex items-center justify-center py-3 px-4 border border-gray-300 rounded-lg bg-white text-gray-700 font-semibold hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition-colors duration-300"
+      className="w-full flex items-center justify-center gap-2 py-3 px-4 border border-slate-200 rounded-full bg-white text-ink/80 font-semibold hover:bg-slate-50 hover:shadow-sm active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-slate-300 transition-all duration-200"
     >
       <GoogleIcon />
       {buttonText}

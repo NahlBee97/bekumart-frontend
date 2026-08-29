@@ -236,14 +236,14 @@ export default function CheckoutPageClient() {
 
   return (
     <>
-      <div className="min-h-screen bg-slate-50 text-gray-800">
+      <div className="min-h-screen bg-mist text-ink">
         <div className="container mx-auto">
-        <div className="flex items-center gap-2 p-2 md:px-8 md:py-4">
+        <div className="flex items-center gap-2 p-3 md:px-8 md:py-4">
           <ArrowLeft
-            className="md:hidden h-6 w-6 text-blue-500"
+            className="md:hidden h-6 w-6 text-ink/70 cursor-pointer"
             onClick={() => router.push("/cart")}
           />
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-blue-500 ">
+          <h1 className="font-display text-2xl md:text-3xl font-semibold tracking-tight text-ink ">
             Checkout
           </h1>
         </div>
@@ -255,7 +255,7 @@ export default function CheckoutPageClient() {
                 aria-labelledby="cart-heading"
                 className="lg:col-span-7 "
               >
-                <div className="space-y-8 border border-gray-200 rounded-lg bg-white p-6 shadow-sm">
+                <div className="space-y-8 rounded-2xl bg-white p-6 shadow-sm shadow-ink/5">
                   <DeliveryMethodSection
                     isLoading={isLoading}
                     deliveryMethod={deliveryMethod}
